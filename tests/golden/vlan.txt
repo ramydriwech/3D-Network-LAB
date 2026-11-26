@@ -1,0 +1,44 @@
+--- étape 1
+200 ADMIN-1>SW1 ARP Request [broadcast]
+1405 SW1>ADMIN-2 ARP Request [broadcast]
+1405 SW1>R1 ARP Request [broadcast]
+2410 R1 ignore ARP Request
+2610 ADMIN-2>SW1 ARP Reply [unicast]
+3815 SW1>ADMIN-1 ARP Reply [unicast]
+5020 ADMIN-1>SW1 ICMP Echo Request [unicast]
+6225 SW1>ADMIN-2 ICMP Echo Request [unicast]
+7430 ADMIN-2>SW1 ICMP Echo Reply [unicast]
+8635 SW1>ADMIN-1 ICMP Echo Reply [unicast]
+--- étape 2
+10440 ADMIN-1>SW1 ARP Request [broadcast]
+11645 SW1>ADMIN-2 ARP Request [broadcast]
+11645 SW1>R1 ARP Request [broadcast]
+12650 ADMIN-2 ignore ARP Request
+12850 R1>SW1 ARP Reply [unicast]
+14055 SW1>ADMIN-1 ARP Reply [unicast]
+15260 ADMIN-1>SW1 ICMP Echo Request [unicast]
+16465 SW1>R1 ICMP Echo Request [unicast]
+17670 R1>SW1 ARP Request [broadcast]
+18875 SW1>ETU-1 ARP Request [broadcast]
+18875 SW1>ETU-2 ARP Request [broadcast]
+19880 ETU-2 ignore ARP Request
+20080 ETU-1>SW1 ARP Reply [unicast]
+21285 SW1>R1 ARP Reply [unicast]
+22490 R1>SW1 ICMP Echo Request [unicast]
+23695 SW1>ETU-1 ICMP Echo Request [unicast]
+24900 ETU-1>SW1 ICMP Echo Reply [unicast]
+26105 SW1>R1 ICMP Echo Reply [unicast]
+27310 R1>SW1 ICMP Echo Reply [unicast]
+28515 SW1>ADMIN-1 ICMP Echo Reply [unicast]
+--- étape 3
+30320 ETU-2>SW1 ARP Request [broadcast]
+31525 SW1>ETU-1 ARP Request [broadcast]
+31525 SW1>R1 ARP Request [broadcast]
+32530 R1 ignore ARP Request
+32730 ETU-1>SW1 ARP Reply [unicast]
+33935 SW1>ETU-2 ARP Reply [unicast]
+35140 ETU-2>SW1 ICMP Echo Request [unicast]
+36345 SW1>ETU-1 ICMP Echo Request [unicast]
+37550 ETU-1>SW1 ICMP Echo Reply [unicast]
+38755 SW1>ETU-2 ICMP Echo Reply [unicast]
+fin 39760 finished

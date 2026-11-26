@@ -1,0 +1,6 @@
+--- étape 1
+200 PC1>SW1 Test [unicast]
+1405 SW1>R1 Test [unicast]
+2610 R1>SW2 Test [unicast]
+3815 SW2>SRV1 Test [unicast]
+fin 4820 finished

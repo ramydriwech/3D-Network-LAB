@@ -1,0 +1,39 @@
+--- étape 1
+200 PC1>SW1 DHCP Discover [broadcast]
+1428 SW1>PC2 DHCP Discover [broadcast]
+1428 SW1>DHCP1 DHCP Discover [broadcast]
+1428 SW1>R1 DHCP Discover [broadcast]
+2456 PC2 ignore DHCP Discover
+2456 R1 ignore DHCP Discover
+2656 DHCP1>SW1 DHCP Offer [broadcast]
+3884 SW1>PC1 DHCP Offer [broadcast]
+3884 SW1>PC2 DHCP Offer [broadcast]
+3884 SW1>R1 DHCP Offer [broadcast]
+4912 PC2 ignore DHCP Offer
+4912 R1 ignore DHCP Offer
+5112 PC1>SW1 DHCP Request [broadcast]
+6340 SW1>PC2 DHCP Request [broadcast]
+6340 SW1>DHCP1 DHCP Request [broadcast]
+6340 SW1>R1 DHCP Request [broadcast]
+7368 PC2 ignore DHCP Request
+7368 R1 ignore DHCP Request
+7568 DHCP1>SW1 DHCP Ack [broadcast]
+8796 SW1>PC1 DHCP Ack [broadcast]
+8796 SW1>PC2 DHCP Ack [broadcast]
+8796 SW1>R1 DHCP Ack [broadcast]
+9824 PC2 ignore DHCP Ack
+9824 R1 ignore DHCP Ack
+--- étape 2
+10624 PC1>SW1 ARP Request [broadcast]
+11829 SW1>PC2 ARP Request [broadcast]
+11829 SW1>DHCP1 ARP Request [broadcast]
+11829 SW1>R1 ARP Request [broadcast]
+12834 PC2 ignore ARP Request
+12834 DHCP1 ignore ARP Request
+13034 R1>SW1 ARP Reply [unicast]
+14239 SW1>PC1 ARP Reply [unicast]
+15444 PC1>SW1 ICMP Echo Request [unicast]
+16649 SW1>R1 ICMP Echo Request [unicast]
+17854 R1>SW1 ICMP Echo Reply [unicast]
+19059 SW1>PC1 ICMP Echo Reply [unicast]
+fin 20064 finished

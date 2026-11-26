@@ -1,0 +1,81 @@
+{
+  "format": 1,
+  "id": "debit",
+  "title": { "fr": "Débit : liens lents, partage et pertes", "en": "Throughput: slow links, sharing and losses" },
+  "summary": {
+    "fr": "Trois postes envoient un fichier de 14 600 octets au serveur. PC1 est en Gigabit, PC2 a une ancienne carte à 100 Mb/s, PC3 est branché avec un câble Cat 5 qui bride le lien à 100 Mb/s. On compare les temps, on provoque des pertes, puis les trois envoient en même temps sur le lien du serveur.",
+    "en": "Three computers send a 14,600-byte file to the server. PC1 is on Gigabit, PC2 has an old 100 Mb/s card, PC3 is plugged in with a Cat 5 cable that limits the link to 100 Mb/s. We compare times, cause losses, then all three send at once over the server's link."
+  },
+  "objectives": {
+    "fr": [
+      "Comprendre que la vitesse d'un lien est la plus petite des deux cartes et du câble.",
+      "Voir le temps d'émission d'une trame : il dépend de sa taille et de la vitesse du lien.",
+      "Suivre la fenêtre glissante TCP, les ACK dupliqués, la retransmission rapide et le délai RTO.",
+      "Observer un lien partagé se charger (couleur du câble) et une file d'attente se former."
+    ],
+    "en": [
+      "Understand that a link's speed is the smallest of the two cards and the cable.",
+      "See a frame's transmission time: it depends on its size and on the link speed.",
+      "Follow the TCP sliding window, duplicate ACKs, fast retransmit and the RTO timeout.",
+      "Watch a shared link fill up (cable colour) and a queue build up."
+    ]
+  },
+  "protocols": ["arp", "icmp", "tcp"],
+  "devices": [
+    { "id": "pc1", "type": "host", "name": "PC1", "model": "pc-std", "position": [-7, 0, -4],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:05:11", "ip": "192.168.5.11", "prefix": 24 }] },
+    { "id": "pc2", "type": "host", "name": "PC2", "model": "pc-fe", "position": [-7, 0, 0],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:05:12", "ip": "192.168.5.12", "prefix": 24 }] },
+    { "id": "pc3", "type": "host", "name": "PC3", "model": "pc-std", "position": [-7, 0, 4],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:05:13", "ip": "192.168.5.13", "prefix": 24 }] },
+    { "id": "sw1", "type": "switch", "name": "SW1", "model": "sw-24g", "position": [0, 0, 0] },
+    { "id": "srv1", "type": "server", "name": "SRV1", "model": "srv-1g", "position": [7, 0, 0],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:05:20", "ip": "192.168.5.20", "prefix": 24 }],
+      "services": { "tcp": { "listen": [5000] } } }
+  ],
+  "links": [
+    { "id": "l1", "a": "pc1:eth0", "b": "sw1:p1", "cable": "cat6", "length": 15 },
+    { "id": "l2", "a": "pc2:eth0", "b": "sw1:p2", "cable": "cat6", "length": 15 },
+    { "id": "l3", "a": "pc3:eth0", "b": "sw1:p3", "cable": "cat5", "length": 15 },
+    { "id": "l4", "a": "sw1:p4", "b": "srv1:eth0", "cable": "cat6", "length": 5 }
+  ],
+  "steps": [
+    {
+      "action": "tcp", "from": "pc1", "to": "srv1", "port": 5000, "size": 14600, "window": 10,
+      "title": { "fr": "1. PC1 envoie un fichier en Gigabit", "en": "1. PC1 sends a file over Gigabit" },
+      "explanation": {
+        "fr": "Le fichier est découpé en 10 segments de 1 460 octets. La fenêtre est de 10 segments : tous partent sans attendre d'accusé, les uns derrière les autres. À 1 Gb/s, une grande trame n'occupe le câble que 0,12 s à l'écran. Le débit utile du bilan reste sous 1 Gb/s : il faut aussi ouvrir la connexion et attendre les ACK.",
+        "en": "The file is cut into 10 segments of 1,460 bytes. The window is 10 segments: they all leave without waiting for an acknowledgement, one behind the other. At 1 Gb/s, a large frame occupies the cable for only 0.12 s on screen. The useful throughput in the summary stays below 1 Gb/s: the connection must also be opened and the ACKs awaited."
+      }
+    },
+    {
+      "action": "tcp", "from": "pc2", "to": "srv1", "port": 5000, "size": 14600, "window": 10,
+      "title": { "fr": "2. Le même fichier depuis une carte à 100 Mb/s", "en": "2. The same file from a 100 Mb/s card" },
+      "explanation": {
+        "fr": "La carte de PC2 ne dépasse pas 100 Mb/s : le lien négocie cette vitesse. Chaque grande trame met dix fois plus de temps à sortir, les paquets s'étirent sur le câble et le débit final est bien plus faible. Comparez les deux bilans dans le journal.",
+        "en": "PC2's card tops out at 100 Mb/s: the link negotiates that speed. Each large frame takes ten times longer to leave, packets stretch along the cable and the final throughput is much lower. Compare both summaries in the log."
+      }
+    },
+    {
+      "action": "tcp", "from": "pc1", "to": "srv1", "port": 5000, "size": 14600, "lose": [2, 9],
+      "title": { "fr": "3. Pertes : retransmission rapide et délai dépassé", "en": "3. Losses: fast retransmit and timeout" },
+      "explanation": {
+        "fr": "Cette fois la fenêtre ne fait que 4 segments : chaque ACK la fait glisser et libère un nouvel envoi. Le segment 3 se perd : le serveur reçoit la suite, la met de côté et répète le même ACK. Au troisième ACK dupliqué, PC1 renvoie le segment sans attendre. Le dernier segment se perd aussi : aucun segment ne le suit, donc pas d'ACK dupliqué — seul le délai RTO le fait renvoyer, bien plus tard.",
+        "en": "This time the window is only 4 segments: each ACK slides it and frees a new send. Segment 3 is lost: the server receives what follows, keeps it aside and repeats the same ACK. On the third duplicate ACK, PC1 resends the segment without waiting. The last segment is lost too: nothing follows it, so no duplicate ACK — only the RTO timeout gets it resent, much later."
+      }
+    },
+    {
+      "action": "group",
+      "steps": [
+        { "action": "tcp", "from": "pc1", "to": "srv1", "port": 5000, "size": 14600, "window": 10 },
+        { "action": "tcp", "from": "pc2", "to": "srv1", "port": 5000, "size": 14600, "window": 10 },
+        { "action": "tcp", "from": "pc3", "to": "srv1", "port": 5000, "size": 14600, "window": 10 }
+      ],
+      "title": { "fr": "4. Trois envois en même temps", "en": "4. Three transfers at the same time" },
+      "explanation": {
+        "fr": "Les trois postes envoient ensemble. Leurs trames se retrouvent dans la même file, sur le port du switch qui mène au serveur : ce lien se charge (sa couleur vire à l'orange) et chacun attend son tour. PC3 a pourtant une carte Gigabit : c'est son câble Cat 5 qui le bride à 100 Mb/s.",
+        "en": "All three computers send together. Their frames end up in the same queue, on the switch port leading to the server: that link fills up (its colour turns orange) and each one waits its turn. PC3 has a Gigabit card: it is its Cat 5 cable that limits it to 100 Mb/s."
+      }
+    }
+  ]
+}

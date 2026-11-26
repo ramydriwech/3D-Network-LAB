@@ -1,0 +1,75 @@
+{
+  "format": 1,
+  "id": "routage",
+  "title": { "fr": "Routage statique et TTL", "en": "Static routing and TTL" },
+  "summary": {
+    "fr": "Deux routeurs relient trois réseaux. Chaque routeur ne connaît d'origine que ses réseaux voisins : une route statique lui indique par où joindre le réseau distant. À chaque routeur traversé, le TTL du paquet diminue de 1.",
+    "en": "Two routers join three networks. Out of the box each router only knows its neighbouring networks: a static route tells it how to reach the distant one. At every router crossed, the packet's TTL drops by 1."
+  },
+  "objectives": {
+    "fr": [
+      "Lire la table de routage de R1 et de R2 (sélectionnez un routeur).",
+      "Vérifier dans l'inspecteur que le TTL passe de 64 à 63 puis 62, alors que les adresses IP ne changent pas.",
+      "Comprendre le rôle du TTL avec un paquet parti avec TTL = 1.",
+      "Voir ce qui arrive quand aucune route ne correspond à la destination."
+    ],
+    "en": [
+      "Read the routing tables of R1 and R2 (select a router).",
+      "Check in the inspector that the TTL goes from 64 to 63 then 62, while the IP addresses stay the same.",
+      "Understand the purpose of the TTL with a packet sent with TTL = 1.",
+      "See what happens when no route matches the destination."
+    ]
+  },
+  "protocols": ["arp", "icmp"],
+  "devices": [
+    { "id": "pc1", "type": "host", "name": "PC1", "position": [-9, 0, 0],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:0A:10", "ip": "10.0.1.10", "prefix": 24 }],
+      "gateway": "10.0.1.1" },
+    { "id": "r1", "type": "router", "name": "R1", "position": [-3, 0, 0],
+      "interfaces": [
+        { "name": "g0/0", "mac": "02:00:00:00:0A:01", "ip": "10.0.1.1", "prefix": 24 },
+        { "name": "g0/1", "mac": "02:00:00:00:0C:01", "ip": "10.0.12.1", "prefix": 30 }
+      ],
+      "routes": [{ "network": "10.0.2.0", "prefix": 24, "via": "10.0.12.2" }] },
+    { "id": "r2", "type": "router", "name": "R2", "position": [3, 0, 0],
+      "interfaces": [
+        { "name": "g0/0", "mac": "02:00:00:00:0C:02", "ip": "10.0.12.2", "prefix": 30 },
+        { "name": "g0/1", "mac": "02:00:00:00:0B:01", "ip": "10.0.2.1", "prefix": 24 }
+      ],
+      "routes": [{ "network": "10.0.1.0", "prefix": 24, "via": "10.0.12.1" }] },
+    { "id": "pc2", "type": "host", "name": "PC2", "position": [9, 0, 0],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:0B:10", "ip": "10.0.2.10", "prefix": 24 }],
+      "gateway": "10.0.2.1" }
+  ],
+  "links": [
+    { "id": "l1", "a": "pc1:eth0", "b": "r1:g0/0" },
+    { "id": "l2", "a": "r1:g0/1", "b": "r2:g0/0" },
+    { "id": "l3", "a": "r2:g0/1", "b": "pc2:eth0" }
+  ],
+  "steps": [
+    {
+      "action": "ping", "from": "pc1", "to": "pc2",
+      "title": { "fr": "1. Ping à travers deux routeurs", "en": "1. Ping across two routers" },
+      "explanation": {
+        "fr": "R1 n'est pas branché sur le réseau 10.0.2.0/24 : sa route statique lui dit de passer par 10.0.12.2 (R2). Inspectez le paquet à chaque saut : le TTL diminue, les adresses MAC changent, les adresses IP restent.",
+        "en": "R1 is not attached to network 10.0.2.0/24: its static route tells it to go through 10.0.12.2 (R2). Inspect the packet at every hop: the TTL drops, the MAC addresses change, the IP addresses stay."
+      }
+    },
+    {
+      "action": "ping", "from": "pc1", "to": "pc2", "ttl": 1,
+      "title": { "fr": "2. Un paquet avec TTL = 1", "en": "2. A packet with TTL = 1" },
+      "explanation": {
+        "fr": "Le TTL empêche un paquet de tourner indéfiniment en cas de boucle. Parti avec TTL = 1, celui-ci est détruit dès le premier routeur, qui prévient PC1 par ICMP « Time Exceeded ». C'est le principe de la commande traceroute.",
+        "en": "The TTL stops a packet from circling forever if there is a loop. Sent with TTL = 1, this one is discarded by the very first router, which warns PC1 with ICMP \"Time Exceeded\". This is how the traceroute command works."
+      }
+    },
+    {
+      "action": "ping", "from": "pc1", "to": "172.16.0.1",
+      "title": { "fr": "3. Une destination sans route", "en": "3. A destination with no route" },
+      "explanation": {
+        "fr": "172.16.0.1 n'appartient à aucun réseau connu de R1 et R1 n'a pas de route par défaut : le paquet est détruit et PC1 reçoit « Destination Unreachable ».",
+        "en": "172.16.0.1 belongs to no network known to R1 and R1 has no default route: the packet is discarded and PC1 receives \"Destination Unreachable\"."
+      }
+    }
+  ]
+}

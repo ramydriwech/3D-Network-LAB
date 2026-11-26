@@ -1,0 +1,89 @@
+{
+  "format": 1,
+  "id": "traceroute",
+  "title": { "fr": "Traceroute : découvrir le chemin routeur par routeur", "en": "Traceroute: discovering the path router by router" },
+  "summary": {
+    "fr": "Trois routeurs séparent PC1 du serveur. En envoyant des paquets dont le TTL vaut 1, puis 2, puis 3, puis 4, PC1 oblige chaque routeur du chemin, l'un après l'autre, à se signaler par un message ICMP « Time Exceeded ». C'est exactement ce que fait la commande traceroute (tracert sous Windows).",
+    "en": "Three routers separate PC1 from the server. By sending packets whose TTL is 1, then 2, then 3, then 4, PC1 forces every router on the path, one after the other, to reveal itself with an ICMP \"Time Exceeded\" message. This is exactly what the traceroute command (tracert on Windows) does."
+  },
+  "objectives": {
+    "fr": [
+      "Comprendre le rôle du TTL : chaque routeur le diminue de 1 et détruit le paquet à 0.",
+      "Voir que c'est l'adresse SOURCE du message « Time Exceeded » qui révèle le routeur.",
+      "Reconstituer le chemin : R1, R2, R3, puis SRV1."
+    ],
+    "en": [
+      "Understand the TTL's role: each router lowers it by 1 and destroys the packet at 0.",
+      "See that it is the SOURCE address of the \"Time Exceeded\" message that reveals the router.",
+      "Rebuild the path: R1, R2, R3, then SRV1."
+    ]
+  },
+  "protocols": ["arp", "icmp"],
+  "devices": [
+    { "id": "pc1", "type": "host", "name": "PC1", "position": [-14, 0, 0],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:0E:10", "ip": "192.168.1.10", "prefix": 24 }], "gateway": "192.168.1.1" },
+    { "id": "r1", "type": "router", "name": "R1", "position": [-8, 0, 0],
+      "interfaces": [
+        { "name": "g0/0", "mac": "02:00:00:00:0E:01", "ip": "192.168.1.1", "prefix": 24 },
+        { "name": "g0/1", "mac": "02:00:00:00:0E:02", "ip": "10.0.12.1", "prefix": 30 }
+      ],
+      "routes": [{ "network": "0.0.0.0", "prefix": 0, "via": "10.0.12.2" }] },
+    { "id": "r2", "type": "router", "name": "R2", "position": [-2, 0, 3],
+      "interfaces": [
+        { "name": "g0/0", "mac": "02:00:00:00:0E:03", "ip": "10.0.12.2", "prefix": 30 },
+        { "name": "g0/1", "mac": "02:00:00:00:0E:04", "ip": "10.0.23.1", "prefix": 30 }
+      ],
+      "routes": [
+        { "network": "192.168.1.0", "prefix": 24, "via": "10.0.12.1" },
+        { "network": "172.16.0.0", "prefix": 24, "via": "10.0.23.2" }
+      ] },
+    { "id": "r3", "type": "router", "name": "R3", "position": [4, 0, 0],
+      "interfaces": [
+        { "name": "g0/0", "mac": "02:00:00:00:0E:05", "ip": "10.0.23.2", "prefix": 30 },
+        { "name": "g0/1", "mac": "02:00:00:00:0E:06", "ip": "172.16.0.1", "prefix": 24 }
+      ],
+      "routes": [{ "network": "0.0.0.0", "prefix": 0, "via": "10.0.23.1" }] },
+    { "id": "srv1", "type": "server", "name": "SRV1", "position": [10, 0, 0],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:0E:20", "ip": "172.16.0.20", "prefix": 24 }], "gateway": "172.16.0.1" }
+  ],
+  "links": [
+    { "id": "l1", "a": "pc1:eth0", "b": "r1:g0/0" },
+    { "id": "l2", "a": "r1:g0/1", "b": "r2:g0/0" },
+    { "id": "l3", "a": "r2:g0/1", "b": "r3:g0/0" },
+    { "id": "l4", "a": "r3:g0/1", "b": "srv1:eth0" }
+  ],
+  "steps": [
+    {
+      "action": "ping", "from": "pc1", "to": "srv1", "ttl": 1,
+      "title": { "fr": "1. TTL = 1 : le premier routeur se dévoile", "en": "1. TTL = 1: the first router reveals itself" },
+      "explanation": {
+        "fr": "R1 reçoit le paquet, retire 1 au TTL : il tombe à 0. R1 le détruit et répond à PC1 par ICMP « Time Exceeded », envoyé depuis son adresse 192.168.1.1. Premier saut trouvé : R1.",
+        "en": "R1 receives the packet and takes 1 off the TTL: it drops to 0. R1 destroys it and answers PC1 with ICMP \"Time Exceeded\", sent from its address 192.168.1.1. First hop found: R1."
+      }
+    },
+    {
+      "action": "ping", "from": "pc1", "to": "srv1", "ttl": 2,
+      "title": { "fr": "2. TTL = 2 : on passe R1, R2 se dévoile", "en": "2. TTL = 2: we get past R1, R2 reveals itself" },
+      "explanation": {
+        "fr": "R1 laisse passer (TTL 2 → 1), R2 détruit (1 → 0) et prévient PC1. La réponse vient de 10.0.12.2 : deuxième saut, R2. Remarquez que la réponse de R2 refait tout le chemin en sens inverse.",
+        "en": "R1 lets it through (TTL 2 → 1), R2 destroys it (1 → 0) and warns PC1. The reply comes from 10.0.12.2: second hop, R2. Notice that R2's reply travels the whole path back."
+      }
+    },
+    {
+      "action": "ping", "from": "pc1", "to": "srv1", "ttl": 3,
+      "title": { "fr": "3. TTL = 3 : R3 se dévoile", "en": "3. TTL = 3: R3 reveals itself" },
+      "explanation": {
+        "fr": "Le paquet traverse R1 et R2 ; R3 met le TTL à 0 et répond depuis 10.0.23.2. Troisième saut : R3.",
+        "en": "The packet crosses R1 and R2; R3 brings the TTL to 0 and replies from 10.0.23.2. Third hop: R3."
+      }
+    },
+    {
+      "action": "ping", "from": "pc1", "to": "srv1", "ttl": 4,
+      "title": { "fr": "4. TTL = 4 : la destination répond", "en": "4. TTL = 4: the destination answers" },
+      "explanation": {
+        "fr": "Cette fois le paquet arrive avec un TTL de 1 : SRV1 répond par un vrai « Echo Reply ». Le chemin complet est connu : R1 → R2 → R3 → SRV1, soit quatre sauts.",
+        "en": "This time the packet arrives with a TTL of 1: SRV1 answers with a real \"Echo Reply\". The full path is known: R1 → R2 → R3 → SRV1, four hops in all."
+      }
+    }
+  ]
+}

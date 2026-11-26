@@ -1,0 +1,21 @@
+{
+  "default": "ping.json",
+  "scenarios": [
+    { "file": "ping.json", "title": { "fr": "Ping : ARP puis ICMP", "en": "Ping: ARP then ICMP" } },
+    { "file": "arp.json", "title": { "fr": "ARP : de l'adresse IP à l'adresse MAC", "en": "ARP: from the IP address to the MAC address" } },
+    { "file": "dhcp.json", "title": { "fr": "DHCP : obtenir une adresse IP", "en": "DHCP: getting an IP address" } },
+    { "file": "udp.json", "title": { "fr": "UDP : envoyer sans connexion", "en": "UDP: sending without a connection" } },
+    { "file": "dns.json", "title": { "fr": "DNS : du nom à l'adresse IP", "en": "DNS: from a name to an IP address" } },
+    { "file": "tcp.json", "title": { "fr": "TCP : ouverture, données, fermeture", "en": "TCP: handshake, data, teardown" } },
+    { "file": "http.json", "title": { "fr": "HTTP : charger une page web", "en": "HTTP: loading a web page" } },
+    { "file": "routage.json", "title": { "fr": "Routage statique et TTL", "en": "Static routing and TTL" } },
+    { "file": "ipv6.json", "title": { "fr": "IPv6 : découverte de voisin et ping", "en": "IPv6: neighbour discovery and ping" } },
+    { "file": "traceroute.json", "title": { "fr": "Traceroute : découvrir le chemin routeur par routeur", "en": "Traceroute: discovering the path router by router" } },
+    { "file": "vlan.json", "title": { "fr": "VLAN : deux réseaux sur le même switch", "en": "VLANs: two networks on the same switch" } },
+    { "file": "pare-feu.json", "title": { "fr": "Pare-feu et NAT : sortir sur Internet, rester protégé", "en": "Firewall and NAT: going online while staying protected" } },
+    { "file": "securite-port.json", "title": { "fr": "Sécurité des ports : un intrus sur la prise réseau", "en": "Port security: an intruder on the network socket" } },
+    { "file": "debit.json", "title": { "fr": "Débit : liens lents, partage et pertes", "en": "Throughput: slow links, sharing and losses" } },
+    { "file": "diagnostic.json", "title": { "fr": "Diagnostic : un réseau mal configuré à réparer", "en": "Diagnostic: a misconfigured network to repair" } },
+    { "file": "topologie-demo.json", "title": { "fr": "Topologie de démonstration", "en": "Demo topology" } }
+  ]
+}

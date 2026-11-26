@@ -1,0 +1,18 @@
+--- étape 1
+200 PC1>SW1 ARP Request [broadcast]
+1405 SW1>INTRUS ARP Request [broadcast]
+1405 SW1>SRV1 ARP Request [broadcast]
+2410 INTRUS ignore ARP Request
+2610 SRV1>SW1 ARP Reply [unicast]
+3815 SW1>PC1 ARP Reply [unicast]
+5020 PC1>SW1 ICMP Echo Request [unicast]
+6225 SW1>SRV1 ICMP Echo Request [unicast]
+7430 SRV1>SW1 ICMP Echo Reply [unicast]
+8635 SW1>PC1 ICMP Echo Reply [unicast]
+--- étape 2
+10440 INTRUS>SW1 ARP Request [broadcast]
+11445 SW1 détruit ARP Request
+--- étape 3
+23040 INTRUS>SW1 ARP Request [broadcast]
+24045 SW1 détruit ARP Request
+fin 34840 finished

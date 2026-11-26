@@ -1,0 +1,52 @@
+{
+  "format": 1,
+  "id": "tcp",
+  "title": { "fr": "TCP : ouverture, données, fermeture", "en": "TCP: handshake, data, teardown" },
+  "summary": {
+    "fr": "PC1 ouvre une connexion TCP vers le port 5000 du serveur (trois segments), envoie un message qui est acquitté, puis la connexion est fermée (quatre segments). Une seconde tentative vise un port fermé.",
+    "en": "PC1 opens a TCP connection to port 5000 of the server (three segments), sends a message that gets acknowledged, then the connection is closed (four segments). A second attempt targets a closed port."
+  },
+  "objectives": {
+    "fr": [
+      "Suivre les numéros de séquence et d'acquittement dans l'inspecteur : ACK = prochain octet attendu.",
+      "Comprendre pourquoi SYN et FIN comptent chacun pour un octet.",
+      "Comparer avec UDP : ici, chaque envoi de données reçoit un accusé de réception."
+    ],
+    "en": [
+      "Follow sequence and acknowledgement numbers in the inspector: ACK = next expected byte.",
+      "Understand why SYN and FIN each count as one byte.",
+      "Compare with UDP: here, every data transfer gets an acknowledgement."
+    ]
+  },
+  "protocols": ["arp", "icmp", "tcp"],
+  "devices": [
+    { "id": "pc1", "type": "host", "name": "PC1", "position": [-6, 0, 0],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:10", "ip": "192.168.1.10", "prefix": 24 }] },
+    { "id": "sw1", "type": "switch", "name": "SW1", "position": [0, 0, 0] },
+    { "id": "srv1", "type": "server", "name": "SRV1", "position": [6, 0, 0],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:20", "ip": "192.168.1.20", "prefix": 24 }],
+      "services": { "tcp": { "listen": [5000] } } }
+  ],
+  "links": [
+    { "id": "l1", "a": "pc1:eth0", "b": "sw1:p1" },
+    { "id": "l2", "a": "sw1:p2", "b": "srv1:eth0" }
+  ],
+  "steps": [
+    {
+      "action": "tcp", "from": "pc1", "to": "srv1", "port": 5000, "data": "Bonjour SUP'COM",
+      "title": { "fr": "1. Une connexion complète vers le port 5000", "en": "1. A full connection to port 5000" },
+      "explanation": {
+        "fr": "Après ARP, observez les trois phases : SYN / SYN,ACK / ACK, puis les 15 octets de « Bonjour SUP'COM » et leur acquittement, enfin la fermeture en quatre segments.",
+        "en": "After ARP, watch the three phases: SYN / SYN,ACK / ACK, then the 15 bytes of \"Bonjour SUP'COM\" and their acknowledgement, and finally the four-segment teardown."
+      }
+    },
+    {
+      "action": "tcp", "from": "pc1", "to": "srv1", "port": 6000, "data": "Bonjour",
+      "title": { "fr": "2. Connexion refusée : port 6000 fermé", "en": "2. Connection refused: port 6000 closed" },
+      "explanation": {
+        "fr": "Aucune application n'écoute sur le port 6000. Le serveur répond au SYN par un segment RST : la connexion n'est jamais établie.",
+        "en": "No application listens on port 6000. The server answers the SYN with an RST segment: the connection is never established."
+      }
+    }
+  ]
+}

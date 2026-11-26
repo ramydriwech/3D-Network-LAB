@@ -1,0 +1,6 @@
+# Fins de ligne identiques sur Windows, macOS et Linux : sans cela, les fichiers de
+# référence des tests (tests/golden/) et l'empreinte du cache changeraient d'un poste à l'autre.
+* text=auto eol=lf
+
+*.glb binary
+*.png binary

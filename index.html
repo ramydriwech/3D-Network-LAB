@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>3D Network Topology</title>
+  <meta name="description" content="Comprendre les protocoles réseau (ARP, ICMP, DNS, DHCP, TCP, UDP, HTTP) en les regardant circuler dans une topologie 3D interactive.">
+  <meta name="theme-color" content="#0b1220">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Three.js (version WebGPU) est servi depuis le dépôt (vendor/three/) : aucune ressource externe,
+       l'application fonctionne donc hors ligne. Version figée : voir vendor/three/VERSION. -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three/three.webgpu.js",
+        "three/addons/": "./vendor/three/addons/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <!--
+    CONTRAT COMMUN — les zones ci-dessous sont réservées : chaque module remplit la sienne
+    et ne touche pas aux autres. Toute modification de ce fichier passe par une pull
+    request approuvée par les quatre.
+
+      #scene          canevas 3D                      src/render/      (Aziz)
+      #controls       lecture, pause, pas à pas…      src/ui/controls.js       (Ramy)
+      #explanations   explications pédagogiques       src/ui/explanations.js   (Ramy)
+      #info           équipement sélectionné          src/ui/infoPanel.js      (Ramy)
+      #inspector      champs d'un paquet              src/ui/inspector.js      (Ramy)
+      #journal        messages échangés               src/ui/journal.js        (Ramy)
+      #scenario-slot  choix du scénario               src/ui/scenarioPicker.js (Ramy)
+      #lang-slot      bouton FR/EN                    src/ui/i18n.js           (Ramy)
+      #install-slot   installation de la PWA          src/ui/install.js        (Ramy)
+      #xr-slot        bouton « Entrer en VR »         src/xr/          (Ayoub)
+  -->
+  <header class="topbar">
+    <h1 class="brand">
+      <img src="assets/icons/favicon.svg" alt="" width="28" height="28">
+      <span data-i18n="app.title">3D Network Topology</span>
+    </h1>
+    <div id="scenario-slot" class="scenario-slot"></div>
+    <div class="topbar-actions">
+      <div id="install-slot"></div>
+      <div id="xr-slot"></div>
+      <div id="lang-slot"></div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="stage" aria-label="Scène 3D">
+      <div id="scene"></div>
+      <p class="scene-hint" data-i18n="scene.hint"></p>
+      <div id="controls" class="controls" role="toolbar" aria-label="Commandes de la simulation"></div>
+    </section>
+
+    <aside class="side">
+      <section id="explanations" class="panel"></section>
+      <section id="info" class="panel"></section>
+      <section id="inspector" class="panel"></section>
+      <section id="journal" class="panel"></section>
+      <section id="diagnostic" class="panel"></section>
+      <section id="editor" class="panel"></section>
+      <section id="missions" class="panel"></section>
+    </aside>
+  </main>
+
+  <noscript>
+    <p class="fatal-error">Cette application a besoin de JavaScript. / This application needs JavaScript.</p>
+  </noscript>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

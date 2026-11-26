@@ -1,0 +1,17 @@
+--- étape 1
+200 PC1>SW1 Neighbor Solicitation [multicast]
+1407 SW1>PC2 Neighbor Solicitation [multicast]
+1407 SW1>PC3 Neighbor Solicitation [multicast]
+2414 PC3 ignore Neighbor Solicitation
+2614 PC2>SW1 Neighbor Advertisement [unicast]
+3821 SW1>PC1 Neighbor Advertisement [unicast]
+5028 PC1>SW1 ICMPv6 Echo Request [unicast]
+6233 SW1>PC2 ICMPv6 Echo Request [unicast]
+7438 PC2>SW1 ICMPv6 Echo Reply [unicast]
+8643 SW1>PC1 ICMPv6 Echo Reply [unicast]
+--- étape 2
+10448 PC1>SW1 ICMPv6 Echo Request [unicast]
+11653 SW1>PC2 ICMPv6 Echo Request [unicast]
+12858 PC2>SW1 ICMPv6 Echo Reply [unicast]
+14063 SW1>PC1 ICMPv6 Echo Reply [unicast]
+fin 15068 finished

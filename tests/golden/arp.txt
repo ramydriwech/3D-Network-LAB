@@ -1,0 +1,44 @@
+--- étape 1
+200 PC1>SW1 ARP Request [broadcast]
+1405 SW1>PC2 ARP Request [broadcast]
+1405 SW1>PC3 ARP Request [broadcast]
+1405 SW1>R1 ARP Request [broadcast]
+2410 PC3 ignore ARP Request
+2410 R1 ignore ARP Request
+2610 PC2>SW1 ARP Reply [unicast]
+3815 SW1>PC1 ARP Reply [unicast]
+5020 PC1>SW1 ICMP Echo Request [unicast]
+6225 SW1>PC2 ICMP Echo Request [unicast]
+7430 PC2>SW1 ICMP Echo Reply [unicast]
+8635 SW1>PC1 ICMP Echo Reply [unicast]
+--- étape 2
+10440 PC1>SW1 ICMP Echo Request [unicast]
+11645 SW1>PC2 ICMP Echo Request [unicast]
+12850 PC2>SW1 ICMP Echo Reply [unicast]
+14055 SW1>PC1 ICMP Echo Reply [unicast]
+--- étape 3
+15860 PC3>SW1 ARP Request [broadcast]
+17065 SW1>PC1 ARP Request [broadcast]
+17065 SW1>PC2 ARP Request [broadcast]
+17065 SW1>R1 ARP Request [broadcast]
+18070 PC1 ignore ARP Request
+18070 PC2 ignore ARP Request
+18070 R1 ignore ARP Request
+--- étape 4
+28460 PC2>SW1 ARP Request [broadcast]
+29665 SW1>PC1 ARP Request [broadcast]
+29665 SW1>PC3 ARP Request [broadcast]
+29665 SW1>R1 ARP Request [broadcast]
+30670 PC1 ignore ARP Request
+30670 PC3 ignore ARP Request
+30870 R1>SW1 ARP Reply [unicast]
+32075 SW1>PC2 ARP Reply [unicast]
+33280 PC2>SW1 ICMP Echo Request [unicast]
+34485 SW1>R1 ICMP Echo Request [unicast]
+35690 R1>SRV1 ARP Request [broadcast]
+36895 SRV1>R1 ARP Reply [unicast]
+38100 R1>SRV1 ICMP Echo Request [unicast]
+39305 SRV1>R1 ICMP Echo Reply [unicast]
+40510 R1>SW1 ICMP Echo Reply [unicast]
+41715 SW1>PC2 ICMP Echo Reply [unicast]
+fin 42720 finished

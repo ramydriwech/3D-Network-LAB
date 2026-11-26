@@ -1,0 +1,17 @@
+{
+  "name": "3d-network-topology",
+  "version": "1.0.0",
+  "description": "Visualisation 3D pédagogique des protocoles réseau (Three.js, WebXR, PWA) — SUP'COM",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prestart": "node tools/generate-precache.mjs",
+    "start": "node tools/serve.mjs",
+    "test": "node --test",
+    "precache": "node tools/generate-precache.mjs",
+    "models": "node tools/make-models.mjs",
+    "icons": "node tools/make-icons.mjs"
+  },
+  "engines": { "node": ">=20" },
+  "license": "MIT"
+}

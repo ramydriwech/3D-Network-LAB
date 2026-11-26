@@ -1,0 +1,64 @@
+{
+  "format": 1,
+  "id": "dns",
+  "title": { "fr": "DNS : du nom à l'adresse IP", "en": "DNS: from a name to an IP address" },
+  "summary": {
+    "fr": "PC1 demande à son serveur DNS l'adresse de www.supcom.tn, puis celle d'un nom qui n'existe pas, puis repose la première question : cette fois son cache répond.",
+    "en": "PC1 asks its DNS server for the address of www.supcom.tn, then for a name that does not exist, then asks the first question again: this time its cache answers."
+  },
+  "objectives": {
+    "fr": [
+      "Voir que la question et la réponse DNS voyagent dans des datagrammes UDP (port 53).",
+      "Retrouver dans la réponse le même identifiant que dans la question.",
+      "Comprendre l'intérêt du cache : la troisième demande ne produit aucun trafic."
+    ],
+    "en": [
+      "See that the DNS query and response travel in UDP datagrams (port 53).",
+      "Find in the response the same identifier as in the query.",
+      "Understand why caching matters: the third lookup produces no traffic."
+    ]
+  },
+  "protocols": ["arp", "icmp", "udp", "dns"],
+  "devices": [
+    { "id": "pc1", "type": "host", "name": "PC1", "position": [-6, 0, 0],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:10", "ip": "192.168.1.10", "prefix": 24 }],
+      "dns": "192.168.1.53" },
+    { "id": "sw1", "type": "switch", "name": "SW1", "position": [0, 0, 0] },
+    { "id": "dns1", "type": "server", "name": "DNS1", "position": [6, 0, -3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:53", "ip": "192.168.1.53", "prefix": 24 }],
+      "services": { "dns": { "records": { "www.supcom.tn": "192.168.1.80", "mail.supcom.tn": "192.168.1.25" } } } },
+    { "id": "web1", "type": "server", "name": "WEB1", "position": [6, 0, 3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:80", "ip": "192.168.1.80", "prefix": 24 }] }
+  ],
+  "links": [
+    { "id": "l1", "a": "pc1:eth0", "b": "sw1:p1" },
+    { "id": "l2", "a": "sw1:p2", "b": "dns1:eth0" },
+    { "id": "l3", "a": "sw1:p3", "b": "web1:eth0" }
+  ],
+  "steps": [
+    {
+      "action": "dns", "from": "pc1", "name": "www.supcom.tn",
+      "title": { "fr": "1. Résoudre www.supcom.tn", "en": "1. Resolve www.supcom.tn" },
+      "explanation": {
+        "fr": "PC1 connaît l'adresse de son serveur DNS (192.168.1.53) mais pas celle de www.supcom.tn. Il lui envoie une question de type A dans un datagramme UDP.",
+        "en": "PC1 knows the address of its DNS server (192.168.1.53) but not that of www.supcom.tn. It sends it a type A query in a UDP datagram."
+      }
+    },
+    {
+      "action": "dns", "from": "pc1", "name": "inconnu.supcom.tn",
+      "title": { "fr": "2. Un nom qui n'existe pas", "en": "2. A name that does not exist" },
+      "explanation": {
+        "fr": "Le serveur n'a aucun enregistrement pour ce nom : il répond quand même, avec le code d'erreur NXDOMAIN.",
+        "en": "The server has no record for this name: it still answers, with the NXDOMAIN error code."
+      }
+    },
+    {
+      "action": "dns", "from": "pc1", "name": "www.supcom.tn",
+      "title": { "fr": "3. La même question, une seconde fois", "en": "3. The same question, a second time" },
+      "explanation": {
+        "fr": "PC1 a gardé la première réponse dans son cache DNS. Aucun paquet ne circule : la réponse est immédiate.",
+        "en": "PC1 kept the first answer in its DNS cache. No packet travels: the answer is immediate."
+      }
+    }
+  ]
+}

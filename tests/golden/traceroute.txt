@@ -1,0 +1,36 @@
+--- étape 1
+200 PC1>R1 ARP Request [broadcast]
+1405 R1>PC1 ARP Reply [unicast]
+2610 PC1>R1 ICMP Echo Request [unicast]
+3615 R1 détruit ICMP Echo Request
+3815 R1>PC1 ICMP Time Exceeded [unicast]
+--- étape 2
+5620 PC1>R1 ICMP Echo Request [unicast]
+6825 R1>R2 ARP Request [broadcast]
+8030 R2>R1 ARP Reply [unicast]
+9235 R1>R2 ICMP Echo Request [unicast]
+10240 R2 détruit ICMP Echo Request
+10440 R2>R1 ICMP Time Exceeded [unicast]
+11645 R1>PC1 ICMP Time Exceeded [unicast]
+--- étape 3
+13450 PC1>R1 ICMP Echo Request [unicast]
+14655 R1>R2 ICMP Echo Request [unicast]
+15860 R2>R3 ARP Request [broadcast]
+17065 R3>R2 ARP Reply [unicast]
+18270 R2>R3 ICMP Echo Request [unicast]
+19275 R3 détruit ICMP Echo Request
+19475 R3>R2 ICMP Time Exceeded [unicast]
+20680 R2>R1 ICMP Time Exceeded [unicast]
+21885 R1>PC1 ICMP Time Exceeded [unicast]
+--- étape 4
+23690 PC1>R1 ICMP Echo Request [unicast]
+24895 R1>R2 ICMP Echo Request [unicast]
+26100 R2>R3 ICMP Echo Request [unicast]
+27305 R3>SRV1 ARP Request [broadcast]
+28510 SRV1>R3 ARP Reply [unicast]
+29715 R3>SRV1 ICMP Echo Request [unicast]
+30920 SRV1>R3 ICMP Echo Reply [unicast]
+32125 R3>R2 ICMP Echo Reply [unicast]
+33330 R2>R1 ICMP Echo Reply [unicast]
+34535 R1>PC1 ICMP Echo Reply [unicast]
+fin 35540 finished

@@ -1,0 +1,13 @@
+# Dépendances et fichiers de travail
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# Généré par tools/generate-precache.mjs (lancé par « npm start » et par la CI)
+precache-manifest.js
+
+# Dossier assemblé par la CI pour GitHub Pages
+_site/

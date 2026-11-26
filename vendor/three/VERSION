@@ -1,0 +1,2 @@
+three.js r187 (paquet npm three@0.187.0) — version figée, ne pas mettre à jour sans refaire les tests WebGPU et WebXR (docs/choix-moteur-rendu.md).
+Fichiers : three.webgpu.js (WebGPURenderer, avec son repli WebGL 2), three.tsl.js et three.core.js, copiés de build/ ; addons/ copiés de examples/jsm/.

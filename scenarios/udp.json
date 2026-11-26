@@ -1,0 +1,55 @@
+{
+  "format": 1,
+  "id": "udp",
+  "title": { "fr": "UDP : envoyer sans connexion", "en": "UDP: sending without a connection" },
+  "summary": {
+    "fr": "PC1 envoie un datagramme UDP au serveur, sans ouverture de connexion ni accusé de réception. Un second datagramme vise un port où rien n'écoute : c'est ICMP qui signale l'erreur.",
+    "en": "PC1 sends a UDP datagram to the server, with no connection setup and no acknowledgement. A second datagram targets a port where nothing listens: ICMP reports the error."
+  },
+  "objectives": {
+    "fr": [
+      "Constater qu'aucun message ne revient quand un datagramme UDP est bien reçu.",
+      "Repérer le rôle des ports : ils désignent l'application, pas la machine.",
+      "Voir qu'UDP ne signale rien lui-même : l'erreur de port fermé vient d'ICMP."
+    ],
+    "en": [
+      "Notice that nothing comes back when a UDP datagram is received correctly.",
+      "Spot the role of ports: they identify the application, not the machine.",
+      "See that UDP itself reports nothing: the closed-port error comes from ICMP."
+    ]
+  },
+  "protocols": ["arp", "icmp", "udp"],
+  "devices": [
+    { "id": "pc1", "type": "host", "name": "PC1", "position": [-6, 0, -2],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:10", "ip": "192.168.1.10", "prefix": 24 }] },
+    { "id": "pc2", "type": "host", "name": "PC2", "position": [-6, 0, 3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:11", "ip": "192.168.1.11", "prefix": 24 }] },
+    { "id": "sw1", "type": "switch", "name": "SW1", "position": [0, 0, 0] },
+    { "id": "srv1", "type": "server", "name": "SRV1", "position": [6, 0, 0],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:20", "ip": "192.168.1.20", "prefix": 24 }],
+      "services": { "udp": { "listen": [5005] } } }
+  ],
+  "links": [
+    { "id": "l1", "a": "pc1:eth0", "b": "sw1:p1" },
+    { "id": "l2", "a": "pc2:eth0", "b": "sw1:p2" },
+    { "id": "l3", "a": "sw1:p3", "b": "srv1:eth0" }
+  ],
+  "steps": [
+    {
+      "action": "udp", "from": "pc1", "to": "srv1", "port": 5005, "data": "temperature=21",
+      "title": { "fr": "1. Datagramme vers un port ouvert (5005)", "en": "1. Datagram to an open port (5005)" },
+      "explanation": {
+        "fr": "Une application de SRV1 écoute sur le port UDP 5005. PC1 lui envoie une mesure. Après la résolution ARP, un seul message circule : UDP ne confirme jamais la réception.",
+        "en": "An application on SRV1 listens on UDP port 5005. PC1 sends it a measurement. After ARP resolution, a single message travels: UDP never confirms reception."
+      }
+    },
+    {
+      "action": "udp", "from": "pc1", "to": "srv1", "port": 9999, "data": "temperature=22",
+      "title": { "fr": "2. Datagramme vers un port fermé (9999)", "en": "2. Datagram to a closed port (9999)" },
+      "explanation": {
+        "fr": "Aucune application n'écoute sur le port 9999 de SRV1. Le datagramme est détruit et SRV1 prévient PC1 avec un message ICMP « Port Unreachable ».",
+        "en": "No application listens on port 9999 of SRV1. The datagram is discarded and SRV1 warns PC1 with an ICMP \"Port Unreachable\" message."
+      }
+    }
+  ]
+}

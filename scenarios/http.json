@@ -1,0 +1,57 @@
+{
+  "format": 1,
+  "id": "http",
+  "title": { "fr": "HTTP : charger une page web", "en": "HTTP: loading a web page" },
+  "summary": {
+    "fr": "PC1 demande la page http://www.supcom.tn/. Trois protocoles s'enchaînent : DNS pour trouver l'adresse du serveur, TCP pour ouvrir une connexion fiable, HTTP pour demander et recevoir la page. Une seconde requête demande une page qui n'existe pas.",
+    "en": "PC1 requests the page http://www.supcom.tn/. Three protocols chain together: DNS to find the server's address, TCP to open a reliable connection, HTTP to request and receive the page. A second request asks for a page that does not exist."
+  },
+  "objectives": {
+    "fr": [
+      "Repérer l'ordre obligatoire : DNS, puis TCP, puis HTTP.",
+      "Voir dans l'inspecteur que la requête HTTP est transportée dans un segment TCP, lui-même dans un paquet IP.",
+      "Savoir qu'avec HTTPS, un échange TLS s'intercale après l'ouverture TCP pour chiffrer la suite (non simulé ici)."
+    ],
+    "en": [
+      "Spot the mandatory order: DNS, then TCP, then HTTP.",
+      "See in the inspector that the HTTP request rides inside a TCP segment, itself inside an IP packet.",
+      "Know that with HTTPS, a TLS exchange slots in after the TCP handshake to encrypt what follows (not simulated here)."
+    ]
+  },
+  "protocols": ["arp", "icmp", "udp", "dns", "tcp", "http"],
+  "devices": [
+    { "id": "pc1", "type": "host", "name": "PC1", "position": [-6, 0, 0],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:10", "ip": "192.168.1.10", "prefix": 24 }],
+      "dns": "192.168.1.53" },
+    { "id": "sw1", "type": "switch", "name": "SW1", "position": [0, 0, 0] },
+    { "id": "dns1", "type": "server", "name": "DNS1", "position": [6, 0, -3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:53", "ip": "192.168.1.53", "prefix": 24 }],
+      "services": { "dns": { "records": { "www.supcom.tn": "192.168.1.80" } } } },
+    { "id": "web1", "type": "server", "name": "WEB1", "position": [6, 0, 3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:80", "ip": "192.168.1.80", "prefix": 24 }],
+      "services": { "http": { "port": 80, "pages": { "/": { "title": "SUP'COM", "body": "<h1>Bienvenue sur le site de SUP'COM</h1>" } } } } }
+  ],
+  "links": [
+    { "id": "l1", "a": "pc1:eth0", "b": "sw1:p1" },
+    { "id": "l2", "a": "sw1:p2", "b": "dns1:eth0" },
+    { "id": "l3", "a": "sw1:p3", "b": "web1:eth0" }
+  ],
+  "steps": [
+    {
+      "action": "http", "from": "pc1", "url": "http://www.supcom.tn/",
+      "title": { "fr": "1. Charger http://www.supcom.tn/", "en": "1. Load http://www.supcom.tn/" },
+      "explanation": {
+        "fr": "Le navigateur de PC1 ne connaît que le nom du site. Suivez la question DNS, l'ouverture TCP vers le port 80, la requête GET /, la réponse 200 OK, puis la fermeture.",
+        "en": "PC1's browser only knows the site's name. Follow the DNS query, the TCP handshake to port 80, the GET / request, the 200 OK response, then the teardown."
+      }
+    },
+    {
+      "action": "http", "from": "pc1", "url": "http://www.supcom.tn/inconnu",
+      "title": { "fr": "2. Une page qui n'existe pas : 404", "en": "2. A page that does not exist: 404" },
+      "explanation": {
+        "fr": "L'adresse du serveur est déjà dans le cache DNS et dans le cache ARP : PC1 ouvre directement une nouvelle connexion TCP. Le serveur répond 404 Not Found.",
+        "en": "The server's address is already in the DNS cache and the ARP cache: PC1 opens a new TCP connection straight away. The server answers 404 Not Found."
+      }
+    }
+  ]
+}

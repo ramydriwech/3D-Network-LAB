@@ -1,0 +1,54 @@
+{
+  "format": 1,
+  "id": "ipv6",
+  "title": { "fr": "IPv6 : découverte de voisin et ping", "en": "IPv6: neighbour discovery and ping" },
+  "summary": {
+    "fr": "Trois PC en double pile (IPv4 et IPv6) sur un même switch. En IPv6, ARP est remplacé par NDP : la question « qui a cette adresse ? » n'est plus diffusée à tous mais envoyée à un groupe de multidiffusion.",
+    "en": "Three dual-stack PCs (IPv4 and IPv6) on one switch. In IPv6, ARP is replaced by NDP: the question \"who has this address?\" is no longer broadcast to everyone but sent to a multicast group."
+  },
+  "objectives": {
+    "fr": [
+      "Comparer avec le scénario Ping : la Neighbor Solicitation joue le rôle de la requête ARP.",
+      "Repérer dans l'inspecteur l'adresse MAC de destination 33:33:FF:… (multidiffusion) au lieu de FF:FF:FF:FF:FF:FF (diffusion).",
+      "Constater au second ping que le cache de voisins évite une nouvelle sollicitation."
+    ],
+    "en": [
+      "Compare with the Ping scenario: the Neighbor Solicitation plays the part of the ARP request.",
+      "Spot in the inspector the destination MAC 33:33:FF:… (multicast) instead of FF:FF:FF:FF:FF:FF (broadcast).",
+      "Notice on the second ping that the neighbour cache avoids a new solicitation."
+    ]
+  },
+  "protocols": ["ipv6"],
+  "devices": [
+    { "id": "pc1", "type": "host", "name": "PC1", "position": [-6, 0, 3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:06:10", "ip": "192.168.6.10", "prefix": 24, "ipv6": "2001:db8:6::10" }] },
+    { "id": "pc2", "type": "host", "name": "PC2", "position": [6, 0, 3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:06:11", "ip": "192.168.6.11", "prefix": 24, "ipv6": "2001:db8:6::11" }] },
+    { "id": "pc3", "type": "host", "name": "PC3", "position": [0, 0, -5],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:06:12", "ip": "192.168.6.12", "prefix": 24, "ipv6": "2001:db8:6::12" }] },
+    { "id": "sw1", "type": "switch", "name": "SW1", "position": [0, 0, 0] }
+  ],
+  "links": [
+    { "id": "l1", "a": "pc1:eth0", "b": "sw1:p1" },
+    { "id": "l2", "a": "pc2:eth0", "b": "sw1:p2" },
+    { "id": "l3", "a": "pc3:eth0", "b": "sw1:p3" }
+  ],
+  "steps": [
+    {
+      "action": "ping6", "from": "pc1", "to": "pc2",
+      "title": { "fr": "1. Premier ping IPv6 : PC1 → PC2", "en": "1. First IPv6 ping: PC1 → PC2" },
+      "explanation": {
+        "fr": "PC1 (2001:db8:6::10) veut joindre PC2 (2001:db8:6::11) mais ne connaît pas son adresse MAC. Il envoie une Neighbor Solicitation au groupe ff02::1:ff00:11 ; PC2 répond par une Neighbor Advertisement, puis le ping peut partir.",
+        "en": "PC1 (2001:db8:6::10) wants to reach PC2 (2001:db8:6::11) but does not know its MAC address. It sends a Neighbor Solicitation to the group ff02::1:ff00:11; PC2 answers with a Neighbor Advertisement, then the ping can leave."
+      }
+    },
+    {
+      "action": "ping6", "from": "pc1", "to": "pc2",
+      "title": { "fr": "2. Second ping : le cache de voisins suffit", "en": "2. Second ping: the neighbour cache is enough" },
+      "explanation": {
+        "fr": "PC1 a gardé l'adresse MAC de PC2 dans son cache de voisins : l'Echo Request part tout de suite, sans sollicitation.",
+        "en": "PC1 kept PC2's MAC address in its neighbour cache: the Echo Request leaves at once, with no solicitation."
+      }
+    }
+  ]
+}

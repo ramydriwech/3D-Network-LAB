@@ -1,0 +1,60 @@
+{
+  "format": 1,
+  "id": "dhcp",
+  "title": { "fr": "DHCP : obtenir une adresse IP", "en": "DHCP: getting an IP address" },
+  "summary": {
+    "fr": "PC1 vient d'être branché et n'a aucune adresse IP. En quatre messages (Discover, Offer, Request, Ack), le serveur DHCP lui fournit adresse, masque, passerelle et DNS. Un ping vers la passerelle prouve ensuite que la configuration fonctionne.",
+    "en": "PC1 has just been plugged in and has no IP address. In four messages (Discover, Offer, Request, Ack), the DHCP server gives it an address, mask, gateway and DNS. A ping to the gateway then proves that the configuration works."
+  },
+  "objectives": {
+    "fr": [
+      "Comprendre pourquoi le client écrit depuis 0.0.0.0 vers 255.255.255.255.",
+      "Retrouver le même identifiant de transaction dans les quatre messages.",
+      "Voir l'étiquette de PC1 afficher sa nouvelle adresse après le message Ack."
+    ],
+    "en": [
+      "Understand why the client writes from 0.0.0.0 to 255.255.255.255.",
+      "Find the same transaction identifier in all four messages.",
+      "See PC1's label show its new address after the Ack message."
+    ]
+  },
+  "protocols": ["arp", "icmp", "udp", "dhcp"],
+  "devices": [
+    { "id": "pc1", "type": "host", "name": "PC1", "position": [-6, 0, -3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:AA" }] },
+    { "id": "pc2", "type": "host", "name": "PC2", "position": [-6, 0, 3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:11", "ip": "192.168.1.11", "prefix": 24 }],
+      "gateway": "192.168.1.1" },
+    { "id": "sw1", "type": "switch", "name": "SW1", "position": [0, 0, 0] },
+    { "id": "dhcp1", "type": "server", "name": "DHCP1", "position": [6, 0, -3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:02", "ip": "192.168.1.2", "prefix": 24 }],
+      "gateway": "192.168.1.1",
+      "services": { "dhcp": { "start": "192.168.1.100", "end": "192.168.1.110", "prefix": 24, "gateway": "192.168.1.1", "dns": "192.168.1.2", "lease": 3600 } } },
+    { "id": "r1", "type": "router", "name": "R1", "position": [6, 0, 3],
+      "interfaces": [{ "name": "g0/0", "mac": "02:00:00:00:01:01", "ip": "192.168.1.1", "prefix": 24 }] }
+  ],
+  "links": [
+    { "id": "l1", "a": "pc1:eth0", "b": "sw1:p1" },
+    { "id": "l2", "a": "pc2:eth0", "b": "sw1:p2" },
+    { "id": "l3", "a": "sw1:p3", "b": "dhcp1:eth0" },
+    { "id": "l4", "a": "sw1:p4", "b": "r1:g0/0" }
+  ],
+  "steps": [
+    {
+      "action": "dhcp", "from": "pc1",
+      "title": { "fr": "1. Les quatre messages DHCP (DORA)", "en": "1. The four DHCP messages (DORA)" },
+      "explanation": {
+        "fr": "PC1 ne connaît ni son adresse ni celle du serveur : il ne peut que diffuser. Suivez Discover, Offer, Request et Ack, puis sélectionnez PC1 pour voir sa nouvelle configuration.",
+        "en": "PC1 knows neither its own address nor the server's: all it can do is broadcast. Follow Discover, Offer, Request and Ack, then select PC1 to see its new configuration."
+      }
+    },
+    {
+      "action": "ping", "from": "pc1", "to": "192.168.1.1",
+      "title": { "fr": "2. Vérification : ping vers la passerelle", "en": "2. Check: ping the gateway" },
+      "explanation": {
+        "fr": "Avec l'adresse reçue (192.168.1.100), PC1 peut maintenant utiliser ARP et ICMP comme n'importe quel poste configuré à la main.",
+        "en": "With the address it received (192.168.1.100), PC1 can now use ARP and ICMP like any manually configured machine."
+      }
+    }
+  ]
+}

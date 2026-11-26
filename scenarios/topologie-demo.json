@@ -1,0 +1,51 @@
+{
+  "format": 1,
+  "id": "topologie-demo",
+  "title": { "fr": "Topologie de démonstration", "en": "Demo topology" },
+  "summary": {
+    "fr": "Deux réseaux locaux reliés par un routeur. Un paquet de test traverse le réseau de PC1 jusqu'au serveur pour vérifier l'affichage et les commandes.",
+    "en": "Two local networks joined by a router. A test packet crosses the network from PC1 to the server to check the display and the controls."
+  },
+  "protocols": [],
+  "devices": [
+    { "id": "pc1", "type": "host", "name": "PC1", "position": [-8, 0, -3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:10", "ip": "192.168.1.10", "prefix": 24 }],
+      "gateway": "192.168.1.1" },
+    { "id": "pc2", "type": "host", "name": "PC2", "position": [-8, 0, 3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:11", "ip": "192.168.1.11", "prefix": 24 }],
+      "gateway": "192.168.1.1" },
+    { "id": "sw1", "type": "switch", "name": "SW1", "position": [-4, 0, 0] },
+    { "id": "r1", "type": "router", "name": "R1", "position": [0, 0, 0],
+      "interfaces": [
+        { "name": "g0/0", "mac": "02:00:00:00:01:01", "ip": "192.168.1.1", "prefix": 24 },
+        { "name": "g0/1", "mac": "02:00:00:00:02:01", "ip": "192.168.2.1", "prefix": 24 }
+      ] },
+    { "id": "sw2", "type": "switch", "name": "SW2", "position": [4, 0, 0] },
+    { "id": "pc3", "type": "host", "name": "PC3", "position": [8, 0, -3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:02:10", "ip": "192.168.2.10", "prefix": 24 }],
+      "gateway": "192.168.2.1" },
+    { "id": "srv1", "type": "server", "name": "SRV1", "position": [8, 0, 3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:02:20", "ip": "192.168.2.20", "prefix": 24 }],
+      "gateway": "192.168.2.1" }
+  ],
+  "links": [
+    { "id": "l1", "a": "pc1:eth0", "b": "sw1:p1" },
+    { "id": "l2", "a": "pc2:eth0", "b": "sw1:p2" },
+    { "id": "l3", "a": "sw1:p3", "b": "r1:g0/0" },
+    { "id": "l4", "a": "r1:g0/1", "b": "sw2:p1" },
+    { "id": "l5", "a": "sw2:p2", "b": "pc3:eth0" },
+    { "id": "l6", "a": "sw2:p3", "b": "srv1:eth0" }
+  ],
+  "steps": [
+    {
+      "action": "trace",
+      "path": ["pc1", "sw1", "r1", "sw2", "srv1"],
+      "label": "Test",
+      "title": { "fr": "Paquet de test", "en": "Test packet" },
+      "explanation": {
+        "fr": "Un paquet factice suit le chemin PC1 → SW1 → R1 → SW2 → SRV1. Aucun protocole n'intervient : on vérifie seulement que l'animation obéit aux commandes Lecture, Pause, Pas à pas, Vitesse et Réinitialiser.",
+        "en": "A dummy packet follows the path PC1 → SW1 → R1 → SW2 → SRV1. No protocol is involved: we only check that the animation obeys Play, Pause, Step, Speed and Reset."
+      }
+    }
+  ]
+}

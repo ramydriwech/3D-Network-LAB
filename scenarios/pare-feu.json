@@ -1,0 +1,95 @@
+{
+  "format": 1,
+  "id": "pare-feu",
+  "title": { "fr": "Pare-feu et NAT : sortir sur Internet, rester protégé", "en": "Firewall and NAT: going online while staying protected" },
+  "summary": {
+    "fr": "Le réseau d'une petite entreprise est relié à Internet par le pare-feu FW1. Les postes internes sortent avec l'adresse publique du pare-feu (NAT). Ce qui part de l'intérieur peut revenir ; ce qui vient d'Internet est bloqué, sauf le site web de la DMZ, ouvert par une règle explicite.",
+    "en": "A small company's network is connected to the Internet through firewall FW1. Internal computers go out with the firewall's public address (NAT). What leaves from inside may come back; what comes from the Internet is blocked, except the DMZ web site, opened by an explicit rule."
+  },
+  "objectives": {
+    "fr": [
+      "Voir la traduction d'adresse à l'aller et au retour (table NAT).",
+      "Comprendre le pare-feu à états : la réponse passe parce que la session a été notée.",
+      "Lire une liste d'accès : seul le port 80 du serveur web est ouvert depuis Internet."
+    ],
+    "en": [
+      "See the address translation going out and coming back (NAT table).",
+      "Understand the stateful firewall: the reply passes because the session was recorded.",
+      "Read an access list: only the web server's port 80 is open from the Internet."
+    ]
+  },
+  "protocols": ["arp", "icmp", "tcp", "http"],
+  "devices": [
+    { "id": "pc1", "type": "host", "name": "PC-BUREAU", "position": [-14, 0, -3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:F0:11", "ip": "192.168.1.10", "prefix": 24 }], "gateway": "192.168.1.1" },
+    { "id": "sw1", "type": "switch", "name": "SW1", "position": [-9, 0, -3] },
+    { "id": "fw1", "type": "firewall", "name": "FW1", "model": "fw-3g", "position": [-3, 0, 0],
+      "interfaces": [
+        { "name": "g0/0", "mac": "02:00:00:00:F0:01", "ip": "192.168.1.1", "prefix": 24, "zone": "inside", "nat": "inside" },
+        { "name": "g0/1", "mac": "02:00:00:00:F0:02", "ip": "203.0.113.2", "prefix": 29, "zone": "outside", "nat": "outside", "acl": { "in": "DEPUIS-INTERNET" } },
+        { "name": "g0/2", "mac": "02:00:00:00:F0:03", "ip": "172.16.1.1", "prefix": 24, "zone": "dmz", "nat": "inside" }
+      ],
+      "routes": [{ "network": "0.0.0.0", "prefix": 0, "via": "203.0.113.1" }],
+      "acls": { "DEPUIS-INTERNET": [{ "action": "permit", "proto": "tcp", "src": "any", "dst": "host 172.16.1.80", "port": 80 }] },
+      "nat": [
+        { "type": "static", "inside": "172.16.1.80", "outside": "203.0.113.5" },
+        { "type": "overload" }
+      ] },
+    { "id": "web1", "type": "server", "name": "WEB-DMZ", "position": [-3, 0, 6],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:F0:80", "ip": "172.16.1.80", "prefix": 24 }], "gateway": "172.16.1.1",
+      "services": { "http": { "port": 80, "pages": { "/": { "title": "Entreprise", "body": "<h1>Site public de l'entreprise</h1>" } } } } },
+    { "id": "isp", "type": "router", "name": "FAI", "position": [4, 0, 0],
+      "interfaces": [
+        { "name": "g0/0", "mac": "02:00:00:00:F0:04", "ip": "203.0.113.1", "prefix": 29 },
+        { "name": "g0/1", "mac": "02:00:00:00:F0:05", "ip": "198.51.100.1", "prefix": 24 }
+      ] },
+    { "id": "sw2", "type": "switch", "name": "INTERNET", "position": [9, 0, 0] },
+    { "id": "ext", "type": "server", "name": "SITE-EXTERNE", "position": [14, 0, -3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:F0:90", "ip": "198.51.100.80", "prefix": 24 }], "gateway": "198.51.100.1" },
+    { "id": "pirate", "type": "host", "name": "PC-INTERNET", "position": [14, 0, 3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:F0:66", "ip": "198.51.100.66", "prefix": 24 }], "gateway": "198.51.100.1" }
+  ],
+  "links": [
+    { "id": "l1", "a": "pc1:eth0", "b": "sw1:p1" },
+    { "id": "l2", "a": "sw1:p2", "b": "fw1:g0/0" },
+    { "id": "l3", "a": "fw1:g0/2", "b": "web1:eth0" },
+    { "id": "l4", "a": "fw1:g0/1", "b": "isp:g0/0" },
+    { "id": "l5", "a": "isp:g0/1", "b": "sw2:p1" },
+    { "id": "l6", "a": "ext:eth0", "b": "sw2:p2" },
+    { "id": "l7", "a": "pirate:eth0", "b": "sw2:p3" }
+  ],
+  "steps": [
+    {
+      "action": "ping", "from": "pc1", "to": "ext",
+      "title": { "fr": "1. Sortir sur Internet : NAT et session", "en": "1. Going online: NAT and session" },
+      "explanation": {
+        "fr": "Le ping va de la zone inside (niveau 100) vers outside (0) : FW1 l'autorise et note la session. En sortant, il remplace l'adresse privée 192.168.1.10 par son adresse publique 203.0.113.2 (NAT overload). La réponse revient vers 203.0.113.2 ; FW1 retrouve dans sa table à qui elle appartient, et la laisse passer car la session est connue.",
+        "en": "The ping goes from the inside zone (level 100) to outside (0): FW1 allows it and records the session. On the way out it replaces the private address 192.168.1.10 with its public address 203.0.113.2 (NAT overload). The reply comes back to 203.0.113.2; FW1 finds in its table who it belongs to, and lets it through since the session is known."
+      }
+    },
+    {
+      "action": "ping", "from": "pirate", "to": "203.0.113.5",
+      "title": { "fr": "2. Depuis Internet : bloqué", "en": "2. From the Internet: blocked" },
+      "explanation": {
+        "fr": "PC-INTERNET tente un ping vers l'adresse publique du serveur web. FW1 traduit 203.0.113.5 en 172.16.1.80, puis consulte la liste DEPUIS-INTERNET : elle n'autorise que TCP vers le port 80. Le ping tombe sous la règle implicite finale « tout refuser ».",
+        "en": "PC-INTERNET tries a ping to the web server's public address. FW1 translates 203.0.113.5 into 172.16.1.80, then checks the DEPUIS-INTERNET list: it only allows TCP to port 80. The ping falls under the final implicit \"deny everything\" rule."
+      }
+    },
+    {
+      "action": "http", "from": "pirate", "url": "http://203.0.113.5/",
+      "title": { "fr": "3. Le site web de la DMZ reste joignable", "en": "3. The DMZ web site remains reachable" },
+      "explanation": {
+        "fr": "Cette fois c'est une connexion TCP vers le port 80 : la règle « permit tcp any host 172.16.1.80 eq 80 » l'autorise. Le serveur est dans la DMZ (niveau 50), pas dans le réseau interne : même s'il était piraté, l'intérieur resterait protégé.",
+        "en": "This time it is a TCP connection to port 80: the rule \"permit tcp any host 172.16.1.80 eq 80\" allows it. The server sits in the DMZ (level 50), not in the internal network: even if it were hacked, the inside would stay protected."
+      }
+    },
+    {
+      "action": "ping", "from": "pc1", "to": "web1",
+      "title": { "fr": "4. De l'intérieur vers la DMZ", "en": "4. From inside to the DMZ" },
+      "explanation": {
+        "fr": "inside (100) vers dmz (50) : autorisé, comme toute communication vers une zone moins sûre. Ouvrez la console de FW1 : « show conn » liste les sessions, « show ip nat translations » la table NAT, « show access-lists » les compteurs des règles.",
+        "en": "inside (100) to dmz (50): allowed, like any traffic towards a less trusted zone. Open FW1's console: \"show conn\" lists the sessions, \"show ip nat translations\" the NAT table, \"show access-lists\" the rule counters."
+      }
+    }
+  ]
+}

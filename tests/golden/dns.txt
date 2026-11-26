@@ -1,0 +1,18 @@
+--- étape 1
+200 PC1>SW1 ARP Request [broadcast]
+1405 SW1>DNS1 ARP Request [broadcast]
+1405 SW1>WEB1 ARP Request [broadcast]
+2410 WEB1 ignore ARP Request
+2610 DNS1>SW1 ARP Reply [unicast]
+3815 SW1>PC1 ARP Reply [unicast]
+5020 PC1>SW1 DNS Query [unicast]
+6226 SW1>DNS1 DNS Query [unicast]
+7432 DNS1>SW1 DNS Response [unicast]
+8639 SW1>PC1 DNS Response [unicast]
+--- étape 2
+10446 PC1>SW1 DNS Query [unicast]
+11652 SW1>DNS1 DNS Query [unicast]
+12858 DNS1>SW1 DNS Response (NXDOMAIN) [unicast]
+14064 SW1>PC1 DNS Response (NXDOMAIN) [unicast]
+--- étape 3
+fin 15670 finished

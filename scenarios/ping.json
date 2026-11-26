@@ -1,0 +1,69 @@
+{
+  "format": 1,
+  "id": "ping",
+  "title": { "fr": "Ping : ARP puis ICMP", "en": "Ping: ARP then ICMP" },
+  "summary": {
+    "fr": "PC1 vérifie qu'il peut joindre PC2 (même réseau) puis PC3 (autre réseau, à travers le routeur R1). Avant chaque premier échange, ARP doit trouver l'adresse MAC du prochain équipement.",
+    "en": "PC1 checks that it can reach PC2 (same network) and then PC3 (another network, through router R1). Before each first exchange, ARP has to find the MAC address of the next device."
+  },
+  "objectives": {
+    "fr": [
+      "Voir pourquoi une requête ARP est diffusée à tous alors que la réponse ne l'est pas.",
+      "Observer le switch apprendre les adresses MAC puis cesser d'inonder ses ports.",
+      "Comprendre que, pour sortir de son réseau, PC1 cherche la MAC de la passerelle et non celle de PC3."
+    ],
+    "en": [
+      "See why an ARP request is broadcast to everyone while the reply is not.",
+      "Watch the switch learn MAC addresses and then stop flooding its ports.",
+      "Understand that, to leave its network, PC1 looks for the gateway's MAC, not PC3's."
+    ]
+  },
+  "protocols": ["arp", "icmp"],
+  "devices": [
+    { "id": "pc1", "type": "host", "name": "PC1", "position": [-8, 0, -3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:10", "ip": "192.168.1.10", "prefix": 24 }],
+      "gateway": "192.168.1.1" },
+    { "id": "pc2", "type": "host", "name": "PC2", "position": [-8, 0, 3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:01:11", "ip": "192.168.1.11", "prefix": 24 }],
+      "gateway": "192.168.1.1" },
+    { "id": "sw1", "type": "switch", "name": "SW1", "position": [-4, 0, 0] },
+    { "id": "r1", "type": "router", "name": "R1", "position": [0, 0, 0],
+      "interfaces": [
+        { "name": "g0/0", "mac": "02:00:00:00:01:01", "ip": "192.168.1.1", "prefix": 24 },
+        { "name": "g0/1", "mac": "02:00:00:00:02:01", "ip": "192.168.2.1", "prefix": 24 }
+      ] },
+    { "id": "sw2", "type": "switch", "name": "SW2", "position": [4, 0, 0] },
+    { "id": "pc3", "type": "host", "name": "PC3", "position": [8, 0, -3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:02:10", "ip": "192.168.2.10", "prefix": 24 }],
+      "gateway": "192.168.2.1" },
+    { "id": "pc4", "type": "host", "name": "PC4", "position": [8, 0, 3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:02:11", "ip": "192.168.2.11", "prefix": 24 }],
+      "gateway": "192.168.2.1" }
+  ],
+  "links": [
+    { "id": "l1", "a": "pc1:eth0", "b": "sw1:p1" },
+    { "id": "l2", "a": "pc2:eth0", "b": "sw1:p2" },
+    { "id": "l3", "a": "sw1:p3", "b": "r1:g0/0" },
+    { "id": "l4", "a": "r1:g0/1", "b": "sw2:p1" },
+    { "id": "l5", "a": "sw2:p2", "b": "pc3:eth0" },
+    { "id": "l6", "a": "sw2:p3", "b": "pc4:eth0" }
+  ],
+  "steps": [
+    {
+      "action": "ping", "from": "pc1", "to": "pc2",
+      "title": { "fr": "1. Ping dans le même réseau : PC1 → PC2", "en": "1. Ping inside one network: PC1 → PC2" },
+      "explanation": {
+        "fr": "PC2 (192.168.1.11) est dans le réseau de PC1 (192.168.1.0/24). PC1 doit d'abord découvrir l'adresse MAC de PC2 avec ARP ; ensuite seulement l'Echo Request ICMP peut partir.",
+        "en": "PC2 (192.168.1.11) is in PC1's network (192.168.1.0/24). PC1 first has to discover PC2's MAC address with ARP; only then can the ICMP Echo Request leave."
+      }
+    },
+    {
+      "action": "ping", "from": "pc1", "to": "pc3",
+      "title": { "fr": "2. Ping vers un autre réseau : PC1 → PC3", "en": "2. Ping to another network: PC1 → PC3" },
+      "explanation": {
+        "fr": "PC3 (192.168.2.10) n'est pas dans le réseau de PC1. PC1 confie donc le paquet à sa passerelle R1 : il cherche par ARP la MAC de R1, puis R1 cherche à son tour la MAC de PC3 de l'autre côté.",
+        "en": "PC3 (192.168.2.10) is outside PC1's network. PC1 therefore hands the packet to its gateway R1: it uses ARP to find R1's MAC, then R1 in turn looks for PC3's MAC on the other side."
+      }
+    }
+  ]
+}

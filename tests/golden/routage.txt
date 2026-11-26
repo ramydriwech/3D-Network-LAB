@@ -1,0 +1,22 @@
+--- étape 1
+200 PC1>R1 ARP Request [broadcast]
+1405 R1>PC1 ARP Reply [unicast]
+2610 PC1>R1 ICMP Echo Request [unicast]
+3815 R1>R2 ARP Request [broadcast]
+5020 R2>R1 ARP Reply [unicast]
+6225 R1>R2 ICMP Echo Request [unicast]
+7430 R2>PC2 ARP Request [broadcast]
+8635 PC2>R2 ARP Reply [unicast]
+9840 R2>PC2 ICMP Echo Request [unicast]
+11045 PC2>R2 ICMP Echo Reply [unicast]
+12250 R2>R1 ICMP Echo Reply [unicast]
+13455 R1>PC1 ICMP Echo Reply [unicast]
+--- étape 2
+15260 PC1>R1 ICMP Echo Request [unicast]
+16265 R1 détruit ICMP Echo Request
+16465 R1>PC1 ICMP Time Exceeded [unicast]
+--- étape 3
+18270 PC1>R1 ICMP Echo Request [unicast]
+19275 R1 détruit ICMP Echo Request
+19475 R1>PC1 ICMP Destination Unreachable (network) [unicast]
+fin 20480 finished

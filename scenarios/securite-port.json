@@ -1,0 +1,66 @@
+{
+  "format": 1,
+  "id": "securite-port",
+  "title": { "fr": "Sécurité des ports : un intrus sur la prise réseau", "en": "Port security: an intruder on the network socket" },
+  "summary": {
+    "fr": "Les prises du switch SW1 sont protégées : chacune n'accepte qu'une seule adresse MAC. Celle de PC1 est apprise automatiquement (« sticky ») ; celle de la prise 2 a été configurée pour le poste de la comptable. Quelqu'un a débranché ce poste et branché son propre portable à sa place.",
+    "en": "SW1's sockets are protected: each one accepts a single MAC address. PC1's is learned automatically (sticky); socket 2's was configured for the accountant's computer. Someone unplugged that computer and plugged in their own laptop instead."
+  },
+  "objectives": {
+    "fr": [
+      "Voir l'apprentissage « sticky » de la première adresse MAC vue sur un port.",
+      "Comprendre la violation : une adresse inconnue, et le port passe en err-disabled.",
+      "Savoir le réactiver depuis la console (shutdown puis no shutdown)."
+    ],
+    "en": [
+      "See the sticky learning of the first MAC address seen on a port.",
+      "Understand the violation: an unknown address, and the port goes err-disabled.",
+      "Know how to re-enable it from the console (shutdown then no shutdown)."
+    ]
+  },
+  "protocols": ["arp", "icmp"],
+  "devices": [
+    { "id": "pc1", "type": "host", "name": "PC1", "position": [-7, 0, -4],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:5E:11", "ip": "192.168.5.11", "prefix": 24 }] },
+    { "id": "intrus", "type": "host", "name": "INTRUS", "model": "pc-std", "position": [-7, 0, 3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:BA:D0", "ip": "192.168.5.12", "prefix": 24 }] },
+    { "id": "sw1", "type": "switch", "name": "SW1", "model": "sw-24m", "position": [0, 0, 0],
+      "ports": {
+        "p1": { "security": { "maximum": 1, "sticky": true, "violation": "shutdown" } },
+        "p2": { "security": { "maximum": 1, "macs": ["02:00:00:00:5E:12"], "violation": "shutdown" } }
+      } },
+    { "id": "srv1", "type": "server", "name": "SRV1", "position": [7, 0, 0],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:5E:20", "ip": "192.168.5.20", "prefix": 24 }] }
+  ],
+  "links": [
+    { "id": "l1", "a": "pc1:eth0", "b": "sw1:p1" },
+    { "id": "l2", "a": "intrus:eth0", "b": "sw1:p2" },
+    { "id": "l3", "a": "sw1:p5", "b": "srv1:eth0" }
+  ],
+  "steps": [
+    {
+      "action": "ping", "from": "pc1", "to": "srv1",
+      "title": { "fr": "1. PC1 : adresse apprise et retenue", "en": "1. PC1: address learned and kept" },
+      "explanation": {
+        "fr": "Le port 1 n'avait encore vu aucune adresse : SW1 retient celle de PC1 (sticky). Désormais, seul PC1 peut utiliser cette prise. Le ping passe normalement.",
+        "en": "Port 1 had not seen any address yet: SW1 keeps PC1's (sticky). From now on, only PC1 may use this socket. The ping goes through normally."
+      }
+    },
+    {
+      "action": "ping", "from": "intrus", "to": "srv1",
+      "title": { "fr": "2. L'intrus est démasqué", "en": "2. The intruder is caught" },
+      "explanation": {
+        "fr": "Le portable de l'intrus envoie sa requête ARP. Son adresse MAC n'est pas celle autorisée sur le port 2 : violation. SW1 coupe le port (err-disabled) et détruit la trame. Le câble devient rouge.",
+        "en": "The intruder's laptop sends its ARP request. Its MAC address is not the one allowed on port 2: violation. SW1 shuts the port (err-disabled) and discards the frame. The cable turns red."
+      }
+    },
+    {
+      "action": "ping", "from": "intrus", "to": "srv1",
+      "title": { "fr": "3. Le port reste coupé", "en": "3. The port stays shut" },
+      "explanation": {
+        "fr": "Nouvel essai : la trame n'entre même plus dans le switch. Un administrateur doit vérifier la prise, puis réactiver le port depuis la console de SW1 : « interface p2 », « shutdown », « no shutdown ». Essayez « show port-security ».",
+        "en": "New attempt: the frame does not even enter the switch. An administrator must check the socket, then re-enable the port from SW1's console: \"interface p2\", \"shutdown\", \"no shutdown\". Try \"show port-security\"."
+      }
+    }
+  ]
+}

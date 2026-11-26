@@ -1,0 +1,103 @@
+# Qui possède quel fichier (onglet « Fichiers » du plan). GitHub demande automatiquement
+# la relecture du propriétaire quand une pull request touche l'un de ses fichiers.
+# La DERNIÈRE règle qui correspond l'emporte : les règles précises sont donc en bas.
+#
+# À FAIRE UNE FOIS : remplacer les quatre identifiants ci-dessous par les vrais noms
+# d'utilisateur GitHub de l'équipe (rechercher/remplacer dans ce fichier).
+#   @GITHUB-RAMY    Rami Driouech
+#   @GITHUB-AZIZ    Mohamed Aziz Saoudi
+#   @GITHUB-KHALIL  Khalil Krifa
+#   @GITHUB-AYOUB   Ayoub Ben Sabbeh
+
+# --- Ramy : page, style, interface, DHCP et HTTP
+/index.html                     @GITHUB-RAMY
+/styles.css                     @GITHUB-RAMY
+/src/ui/                        @GITHUB-RAMY
+/README.md                      @GITHUB-RAMY
+/docs/manuel.md                 @GITHUB-RAMY
+/docs/cahier-conceptuel.md      @GITHUB-RAMY
+/docs/conception/maquette.*     @GITHUB-RAMY
+/docs/conception/cas-utilisation.md @GITHUB-RAMY
+
+# --- Aziz : rendu 3D, Three.js figé, modèles, ICMP, UDP, DNS
+/src/render/                    @GITHUB-AZIZ
+/vendor/three/                  @GITHUB-AZIZ
+/assets/models/                 @GITHUB-AZIZ
+/tools/make-models.mjs          @GITHUB-AZIZ
+/docs/api-rendu.md              @GITHUB-AZIZ
+/docs/rendu-3d.md               @GITHUB-AZIZ
+/docs/tests-appareils.md        @GITHUB-AZIZ
+/docs/conception/sequence-ping.md @GITHUB-AZIZ
+
+# --- Khalil : moteur, contrats communs, PC et routeur, ARP, TCP, routage
+/simulation.js                  @GITHUB-KHALIL
+/src/sim/                       @GITHUB-KHALIL
+/tests/                         @GITHUB-KHALIL
+/docs/format-scenario.md        @GITHUB-KHALIL
+/docs/contrats.md               @GITHUB-KHALIL
+/docs/simulation.md             @GITHUB-KHALIL
+/docs/architecture.md           @GITHUB-KHALIL
+/docs/conception/classes.md     @GITHUB-KHALIL
+
+# --- Ayoub : démarrage, PWA, CI, déploiement, VR, animation des paquets, switch
+/main.js                        @GITHUB-AYOUB
+/manifest.json                  @GITHUB-AYOUB
+/sw.js                          @GITHUB-AYOUB
+/package.json                   @GITHUB-AYOUB
+/.github/                       @GITHUB-AYOUB
+/tools/                         @GITHUB-AYOUB
+/src/xr/                        @GITHUB-AYOUB
+/assets/icons/                  @GITHUB-AYOUB
+/docs/choix-moteur-rendu.md     @GITHUB-AYOUB
+/docs/lancement-deploiement.md  @GITHUB-AYOUB
+/docs/lighthouse.md             @GITHUB-AYOUB
+/docs/conception/deploiement.md @GITHUB-AYOUB
+
+# --- Exceptions à l'intérieur des dossiers ci-dessus
+/src/render/packetAnimator.js   @GITHUB-AYOUB
+/src/sim/devices/switch.js      @GITHUB-AYOUB
+/scenarios/ping.json            @GITHUB-AYOUB
+/tests/switch.test.js           @GITHUB-AYOUB
+/tests/precache.test.js         @GITHUB-AYOUB
+/tools/make-models.mjs          @GITHUB-AZIZ
+
+# --- Protocoles : code, scénario, tests et documentation vont ensemble
+/src/sim/protocols/dhcp.js      @GITHUB-RAMY
+/src/sim/protocols/http.js      @GITHUB-RAMY
+/scenarios/dhcp.json            @GITHUB-RAMY
+/scenarios/http.json            @GITHUB-RAMY
+/tests/dhcp.test.js             @GITHUB-RAMY
+/tests/http.test.js             @GITHUB-RAMY
+/tests/ui-i18n.test.js          @GITHUB-RAMY
+/docs/protocoles/dhcp.md        @GITHUB-RAMY
+/docs/protocoles/http.md        @GITHUB-RAMY
+
+/src/sim/protocols/icmp.js      @GITHUB-AZIZ
+/src/sim/protocols/udp.js       @GITHUB-AZIZ
+/src/sim/protocols/dns.js       @GITHUB-AZIZ
+/scenarios/udp.json             @GITHUB-AZIZ
+/scenarios/dns.json             @GITHUB-AZIZ
+/tests/icmp.test.js             @GITHUB-AZIZ
+/tests/udp.test.js              @GITHUB-AZIZ
+/tests/dns.test.js              @GITHUB-AZIZ
+/tests/render-api.test.js       @GITHUB-AZIZ
+/tests/packetStyles.test.js     @GITHUB-AZIZ
+/docs/protocoles/icmp.md        @GITHUB-AZIZ
+/docs/protocoles/udp.md         @GITHUB-AZIZ
+/docs/protocoles/dns.md         @GITHUB-AZIZ
+
+/scenarios/topologie-demo.json  @GITHUB-KHALIL
+/scenarios/tcp.json             @GITHUB-KHALIL
+/scenarios/routage.json         @GITHUB-KHALIL
+/scenarios/ipv6.json            @GITHUB-KHALIL
+/docs/protocoles/arp.md         @GITHUB-KHALIL
+/docs/protocoles/tcp.md         @GITHUB-KHALIL
+/docs/protocoles/routage.md     @GITHUB-KHALIL
+/docs/protocoles/ipv6.md        @GITHUB-KHALIL
+
+# --- Fichiers partagés (contrats) : modification = pull request approuvée par les quatre
+/src/sim/events.js              @GITHUB-RAMY @GITHUB-AZIZ @GITHUB-KHALIL @GITHUB-AYOUB
+/src/sim/scenario.js            @GITHUB-RAMY @GITHUB-AZIZ @GITHUB-KHALIL @GITHUB-AYOUB
+/docs/format-scenario.md        @GITHUB-RAMY @GITHUB-AZIZ @GITHUB-KHALIL @GITHUB-AYOUB
+/index.html                     @GITHUB-RAMY @GITHUB-AZIZ @GITHUB-KHALIL @GITHUB-AYOUB
+/scenarios/index.json           @GITHUB-RAMY @GITHUB-AZIZ @GITHUB-KHALIL @GITHUB-AYOUB

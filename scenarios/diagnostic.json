@@ -1,0 +1,83 @@
+{
+  "format": 1,
+  "id": "diagnostic",
+  "title": { "fr": "Diagnostic : un réseau mal configuré à réparer", "en": "Diagnostic: a misconfigured network to repair" },
+  "summary": {
+    "fr": "Deux réseaux locaux reliés par deux routeurs… et plusieurs erreurs de configuration cachées. Jouez les étapes pour voir les pannes, ouvrez l'onglet Diagnostic, appliquez les corrections une par une et rejouez jusqu'à ce que tout passe.",
+    "en": "Two local networks joined by two routers… and several hidden configuration mistakes. Play the steps to see the failures, open the Diagnostic tab, apply the fixes one by one and replay until everything works."
+  },
+  "objectives": {
+    "fr": [
+      "Relier chaque panne observée à sa cause : route manquante, passerelle hors réseau, adresse en double, DNS introuvable.",
+      "Comprendre qu'un ping peut échouer au RETOUR : la requête arrive, mais la réponse n'a pas de chemin.",
+      "Repérer un câble qui bride un lien et le remplacer."
+    ],
+    "en": [
+      "Link each observed failure to its cause: missing route, gateway outside the network, duplicate address, unreachable DNS.",
+      "Understand that a ping can fail on the WAY BACK: the request arrives, but the reply has no path.",
+      "Spot a cable that limits a link and replace it."
+    ]
+  },
+  "protocols": ["arp", "icmp"],
+  "devices": [
+    { "id": "pc1", "type": "host", "name": "PC1", "position": [-12, 0, -4],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:0D:11", "ip": "10.1.1.10", "prefix": 24 }], "gateway": "10.1.1.1" },
+    { "id": "pc2", "type": "host", "name": "PC2", "position": [-12, 0, 0],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:0D:12", "ip": "10.1.1.10", "prefix": 24 }], "gateway": "10.1.1.1" },
+    { "id": "pc3", "type": "host", "name": "PC3", "position": [-12, 0, 4],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:0D:13", "ip": "10.1.1.12", "prefix": 24 }], "gateway": "10.1.2.1" },
+    { "id": "sw1", "type": "switch", "name": "SW1", "position": [-6, 0, 0] },
+    { "id": "r1", "type": "router", "name": "R1", "position": [-1, 0, 0],
+      "interfaces": [
+        { "name": "g0/0", "mac": "02:00:00:00:0D:01", "ip": "10.1.1.1", "prefix": 24 },
+        { "name": "g0/1", "mac": "02:00:00:00:0D:02", "ip": "10.0.12.1", "prefix": 30 }
+      ],
+      "routes": [{ "network": "10.2.2.0", "prefix": 24, "via": "10.0.12.2" }] },
+    { "id": "r2", "type": "router", "name": "R2", "position": [4, 0, 0],
+      "interfaces": [
+        { "name": "g0/0", "mac": "02:00:00:00:0D:03", "ip": "10.0.12.2", "prefix": 30 },
+        { "name": "g0/1", "mac": "02:00:00:00:0D:04", "ip": "10.2.2.1", "prefix": 24 }
+      ] },
+    { "id": "sw2", "type": "switch", "name": "SW2", "position": [9, 0, 0] },
+    { "id": "pc4", "type": "host", "name": "PC4", "position": [14, 0, -3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:0D:14", "ip": "10.2.2.10", "prefix": 24 }], "gateway": "10.2.2.1", "dns": "10.2.2.53" },
+    { "id": "srv1", "type": "server", "name": "SRV1", "position": [14, 0, 3],
+      "interfaces": [{ "name": "eth0", "mac": "02:00:00:00:0D:20", "ip": "10.2.2.20", "prefix": 24 }], "gateway": "10.2.2.1" }
+  ],
+  "links": [
+    { "id": "l1", "a": "pc1:eth0", "b": "sw1:p1" },
+    { "id": "l2", "a": "pc2:eth0", "b": "sw1:p2" },
+    { "id": "l3", "a": "pc3:eth0", "b": "sw1:p3" },
+    { "id": "l4", "a": "sw1:p4", "b": "r1:g0/0" },
+    { "id": "l5", "a": "r1:g0/1", "b": "r2:g0/0" },
+    { "id": "l6", "a": "r2:g0/1", "b": "sw2:p1" },
+    { "id": "l7", "a": "pc4:eth0", "b": "sw2:p2" },
+    { "id": "l8", "a": "srv1:eth0", "b": "sw2:p3", "cable": "cat5" }
+  ],
+  "steps": [
+    {
+      "action": "ping", "from": "pc1", "to": "pc4",
+      "title": { "fr": "1. PC1 → PC4 : la réponse se perd", "en": "1. PC1 → PC4: the reply gets lost" },
+      "explanation": {
+        "fr": "La requête traverse R1 puis R2 et arrive chez PC4. Mais la réponse, adressée au réseau 10.1.1.0/24, est détruite par R2 : il ne connaît aucun chemin vers ce réseau. Le diagnostic propose la route qui manque.",
+        "en": "The request crosses R1 then R2 and reaches PC4. But the reply, addressed to network 10.1.1.0/24, is destroyed by R2: it knows no path to that network. The diagnostic suggests the missing route."
+      }
+    },
+    {
+      "action": "ping", "from": "pc3", "to": "srv1",
+      "title": { "fr": "2. PC3 → SRV1 : rien ne sort", "en": "2. PC3 → SRV1: nothing gets out" },
+      "explanation": {
+        "fr": "La passerelle de PC3 (10.1.2.1) n'est pas dans son réseau 10.1.1.0/24 : il ne peut pas la joindre, aucun paquet ne quitte le réseau local.",
+        "en": "PC3's gateway (10.1.2.1) is not in its network 10.1.1.0/24: it cannot reach it, no packet leaves the local network."
+      }
+    },
+    {
+      "action": "ping", "from": "pc4", "to": "srv1",
+      "title": { "fr": "3. PC4 → SRV1 : ça passe, mais lentement", "en": "3. PC4 → SRV1: it works, but slowly" },
+      "explanation": {
+        "fr": "Même réseau, pas de routeur : le ping réussit. Regardez cependant le lien de SRV1 : un vieux câble Cat 5 le limite à 100 Mb/s (étiquette orange sur le câble).",
+        "en": "Same network, no router: the ping succeeds. But look at SRV1's link: an old Cat 5 cable limits it to 100 Mb/s (orange tag on the cable)."
+      }
+    }
+  ]
+}
