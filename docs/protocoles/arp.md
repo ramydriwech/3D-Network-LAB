@@ -5,8 +5,8 @@ de fabriquer la trame Ethernet qui transporte le paquet IP.
 
 | | |
 | --- | --- |
-| Code | `src/sim/protocols/arp.js` |
-| Tests | `tests/arp.test.js` |
+| Code | `src/sim/protocols/arp.mjs` |
+| Tests | `tests/arp.test.mjs` |
 | Scénario | `scenarios/ping.json` (ARP précède chaque premier échange) |
 | Couche | liaison |
 
@@ -21,7 +21,7 @@ de fabriquer la trame Ethernet qui transporte le paquet IP.
 5. Sans réponse au bout de 12 s simulées, la résolution échoue (`arp.timeout`) et le paquet en attente est abandonné.
 
 Pour sortir de son réseau, un hôte demande la MAC **de sa passerelle**, jamais celle de la destination finale :
-c'est `IpNode.sendIp()` (`src/sim/devices/host.js`) qui choisit le prochain saut, ARP ne fait que le résoudre.
+c'est `IpNode.sendIp()` (`src/sim/devices/host.mjs`) qui choisit le prochain saut, ARP ne fait que le résoudre.
 
 ## Ce que montre l'inspecteur
 

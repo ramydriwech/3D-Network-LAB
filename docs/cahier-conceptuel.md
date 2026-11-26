@@ -97,10 +97,10 @@ a permis de développer l'interface, la scène et la VR sans conflit.
 
 | Concept | Utilisation |
 | --- | --- |
-| WebGPU | rendu classique par `WebGPURenderer` ; WebGL 2 en secours et pour la VR (`src/render/scene.js`) |
-| Session XR | entrée et sortie du mode `immersive-vr` (`src/xr/session.js`) |
+| WebGPU | tout le rendu, à l'écran et en VR, par `WebGPURenderer` en WebGPU seulement (`src/render/scene.mjs`, `src/xr/gpuBridge.mjs`) |
+| Session XR | entrée et sortie du mode `immersive-vr` (`src/xr/session.mjs`) |
 | Raycasting | sélection d'un équipement ou d'un paquet, à la souris, au doigt ou à la manette (`pick()`) |
-| Évènements discrets | simulation déterministe, indépendante des images affichées (`src/sim/engine.js`) |
+| Évènements discrets | simulation déterministe, indépendante des images affichées (`src/sim/engine.mjs`) |
 | JSON | description des topologies et des scénarios (`scenarios/`) |
 | PWA | manifest pour l'installation, Service Worker pour le cache |
 | Hit testing (option) | non réalisé |

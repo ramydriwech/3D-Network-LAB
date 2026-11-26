@@ -25,7 +25,7 @@ jobs:
       - name: Archive du site
         run: |
           mkdir _site
-          cp -r index.html styles.css main.js simulation.js manifest.json sw.js precache-manifest.js src scenarios assets vendor _site/
+          cp -r index.html styles.css main.mjs simulation.mjs manifest.json sw.mjs precache-manifest.mjs src scenarios assets vendor _site/
           cd _site && zip -r ../3d-network-topology-${{ github.ref_name }}.zip .
       - name: Créer la release
         env:

@@ -1,10 +1,10 @@
-// Génère precache-manifest.js : la liste des fichiers que le Service Worker (sw.js) met
+// Génère precache-manifest.mjs : la liste des fichiers que le Service Worker (sw.mjs) met
 // en cache pour l'usage hors ligne, avec une version calculée d'après leur contenu.
 //
 // Lancé automatiquement par « npm start » et par la CI avant chaque déploiement : personne
 // n'a besoin de tenir cette liste à la main, et un fichier ajouté n'est jamais oublié.
 //
-//   node tools/generate-precache.mjs           écrit precache-manifest.js
+//   node tools/generate-precache.mjs           écrit precache-manifest.mjs
 //   node tools/generate-precache.mjs --print   affiche la liste sans rien écrire
 
 import fs from 'node:fs';
@@ -13,10 +13,10 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-export const OUTPUT = 'precache-manifest.js';
+export const OUTPUT = 'precache-manifest.mjs';
 
 /** Fichiers de la racine nécessaires à l'exécution. */
-export const ROOT_FILES = ['index.html', 'styles.css', 'main.js', 'simulation.js', 'manifest.json'];
+export const ROOT_FILES = ['index.html', 'styles.css', 'main.mjs', 'simulation.mjs', 'manifest.json'];
 /** Dossiers entièrement mis en cache. Les tests, la doc et les outils n'en font pas partie. */
 export const DIRECTORIES = ['src', 'scenarios', 'assets', 'vendor'];
 /** Fichiers présents dans ces dossiers mais inutiles au navigateur. */
@@ -49,8 +49,8 @@ export function buildManifest(root = DEFAULT_ROOT) {
     hash.update(file);
     hash.update(fs.readFileSync(path.join(root, file)));
   }
-  // sw.js fait partie de l'empreinte : le modifier doit aussi renouveler le cache.
-  if (fs.existsSync(path.join(root, 'sw.js'))) hash.update(fs.readFileSync(path.join(root, 'sw.js')));
+  // sw.mjs fait partie de l'empreinte : le modifier doit aussi renouveler le cache.
+  if (fs.existsSync(path.join(root, 'sw.mjs'))) hash.update(fs.readFileSync(path.join(root, 'sw.mjs')));
   // './' : la page elle-même, pour que l'adresse du site s'ouvre hors ligne.
   return { version: hash.digest('hex').slice(0, 12), files: ['./', ...files] };
 }

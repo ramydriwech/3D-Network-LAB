@@ -1,6 +1,6 @@
 # La simulation
 
-Ce document explique comment fonctionne le moteur (`simulation.js`, `src/sim/`) et comment y ajouter un protocole
+Ce document explique comment fonctionne le moteur (`simulation.mjs`, `src/sim/`) et comment y ajouter un protocole
 ou un scénario. Les protocoles eux-mêmes sont décrits dans [protocoles/](protocoles/).
 
 ## 1. Une simulation à évènements discrets
@@ -24,26 +24,26 @@ Conséquences :
   rapide, avec moins d'images. Le rendu se contente de lire `sim.now` pour placer les paquets.
 - **La vitesse est un simple facteur** : `engine.tick(dt)` avance l'horloge de `dt × vitesse`.
 
-Deux durées fixent le rythme (dans `src/sim/events.js`) : `HOP_DURATION = 1000` ms pour traverser un câble,
+Deux durées fixent le rythme (dans `src/sim/events.mjs`) : `HOP_DURATION = 1000` ms pour traverser un câble,
 `PROCESS_DELAY = 200` ms de traitement avant d'émettre.
 
 ## 2. Les modules
 
 | Fichier | Rôle |
 | --- | --- |
-| `simulation.js` | façade : assemble tout, seul point d'entrée du reste de l'application |
-| `src/sim/engine.js` | file d'évènements, horloge, vitesse, pas à pas |
-| `src/sim/state.js` | états prêt / lecture / pause / terminé (patron State) |
-| `src/sim/commands.js` | commandes (patron Command) |
-| `src/sim/eventBus.js` | bus d'évènements (patron Observer) |
-| `src/sim/events.js` | **contrat** : sujets du bus, forme d'un paquet, contrat d'un protocole |
-| `src/sim/scenario.js` | **contrat** : validation et chargement d'un scénario |
-| `src/sim/registry.js` | registre des protocoles (patron Strategy), chargés à la demande |
-| `src/sim/network.js` | équipements, câbles, circulation des trames |
-| `src/sim/addr.js` | calculs d'adresses MAC et IPv4 |
+| `simulation.mjs` | façade : assemble tout, seul point d'entrée du reste de l'application |
+| `src/sim/engine.mjs` | file d'évènements, horloge, vitesse, pas à pas |
+| `src/sim/state.mjs` | états prêt / lecture / pause / terminé (patron State) |
+| `src/sim/commands.mjs` | commandes (patron Command) |
+| `src/sim/eventBus.mjs` | bus d'évènements (patron Observer) |
+| `src/sim/events.mjs` | **contrat** : sujets du bus, forme d'un paquet, contrat d'un protocole |
+| `src/sim/scenario.mjs` | **contrat** : validation et chargement d'un scénario |
+| `src/sim/registry.mjs` | registre des protocoles (patron Strategy), chargés à la demande |
+| `src/sim/network.mjs` | équipements, câbles, circulation des trames |
+| `src/sim/addr.mjs` | calculs d'adresses MAC et IPv4 |
 | `src/sim/devices/` | comportement d'un hôte, d'un routeur, d'un switch (patron Factory) |
 | `src/sim/protocols/` | un fichier par protocole |
-| `src/sim/mockEngine.js` | fausse simulation pour développer l'interface seule |
+| `src/sim/mockEngine.mjs` | fausse simulation pour développer l'interface seule |
 
 ## 3. Le trajet d'un paquet
 
@@ -76,11 +76,11 @@ DHCP repartent de zéro.
 
 ## 6. Ajouter un protocole
 
-1. Créer `src/sim/protocols/<id>.js` qui exporte par défaut un objet conforme au contrat ([contrats.md](contrats.md), § 4).
+1. Créer `src/sim/protocols/<id>.mjs` qui exporte par défaut un objet conforme au contrat ([contrats.md](contrats.md), § 4).
 2. Dans `install(device, net)`, brancher les réceptions : `device.on('ip:MONPROTO', (packet, iface) => …)`.
 3. Émettre avec `device.sendIp({ dst, proto, protocol, label, explain, … })` : le choix de la route, ARP et la trame Ethernet sont pris en charge.
 4. Écrire un texte `{ fr, en }` pour chaque explication dans `texts`.
-5. Si la famille de paquets est nouvelle, l'ajouter à `PROTOCOL_IDS` (contrat : pull request à quatre) et lui donner une couleur dans `src/render/packetStyles.js`.
+5. Si la famille de paquets est nouvelle, l'ajouter à `PROTOCOL_IDS` (contrat : pull request à quatre) et lui donner une couleur dans `src/render/packetStyles.mjs`.
 6. Écrire le scénario, l'ajouter à `scenarios/index.json`, écrire les tests.
 
 Aucune autre modification : ni le moteur, ni l'interface, ni le rendu ne connaissent la liste des protocoles.
@@ -89,12 +89,12 @@ Aucune autre modification : ni le moteur, ni l'interface, ni le rendu ne connais
 
 | Fichier | Vérifie |
 | --- | --- |
-| `tests/contrats.test.js` | adresses, format des scénarios, forme des paquets, contrat des protocoles, commandes, mock |
-| `tests/engine.test.js`, `tests/eventBus.test.js` | ordre des évènements, vitesse, pas à pas, états, bus |
-| `tests/<protocole>.test.js` | la suite exacte des messages de chaque protocole et ses cas d'erreur |
-| `tests/regression.test.js` | chaque scénario du catalogue, comparé à sa trace de référence (`tests/golden/`) ; déterminisme ; textes fr/en présents |
+| `tests/contrats.test.mjs` | adresses, format des scénarios, forme des paquets, contrat des protocoles, commandes, mock |
+| `tests/engine.test.mjs`, `tests/eventBus.test.mjs` | ordre des évènements, vitesse, pas à pas, états, bus |
+| `tests/<protocole>.test.mjs` | la suite exacte des messages de chaque protocole et ses cas d'erreur |
+| `tests/regression.test.mjs` | chaque scénario du catalogue, comparé à sa trace de référence (`tests/golden/`) ; déterminisme ; textes fr/en présents |
 
-Après un changement **voulu** du comportement : `UPDATE_GOLDEN=1 node --test tests/regression.test.js`, puis relire le diff des fichiers `tests/golden/`.
+Après un changement **voulu** du comportement : `UPDATE_GOLDEN=1 node --test tests/regression.test.mjs`, puis relire le diff des fichiers `tests/golden/`.
 
 ## 8. Simplifications assumées
 

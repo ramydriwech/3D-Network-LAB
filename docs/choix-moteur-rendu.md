@@ -1,60 +1,66 @@
-# Choix du moteur de rendu : WebGPU et WebXR
+# Choix du moteur de rendu : 100 % WebGPU, VR comprise
 
 Tâche n° 16 (S1) : tester WebXR dans l'émulateur pour fixer le moteur de rendu **avant** d'écrire le reste de la scène.
-C'est le premier risque du cahier des charges (« WebXR/WebGPU incompatibles »).
+C'était le premier risque du cahier des charges (« WebXR/WebGPU incompatibles »).
 
 ## Décision
 
-**`WebGPURenderer` de Three.js partout**, version figée **r187** (`vendor/three/`, voir `vendor/three/VERSION`) :
+**`WebGPURenderer` de Three.js, en WebGPU seulement**, version figée **r187** (`vendor/three/`, voir
+`vendor/three/VERSION`) : à l'écran comme en VR, l'application ne dessine qu'en WebGPU. Il n'y a **aucun secours
+WebGL**.
 
-| Situation au démarrage | Moteur de `WebGPURenderer` |
+| Situation au démarrage | Résultat |
 | --- | --- |
-| mode classique, navigateur avec WebGPU | **WebGPU** |
-| navigateur sans WebGPU, ou carte graphique refusée | WebGL 2 (secours intégré à `WebGPURenderer`) |
-| une session VR est possible (casque ou Immersive Web Emulator) | WebGL 2 : la voie compatible WebXR |
+| navigateur avec WebGPU et une carte graphique acceptée | **WebGPU** : la scène s'affiche, pastille « WebGPU » (un clic ouvre le panneau « Technologies », `src/ui/techPanel.mjs`) |
+| navigateur sans WebGPU | pas de scène 3D : message « Ce navigateur ne connaît pas WebGPU… » et liste des navigateurs qui conviennent |
+| WebGPU désactivé, carte ou pilote refusés | pas de scène 3D : message « WebGPU est désactivé ou cette carte graphique n'est pas prise en charge… » |
+| WebGPU qui échoue au démarrage du moteur | pas de scène 3D : message « WebGPU n'a pas pu démarrer… » (le passage automatique de Three.js sur son moteur WebGL est refusé) |
 
-C'est exactement ce que demande le cahier des charges : « Three.js avec WebGPURenderer pour le rendu classique lorsque pris
-en charge ; une voie WebGL 2 compatible XR est prévue si nécessaire ».
+Dans les trois derniers cas, le reste de l'application fonctionne (scénarios, explications, journal, inspecteur,
+consoles) : seule la scène 3D manque.
 
-> **Mise à jour S7** : la VR passe désormais aussi par WebGPU (voir `docs/vr-webgpu.md`). La
-> section ci-dessous décrit le choix fait jusqu'en S6, gardé pour la voie de secours
-> `?backend=webgl`.
+Historique : jusqu'en S6, la VR passait par le moteur WebGL 2 du même `WebGPURenderer` (la liaison WebGPU–WebXR était
+trop récente) ; en S7, un pont maison a fait passer la VR en WebGPU ([vr-webgpu.md](vr-webgpu.md)) ; WebGL 2 n'était
+plus qu'un secours. Il a été retiré : l'application est désormais **100 % WebGPU**.
 
-## Pourquoi la VR passe par WebGL 2
+## Comment c'est fait
 
-- Avec le moteur WebGPU, Three.js r187 n'ouvre une session XR que si le navigateur fournit `XRGPUBinding` et la fonction de
-  session `webgpu`. Cette liaison WebGPU–WebXR est encore expérimentale et l'émulateur exigé pour la démonstration ne la propose pas.
-- Avec le moteur WebGL 2 du même `WebGPURenderer`, la session `immersive-vr` s'ouvre normalement.
-- Le moteur ne peut pas être remplacé une fois créé. `chooseBackend()` (`src/render/scene.js`) décide donc au démarrage :
-  si `navigator.xr.isSessionSupported('immersive-vr')` répond oui, il crée le moteur avec `forceWebGL: true`.
-
-Conséquence à connaître pour la démonstration : **sur un poste où l'extension Immersive Web Emulator est active, la pastille de
-la scène indique « WebGL 2 »**. Pour montrer WebGPU sur ce même poste, ouvrir l'adresse avec `?backend=webgpu` (le bouton VR
-est alors annoncé indisponible), ou désactiver l'extension.
-
-## Deux précautions dans le code
-
-| Précaution | Où | Pourquoi |
+| Étape | Où | Ce qui se passe |
 | --- | --- | --- |
-| `await renderer.init()` avant tout dessin | `createScene()` | l'accès à la carte graphique est asynchrone en WebGPU |
-| framebuffer `null` toléré | `tolerateDefaultFramebuffer()` | un émulateur dessine dans le canevas de la page (framebuffer `null`) ; le moteur WebGL 2 de r187 ne l'accepte pas tel quel et lèverait une erreur à chaque image |
+| 1. vérifier WebGPU | `requireWebGPU()` (`src/render/webgpu.mjs`, testé) | `navigator.gpu` existe et `requestAdapter()` fournit une carte ; sinon `WebGPUUnavailableError` (`'absent'` ou `'adapter'`) |
+| 2. créer le moteur | `createScene()` (`src/render/scene.mjs`) | `new WebGPURenderer(…)` sans `forceWebGL`, puis `await renderer.init()` (l'accès à la carte est asynchrone) |
+| 3. refuser le repli | `createScene()` | si Three.js est passé malgré tout sur WebGL (`renderer.backend.isWebGPUBackend` faux), le moteur est libéré et `WebGPUUnavailableError('init')` est levée |
+| 4. prévenir l'utilisateur | `showFailure()` (`src/render/index.mjs`) | message en français et en anglais dans la scène ; le faux rendu (`mockRender.mjs`) prend le relais pour que le reste de l'application marche |
+| VR | `src/xr/gpuBridge.mjs` | deux voies, toutes deux en WebGPU : directe (`XRGPUBinding`) ou pont pour émulateur ; voir [vr-webgpu.md](vr-webgpu.md) |
+
+Un test (`tests/webgpu.test.mjs`) vérifie aussi qu'aucun fichier de `src/` ne réintroduit `forceWebGL`,
+`?backend=webgl` ou un contexte WebGL.
+
+## Navigateurs qui conviennent
+
+Chrome et Edge récents (PC, Mac, Android 12 ou plus avec une carte graphique prise en charge), Safari 26 ou plus
+récent (macOS, iOS, iPadOS), Firefox 141 ou plus récent (Windows). L'accélération matérielle doit être activée, et le
+pilote graphique à jour. En VR sur un vrai casque, le navigateur du casque doit en plus relier WebXR et WebGPU
+(`XRGPUBinding`, voir [vr-webgpu.md](vr-webgpu.md)).
 
 ## Protocole de test (à refaire à chaque changement de version de Three.js)
 
 Poste : Chrome récent sur PC, site servi sur `http://localhost:8080` ou sur GitHub Pages (WebGPU et WebXR exigent un contexte sécurisé).
 
-**A. WebGPU, sans émulateur** (extension Immersive Web Emulator désactivée)
+**A. WebGPU à l'écran**
 
 1. Ouvrir l'application : la pastille en bas à droite de la scène indique « WebGPU ». La console affiche `[rendu] moteur : WebGPU`.
-2. La topologie, les étiquettes et les paquets s'affichent ; lecture, pause, sélection à la souris fonctionnent.
-3. Ouvrir `?backend=webgl` : la pastille indique « WebGL 2 », l'affichage est identique.
+2. Le laboratoire, puis le mode classique, s'affichent ; lecture, pause, sélection à la souris fonctionnent.
+3. Dans `chrome://flags`, désactiver WebGPU (« Unsafe WebGPU Support » / accélération matérielle) puis recharger : le
+   message « WebGPU … La scène 3D a besoin de WebGPU » s'affiche, et Lecture fait toujours avancer le journal.
 
-**B. VR, avec l'émulateur** (extension activée, page rechargée)
+**B. VR, avec l'émulateur** (extension Immersive Web Emulator activée, page rechargée)
 
-4. La pastille indique « WebGL 2 » et le bouton « Entrer en VR » est actif.
-5. Entrer en VR : la topologie et le panneau s'affichent ; dans l'onglet WebXR des outils de développement, la tête et les manettes bougent.
+4. La pastille indique « WebGPU » et le bouton « Entrer en VR » est actif.
+5. Entrer en VR : message « VR WebGPU (pont pour émulateur) » ; la salle et le panneau s'affichent ; dans l'onglet
+   WebXR des outils de développement, la tête et les manettes bougent.
 6. Gâchette sur un bouton du panneau, puis sur un équipement.
-7. Quitter la session : retour au mode classique, la souris fonctionne à nouveau.
+7. Quitter la session : retour à l'écran, la souris fonctionne à nouveau.
 
 ## Résultats relevés
 
@@ -64,6 +70,6 @@ Poste : Chrome récent sur PC, site servi sur `http://localhost:8080` ou sur Git
 
 > Ce tableau se remplit sur le poste de test : noter « OK » ou le message d'erreur exact.
 >
-> Vérifications automatiques déjà faites (Chrome sans écran, rendu logiciel) : avec WebGPU, la scène complète est bien dessinée
-> (image relue depuis une cible de rendu) ; sans WebGPU, le secours WebGL 2 s'active seul ; avec un casque Meta Quest 3 simulé
-> (IWER), les étapes 4 à 7 passent. L'affichage de WebGPU à l'écran sur une vraie carte graphique reste à constater en A.
+> Vérifications automatiques déjà faites (Chrome sans écran) : avec WebGPU, l'application s'ouvre dans le laboratoire,
+> pastille « WebGPU », sans erreur ; navigateur sans WebGPU, et carte graphique refusée : le bon message s'affiche et
+> la simulation continue de fonctionner.

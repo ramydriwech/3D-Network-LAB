@@ -7,40 +7,41 @@ réseau : il affiche ce que la simulation publie sur le bus. Son interface publi
 
 | Fichier | Rôle |
 | --- | --- |
-| `index.js` | `initRender()` : assemble la scène, affiche une topologie, fournit l'API de rendu |
-| `scene.js` | moteur `WebGPURenderer` (WebGPU, secours WebGL 2), caméra, éclairage et ombres, niveaux de qualité, grille, navigation (OrbitControls), cadrage |
-| `environment.js` | panorama lumineux HDR calculé (ambiances « studio » et « lab ») : données pures, testées |
-| `quality.js` | niveaux de qualité Auto / Basse / Haute : données pures, testées |
-| `contactShadow.js` | ombres de contact peintes sous les objets ; marquage des objets qui portent des ombres |
-| `factory.js` | fabrique : modèle réaliste de chaque équipement, sinon modèle GLB, sinon forme simple (patron Factory) |
-| `deviceLayout.js` | disposition de chaque modèle du catalogue (forme, dimensions, ports, voyants) et règle des voyants : données pures, testées |
-| `deviceModels.js` | construction 3D des équipements réalistes d'après leur disposition |
-| `portLeds.js` | voyants des ports allumés pendant la simulation (lien, activité, port bloqué) |
-| `shapes.js` | formes simples (cube, cylindre) : S1, puis repli si un modèle manque |
-| `links.js` | câbles : cordons souples branchés dans les prises, avec leurs connecteurs (fiche RJ45 transparente, LC duplex pour la fibre) |
-| `cableRoute.js` | tracé des câbles (de prise à prise, par le sol) et couleur de gaine par type de câble : données pures, testées |
-| `linkLoad.js` | câbles vivants : lueur de passage (couleur du protocole), étiquettes de charge et de vitesse, câble coupé, clignotement du diagnostic |
-| `lab.js` | salle du laboratoire : construction, vue à la première personne, survol, VR à l'échelle réelle |
-| `labFurniture.js` | mobilier et décor de la salle : baies (obturateurs, passe-câbles, panneau de brassage, ventilation, aux couleurs distinctes des équipements), postes de travail, rouleaux de câbles de l'étagère-catalogue, faux plancher, murs, fenêtre, tableau, chemins de câbles… |
-| `mergeStatic.js` | fusion des pièces fixes en un maillage par matériau (équipements, salle) : moins d'appels de dessin |
-| `labels.js` | étiquettes : texte dessiné dans un canevas 2D, affiché sur un sprite |
-| `packetStyles.js` | couleur par protocole, forme par type de diffusion (données pures, testées) |
-| `packetAnimator.js` | déplacement des paquets sur les câbles (Ayoub) |
-| `api.js`, `mockRender.js` | liste de l'API et fausse version sans carte graphique |
+| `index.mjs` | `initRender()` : assemble la scène, affiche une topologie, fournit l'API de rendu |
+| `scene.mjs` | moteur `WebGPURenderer` (100 % WebGPU, sans secours WebGL), caméra, éclairage et ombres, niveaux de qualité, grille, navigation (OrbitControls), cadrage |
+| `webgpu.mjs` | vérification que WebGPU est utilisable avant de créer le moteur (`requireWebGPU`, `WebGPUUnavailableError`) : données pures, testées |
+| `environment.mjs` | panorama lumineux HDR calculé (ambiances « studio » et « lab ») : données pures, testées |
+| `quality.mjs` | niveaux de qualité Auto / Basse / Haute : données pures, testées |
+| `contactShadow.mjs` | ombres de contact peintes sous les objets ; marquage des objets qui portent des ombres |
+| `factory.mjs` | fabrique : modèle réaliste de chaque équipement, sinon modèle GLB, sinon forme simple (patron Factory) |
+| `deviceLayout.mjs` | disposition de chaque modèle du catalogue (forme, dimensions, ports, voyants) et règle des voyants : données pures, testées |
+| `deviceModels.mjs` | construction 3D des équipements réalistes d'après leur disposition |
+| `portLeds.mjs` | voyants des ports allumés pendant la simulation (lien, activité, port bloqué) |
+| `shapes.mjs` | formes simples (cube, cylindre) : S1, puis repli si un modèle manque |
+| `links.mjs` | câbles : cordons souples branchés dans les prises, avec leurs connecteurs (fiche RJ45 transparente, LC duplex pour la fibre) |
+| `cableRoute.mjs` | tracé des câbles (de prise à prise, par le sol) et couleur de gaine par type de câble : données pures, testées |
+| `linkLoad.mjs` | câbles vivants : lueur de passage (couleur du protocole), étiquettes de charge et de vitesse, câble coupé, clignotement du diagnostic |
+| `lab.mjs` | salle du laboratoire : construite d'après son plan (meubles, équipements installés), deux étagères (Équipements, Mobilier), vue à la première personne, survol, VR à l'échelle réelle ; visée des prises et des emplacements, silhouette de ce que l'on pose |
+| `labLayout.mjs` | plan de la salle : catalogue du mobilier, emplacements U des baies et places des bureaux et tables, collisions au sol, position de chaque équipement installé, plan automatique des scénarios : données pures, testées |
+| `labHands.mjs` | les mains de Steve (vue à la première personne) : mains humaines (paume, doigts de trois phalanges, pouce, ongles, poignet, manche de blouse) ; marche, gestes ; équipement saisi par ses côtés, qui glisse de l'étagère aux mains puis des mains à sa place (`dropTo`) ; meuble poussé ; câble en main continu : rouleau de quatre spires → fiche, et prise → rouleau une fois le premier bout branché |
+| `labFurniture.mjs` | mobilier et décor de la salle : baies à emplacements U (`rackCabinet` : une plaque d'obturation sur chaque U libre ; obturateurs, passe-câbles, panneau de brassage, ventilation, aux couleurs distinctes des équipements), postes de travail, rouleaux de câbles de l'étagère « Équipements », faux plancher, murs, fenêtre, tableau, chemins de câbles… |
+| `mergeStatic.mjs` | fusion des pièces fixes en un maillage par matériau (équipements, salle) : moins d'appels de dessin |
+| `labels.mjs` | étiquettes : texte dessiné dans un canevas 2D, affiché sur un sprite |
+| `packetStyles.mjs` | couleur par protocole, forme par type de diffusion (données pures, testées) |
+| `packetAnimator.mjs` | déplacement des paquets sur les câbles (Ayoub) |
+| `api.mjs`, `mockRender.mjs` | liste de l'API et fausse version sans carte graphique |
 
-## Le moteur : WebGPU d'abord
+## Le moteur : 100 % WebGPU
 
-`scene.js` crée un `THREE.WebGPURenderer` et attend son initialisation (`await renderer.init()`), d'où le `await initRender()` de `main.js`.
+`scene.mjs` vérifie d'abord que WebGPU est utilisable (`requireWebGPU()`, `webgpu.mjs`), crée un `THREE.WebGPURenderer`
+et attend son initialisation (`await renderer.init()`), d'où le `await initRender()` de `main.mjs`.
 
-| Situation | Moteur utilisé | Pastille dans la scène |
+| Situation | Résultat | Dans la scène |
 | --- | --- | --- |
-| navigateur avec WebGPU, pas de casque ni d'émulateur | **WebGPU** | « WebGPU » (verte) |
-| navigateur sans WebGPU, ou carte graphique refusée | WebGL 2, secours intégré à `WebGPURenderer` | « WebGL 2 » |
-| session VR possible (casque ou Immersive Web Emulator) | WebGL 2, la voie compatible WebXR | « WebGL 2 » |
+| navigateur avec WebGPU et carte acceptée | **WebGPU**, à l'écran comme en VR | pastille « WebGPU » (verte) |
+| navigateur sans WebGPU, WebGPU désactivé, carte refusée, ou échec au démarrage | pas de scène 3D : **aucun secours WebGL** | message qui explique la cause et les navigateurs qui conviennent ; le reste de l'application fonctionne |
 
-Le moteur ne peut pas être changé une fois créé : le choix se fait donc au démarrage (`chooseBackend()`).
-`?backend=webgpu` ou `?backend=webgl` dans l'adresse l'impose, pour une démonstration. Le code de la scène est le même
-dans tous les cas : matériaux, lumières et sprites standard de Three.js, convertis automatiquement par le moteur.
+Si Three.js passe malgré tout sur son moteur WebGL interne, `createScene()` le refuse (`renderer.backend.isWebGPUBackend`).
 Les raisons de ce choix sont dans [choix-moteur-rendu.md](choix-moteur-rendu.md).
 
 ## La scène
@@ -54,6 +55,27 @@ Les raisons de ce choix sont dans [choix-moteur-rendu.md](choix-moteur-rendu.md)
   visible ; une grille discrète pour lire les distances ; un léger brouillard de profondeur (au-delà de 45 unités).
   Grille, socle et ombres portées se masquent ensemble dans le laboratoire et en VR.
 
+## Mode classique et laboratoire
+
+L'application s'ouvre **dans le laboratoire** (`lab.enter()` dès le premier scénario chargé, `src/ui/labHud.mjs`) ;
+le **mode classique** — la topologie seule sur son socle, vue d'ensemble de qui est relié à qui — s'ouvre à la
+demande : bouton « Mode classique / Retour au labo » ou touche **L**, ou `?classique` dans l'adresse.
+
+Les deux vues montrent les **mêmes objets** (le groupe `world`) : le laboratoire réduit ce groupe et le pose dans la
+salle. Pour que le mode classique soit lisible de loin, une **échelle d'affichage** (`setViewScale`, `viewScale`)
+grossit les objets sans changer les distances de la topologie :
+
+| Objet | Mode classique (`CLASSIC_SCALE` = 1,5) | Laboratoire |
+| --- | --- | --- |
+| équipements (avec leur étiquette, anneau de sélection, ombre, voyants) | × 1,5 | × 1 |
+| câbles : épaisseur, connecteurs, départ du cordon (`routing.scale`, `links.mjs`) | × 1,5 | × 1 |
+| lueur de passage, étiquettes de câble, de charge et de port | × 1,5 | × 1 |
+| paquets : point, halo, tige, carte-message (`packetAnimator.mjs`) | × 2,25 (1,5 × `CLASSIC_PACKET_BOOST`) | × 1 |
+
+Les paquets grossissent un peu plus pour que la carte (« ARP Reply / PC2 → PC1 ») se lise depuis la vue d'ensemble.
+Le laboratoire repasse à 1 en entrant (avant de construire la salle : PC à leur taille sur les bureaux, fiches dans
+les prises) et remet 1,5 en sortant, puis recadre la caméra sur toute la topologie (`frameTopology`).
+
 ## Éclairage, ombres et qualité
 
 L'éclairage suit les règles physiques de Three.js : les lumières ont des intensités réelles et l'image est ramenée à
@@ -63,17 +85,17 @@ anneaux de sélection) en sont exclus (`toneMapped: false`) : leurs couleurs res
 
 | Source | Rôle | Où |
 | --- | --- | --- |
-| **environnement** | lumière indirecte et reflets : c'est lui qui rend le métal et le plastique crédibles | `environment.js` → `scene.environment` |
-| lumière du ciel (hémisphère) | léger complément | `scene.js` |
-| « soleil » (lumière directionnelle) | lumière principale, la seule qui **porte des ombres** | `scene.js` |
-| ombres de contact | tache floue sous chaque équipement et chaque meuble : elle « pose » l'objet | `contactShadow.js` |
+| **environnement** | lumière indirecte et reflets : c'est lui qui rend le métal et le plastique crédibles | `environment.mjs` → `scene.environment` |
+| lumière du ciel (hémisphère) | léger complément | `scene.mjs` |
+| « soleil » (lumière directionnelle) | lumière principale, la seule qui **porte des ombres** | `scene.mjs` |
+| ombres de contact | tache floue sous chaque équipement et chaque meuble : elle « pose » l'objet | `contactShadow.mjs` |
 
 L'**environnement** est un panorama équirectangulaire **calculé** (aucun fichier à télécharger), en lumière linéaire
 HDR : une dalle LED vaut plusieurs fois un mur. Deux ambiances : `studio` pour la vue classique (deux boîtes à
 lumière et un liseré à l'horizon) et `lab` pour la salle (plafond à dalles, murs gris clair avec leur bandeau bleu).
 Le laboratoire passe de l'une à l'autre en entrant et en sortant (`setAmbience`).
 
-**Ombres portées figées.** La carte d'ombre n'est pas recalculée à chaque image : `index.js` calcule à chaque image
+**Ombres portées figées.** La carte d'ombre n'est pas recalculée à chaque image : `index.mjs` calcule à chaque image
 une empreinte de la scène (position du groupe `world`, des équipements, de la salle) et ne recadre la lumière que
 si elle change : topologie, glisser-déposer, entrée dans le labo, VR, téléportation. Par sécurité, la carte est aussi
 recalculée toutes les 500 ms, car WebGPU prépare ses programmes de dessin en arrière-plan, parfois pendant plusieurs
@@ -89,10 +111,10 @@ Le réglage se choisit dans la liste **Qualité** de la barre de commandes ; il 
 
 ## Modèles 3D
 
-Chaque équipement est **construit dans le code** d'après sa fiche du catalogue (`src/sim/catalog.js`) : deux modèles
+Chaque équipement est **construit dans le code** d'après sa fiche du catalogue (`src/sim/catalog.mjs`) : deux modèles
 d'un même type ne se ressemblent donc pas (un switch 8 ports de bureau n'est pas un switch 24 ports de baie). Aucun
-fichier à télécharger, aucune licence tierce. `deviceLayout.js` calcule la disposition (données pures, testées) ;
-`deviceModels.js` en fait la 3D.
+fichier à télécharger, aucune licence tierce. `deviceLayout.mjs` calcule la disposition (données pures, testées) ;
+`deviceModels.mjs` en fait la 3D.
 
 | Forme | Modèles | Détails |
 | --- | --- | --- |
@@ -110,7 +132,7 @@ colorée sous chaque prise indique sa zone (vert inside, rouge outside, orange d
 L'objet 3D d'un équipement (`render.deviceObject(id)`) porte dans `userData` sa disposition (`layout`),
 le point de branchement de chaque port (`ports`) et ses voyants (`leds`).
 
-**Voyants des ports** (`portLeds.js`, règle `portLedState` dans `deviceLayout.js`) : chaque prise a deux voyants,
+**Voyants des ports** (`portLeds.mjs`, règle `portLedState` dans `deviceLayout.mjs`) : chaque prise a deux voyants,
 comme sur un vrai switch.
 
 | Voyant | État | Signification |
@@ -126,16 +148,16 @@ Lors d'une diffusion ARP, on voit le switch inonder ses ports.
 
 **Modèles de secours.** Si un modèle ne peut pas être construit, la fabrique prend le modèle GLB simplifié de
 `assets/models/` (`pc.glb`, `server.glb`, `switch.glb`, `router.glb`, `firewall.glb`, générés par
-`tools/make-models.mjs`), puis à défaut la forme simple de `shapes.js`.
+`tools/make-models.mjs`), puis à défaut la forme simple de `shapes.mjs`.
 
 ## Câbles
 
 Un câble est un **cordon souple branché dans la prise** de chaque équipement (point de branchement fourni par le
-modèle 3D, voir « Modèles 3D »). Son tracé (`cableRoute.js`) sort perpendiculairement à la façade, descend au
+modèle 3D, voir « Modèles 3D »). Son tracé (`cableRoute.mjs`) sort perpendiculairement à la façade, descend au
 sol, le longe, puis remonte jusqu'à la prise d'en face ; le tube suit une courbe lisse passant par ces points, avec
 un connecteur à chaque bout (un port sans emplacement connu, modèle de secours, part du bord de l'équipement).
 
-Les connecteurs (`cablePlug`, `links.js`) sont ceux d'un vrai câble, à l'échelle des prises des modèles :
+Les connecteurs (`cablePlug`, `links.mjs`) sont ceux d'un vrai câble, à l'échelle des prises des modèles :
 
 - **cuivre (Cat 5 à Cat 6a) : fiche RJ45** — corps transparent qui dépasse de la prise, on y voit les huit fils
   colorés (ordre T568B), les huit contacts dorés à la pointe et la barre de sertissage ; languette de verrouillage
@@ -145,7 +167,7 @@ Les connecteurs (`cablePlug`, `links.js`) sont ceux d'un vrai câble, à l'éche
   câble.
 
 Le cordon part du manchon (`PLUG_REACH`), pas du fond de la prise : il ne masque pas l'intérieur de la fiche. Les
-rouleaux de l'étagère-catalogue du labo portent les mêmes connecteurs, en plus petit. Chaque connecteur ne coûte que
+rouleaux de l'étagère « Équipements » du labo portent les mêmes connecteurs, en plus petit. Chaque connecteur ne coûte que
 trois maillages (corps, intérieur en couleurs par sommet, manchon), aux géométries partagées par tous les câbles.
 
 | Type de câble (catalogue) | Couleur de gaine |
@@ -157,15 +179,15 @@ trois maillages (corps, intérieur en couleurs par sommet, manchon), aux géomé
 | fibre OM3 | turquoise (couleur normalisée de la fibre OM3) |
 
 Les câbles sont fins (rayon de 1,8 cm à l'échelle de la scène) : le point lumineux d'un paquet, plus gros, se voit
-toujours. Leur courbe lisse est calculée dans `cableRoute.js` (`smoothRoute`, testée) et bornée par le plus bas de
+toujours. Leur courbe lisse est calculée dans `cableRoute.mjs` (`smoothRoute`, testée) et bornée par le plus bas de
 ses points de passage : un câble ne passe jamais sous le sol ni sous un chemin de câbles.
 
-`linkLoad.js` fait vivre les câbles :
+`linkLoad.mjs` fait vivre les câbles :
 
 - **passage d'un paquet** : pendant qu'il traverse le câble, une lueur légère de la **couleur de son protocole** court
   le long du câble, dans son sens, au rythme de l'horloge simulée (figée en pause). Transparente (40 %) et plus fine que
   le point lumineux, elle ne le masque jamais ; elle s'éteint quand le paquet est arrivé ;
-- **type et vitesse** : chaque câble porte une étiquette « Cat 6 · 1 Gb/s » (`cableTagLines`, `cableRoute.js`, testée) :
+- **type et vitesse** : chaque câble porte une étiquette « Cat 6 · 1 Gb/s » (`cableTagLines`, `cableRoute.mjs`, testée) :
   la vitesse RÉELLE du lien, négociée (la plus petite des deux cartes et du câble), et non la capacité du câble. Quand
   une carte ou le câble bride le lien, elle est orange avec « bridé par … » et reste toujours visible. Les autres,
   grises et discrètes, n'apparaissent que sur les câbles proches de la caméra, sur ceux de l'équipement sélectionné,
@@ -175,7 +197,7 @@ ses points de passage : un câble ne passe jamais sous le sol ni sous un chemin 
 - **câble coupé** (`shutdown`, `err-disabled`) : gaine rouge sombre ; le diagnostic fait clignoter la lueur en magenta.
 
 **Dans le laboratoire, les câbles passent par les chemins de câbles** (`render.setCableRouting({ mode: 'tray', height })`,
-appelé par `lab.js` en entrant ; `{ mode: 'floor' }` en sortant). Au lieu de traverser l'allée, un cordon longe la
+appelé par `lab.mjs` en entrant ; `{ mode: 'floor' }` en sortant). Au lieu de traverser l'allée, un cordon longe la
 façade de sa baie jusqu'au bord le plus proche de sa destination, monte le long du montant, suit à angle droit les
 chemins de câbles suspendus sous le plafond, puis redescend jusqu'à l'autre prise (`trayRoute`). Chaque câble est
 un peu décalé dans le chemin : ils forment une nappe. La salle dessine les chemins là où passent les câbles
@@ -200,13 +222,13 @@ Un paquet est une **carte-message** : tout ce qu'il faut savoir y est écrit, sa
 ```
 
 - 1re ligne (en gras) : le **type de message**, c'est-à-dire le libellé que lui donne son protocole ;
-- 2e ligne : **qui parle à qui** (`packetCaption`, `packetStyles.js`, données pures, testées) : adresses IP de bout en
+- 2e ligne : **qui parle à qui** (`packetCaption`, `packetStyles.mjs`, données pures, testées) : adresses IP de bout en
   bout (« PC1 → PC3 » sur chaque câble traversé), sinon adresses MAC ; « tous » pour une diffusion, « groupe » pour une
   multidiffusion ;
 - le **point lumineux** (et son halo) glisse sur le câble et montre la position exacte du paquet ; une **tige** le relie à
   la carte ;
 - le liseré, le point et la traînée ont la **couleur du protocole**, un simple repère en plus, expliqué par la légende
-  vivante de l'interface (`src/ui/packetLegend.js`), qui n'affiche que les protocoles du scénario.
+  vivante de l'interface (`src/ui/packetLegend.mjs`), qui n'affiche que les protocoles du scénario.
 
 | Protocole | Couleur | | Protocole | Couleur |
 | --- | --- | --- | --- | --- |
@@ -239,19 +261,19 @@ vise pas directement : les visées de la VR et du laboratoire n'ont pas de camé
 
 | Mesure | Où |
 | --- | --- |
-| géométries et matériaux créés une fois et partagés | `shapes.js`, `links.js`, `packetAnimator.js` |
-| modèles construits dans le code : géométries, matériaux et textures de façade partagés entre équipements | `deviceModels.js` |
-| tous les voyants d'un équipement en une seule `InstancedMesh` (un appel de dessin), prises de même `InstancedMesh` | `deviceModels.js` |
-| voyants recolorés au plus toutes les 40 ms, seulement s'ils changent | `portLeds.js` |
-| pièces fixes fusionnées en un maillage par matériau : un équipement passe d'une vingtaine de pièces à quelques-unes, la salle de plusieurs milliers à environ deux cents ; matériaux de baie partagés pour que les baies se fusionnent entre elles | `mergeStatic.js`, `labFurniture.js` |
-| paquets : un point, une tige et deux étiquettes par paquet ; géométries et matériaux partagés ; traînée seulement en qualité haute | `packetAnimator.js` |
-| câbles retracés seulement quand un équipement bouge ; lueur = un tube par câble ; charge recalculée toutes les 150 ms | `links.js`, `linkLoad.js` |
-| densité de pixels plafonnée (1,5 en qualité basse, 2 en haute) | `scene.js`, `quality.js` |
-| ombres portées seulement en qualité haute, carte recalculée quand la scène bouge (et toutes les 500 ms) | `scene.js`, `index.js` |
-| ombres de contact : un plan et une texture partagés | `contactShadow.js` |
-| nombre de paquets affichés plafonné (16 sur écran tactile, 48 ailleurs) | `index.js` (`maxPackets`) |
-| étiquettes = une texture par étiquette, redessinée seulement si le texte change | `labels.js` |
-| horloge de l'image bornée à 100 ms (onglet revenu d'arrière-plan) | `index.js` |
+| géométries et matériaux créés une fois et partagés | `shapes.mjs`, `links.mjs`, `packetAnimator.mjs` |
+| modèles construits dans le code : géométries, matériaux et textures de façade partagés entre équipements | `deviceModels.mjs` |
+| tous les voyants d'un équipement en une seule `InstancedMesh` (un appel de dessin), prises de même `InstancedMesh` | `deviceModels.mjs` |
+| voyants recolorés au plus toutes les 40 ms, seulement s'ils changent | `portLeds.mjs` |
+| pièces fixes fusionnées en un maillage par matériau : un équipement passe d'une vingtaine de pièces à quelques-unes, la salle de plusieurs milliers à environ deux cents ; matériaux de baie partagés pour que les baies se fusionnent entre elles | `mergeStatic.mjs`, `labFurniture.mjs` |
+| paquets : un point, une tige et deux étiquettes par paquet ; géométries et matériaux partagés ; traînée seulement en qualité haute | `packetAnimator.mjs` |
+| câbles retracés seulement quand un équipement bouge ; lueur = un tube par câble ; charge recalculée toutes les 150 ms | `links.mjs`, `linkLoad.mjs` |
+| densité de pixels plafonnée (1,5 en qualité basse, 2 en haute) | `scene.mjs`, `quality.mjs` |
+| ombres portées seulement en qualité haute, carte recalculée quand la scène bouge (et toutes les 500 ms) | `scene.mjs`, `index.mjs` |
+| ombres de contact : un plan et une texture partagés | `contactShadow.mjs` |
+| nombre de paquets affichés plafonné (16 sur écran tactile, 48 ailleurs) | `index.mjs` (`maxPackets`) |
+| étiquettes = une texture par étiquette, redessinée seulement si le texte change | `labels.mjs` |
+| horloge de l'image bornée à 100 ms (onglet revenu d'arrière-plan) | `index.mjs` |
 
 ## Lisibilité en VR
 

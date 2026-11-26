@@ -5,8 +5,8 @@ d'accusé de réception. Le numéro de port désigne l'application destinataire.
 
 | | |
 | --- | --- |
-| Code | `src/sim/protocols/udp.js` |
-| Tests | `tests/udp.test.js` |
+| Code | `src/sim/protocols/udp.mjs` |
+| Tests | `tests/udp.test.mjs` |
 | Scénario | `scenarios/udp.json` |
 | Couche | transport — dépend d'ARP et d'ICMP |
 | Action de scénario | `{ "action": "udp", "from": "pc1", "to": "srv1", "port": 5005, "data": "temperature=21" }` |

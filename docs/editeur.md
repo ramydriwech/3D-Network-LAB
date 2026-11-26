@@ -1,8 +1,8 @@
 # Éditeur de topologie
 
-> Demande du superviseur (S7). Code : `src/sim/builder.js` (opérations pures),
-> `src/ui/editorPanel.js` (onglet Construire), `src/render/dragControls.js` (glisser).
-> Tests : `tests/builder.test.js`.
+> Demande du superviseur (S7). Code : `src/sim/builder.mjs` (opérations pures),
+> `src/ui/editorPanel.mjs` (onglet Construire), `src/render/dragControls.mjs` (glisser).
+> Tests : `tests/builder.test.mjs`.
 
 ![L'éditeur : réseau construit, réglages de PC1](captures/editeur.jpg)
 
@@ -30,6 +30,11 @@
 L'onglet Diagnostic suit le brouillon en permanence ; ses corrections s'ajoutent à
 l'historique de l'éditeur.
 
+Dans le **laboratoire**, les gestes à la main (poser un meuble, installer un équipement, brancher ou débrancher un
+câble, déplacer : `src/ui/labBuild.mjs`, voir `docs/laboratoire.md`) sont des modifications du même brouillon : le
+premier geste ouvre l'éditeur (le réseau d'origine reste dans l'historique, le geste est donc annulable), les suivants
+s'y ajoutent. Le plan de la salle voyage dans le brouillon (champ `lab`).
+
 ## Enregistrer
 
 - Le brouillon est **enregistré automatiquement** dans le navigateur (`localStorage`) et
@@ -43,7 +48,7 @@ Si le navigateur refuse le stockage (navigation privée), un message invite à e
 
 ## Conception
 
-Chaque opération de `builder.js` reçoit un brouillon et en **retourne une copie** modifiée :
+Chaque opération de `builder.mjs` reçoit un brouillon et en **retourne une copie** modifiée :
 l'historique n'est qu'une liste de versions, et tout se teste sans navigateur. Une opération
 impossible lève une `BuildError` dont le message existe en français et en anglais. Après
 chaque modification, l'éditeur recharge le brouillon dans la simulation : la scène, le

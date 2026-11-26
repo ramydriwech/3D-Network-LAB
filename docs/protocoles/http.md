@@ -5,8 +5,8 @@ ARP, DNS, TCP puis HTTP, exactement comme lorsqu'on tape une adresse dans un nav
 
 | | |
 | --- | --- |
-| Code | `src/sim/protocols/http.js` |
-| Tests | `tests/http.test.js` |
+| Code | `src/sim/protocols/http.mjs` |
+| Tests | `tests/http.test.mjs` |
 | Scénario | `scenarios/http.json` |
 | Couche | application — transporté par TCP, port 80 ; dépend de DNS |
 | Action de scénario | `{ "action": "http", "from": "pc1", "url": "http://www.supcom.tn/" }` |

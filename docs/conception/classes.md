@@ -1,6 +1,6 @@
 # Diagramme de classes
 
-Le diagramme couvre la simulation (`simulation.js`, `src/sim/`), cœur métier de l'application. Le rendu et
+Le diagramme couvre la simulation (`simulation.mjs`, `src/sim/`), cœur métier de l'application. Le rendu et
 l'interface n'ont pas de classes : ce sont des modules de fonctions abonnés au bus.
 
 ```mermaid
@@ -161,11 +161,11 @@ Protocoles livrés (chacun réalise `Protocol`) : `arp`, `icmp`, `udp`, `dns`, `
 
 | Patron | Où | Pourquoi |
 | --- | --- | --- |
-| **Observer** | `EventBus` (`src/sim/eventBus.js`) | la simulation publie ; l'interface, la 3D et la VR s'abonnent. Aucune partie n'appelle directement une autre : chacune se développe et se teste seule. |
-| **Command** | `src/sim/commands.js` | lecture, pause, pas à pas, vitesse, réinitialisation sont des objets `canExecute()` / `execute()`. Les boutons HTML, le clavier et le panneau VR partagent la même logique. |
+| **Observer** | `EventBus` (`src/sim/eventBus.mjs`) | la simulation publie ; l'interface, la 3D et la VR s'abonnent. Aucune partie n'appelle directement une autre : chacune se développe et se teste seule. |
+| **Command** | `src/sim/commands.mjs` | lecture, pause, pas à pas, vitesse, réinitialisation sont des objets `canExecute()` / `execute()`. Les boutons HTML, le clavier et le panneau VR partagent la même logique. |
 | **Strategy** | `ProtocolRegistry` + un fichier par protocole | la logique de traitement est choisie d'après l'identifiant du protocole. Ajouter un protocole = ajouter un fichier, sans toucher au moteur. |
-| **Factory** | `loadDeviceTypes()` (`src/sim/network.js`) et `createDeviceFactory()` (`src/render/factory.js`) | à partir de l'objet JSON d'un équipement, créer le bon comportement (hôte, routeur, switch) et le bon modèle 3D. |
-| **State** | `StateMachine` (`src/sim/state.js`) | prêt, lecture, pause, terminé : les transitions interdites sont refusées et l'interface sait quels boutons activer. |
+| **Factory** | `loadDeviceTypes()` (`src/sim/network.mjs`) et `createDeviceFactory()` (`src/render/factory.mjs`) | à partir de l'objet JSON d'un équipement, créer le bon comportement (hôte, routeur, switch) et le bon modèle 3D. |
+| **State** | `StateMachine` (`src/sim/state.mjs`) | prêt, lecture, pause, terminé : les transitions interdites sont refusées et l'interface sait quels boutons activer. |
 
 ## Choix de conception
 

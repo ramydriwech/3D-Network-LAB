@@ -7,7 +7,7 @@ Thumbs.db
 .idea/
 
 # Généré par tools/generate-precache.mjs (lancé par « npm start » et par la CI)
-precache-manifest.js
+precache-manifest.mjs
 
 # Dossier assemblé par la CI pour GitHub Pages
 _site/

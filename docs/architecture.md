@@ -7,9 +7,9 @@ GitHub Pages. Tout s'exécute dans le navigateur ; il n'y a ni serveur applicati
 
 ```mermaid
 flowchart TB
-  main["main.js<br/>assemble les quatre parties"]
+  main["main.mjs<br/>assemble les quatre parties"]
 
-  subgraph sim["Simulation — simulation.js, src/sim/"]
+  subgraph sim["Simulation — simulation.mjs, src/sim/"]
     engine["Moteur à évènements discrets"]
     net["Réseau simulé<br/>équipements, câbles"]
     protos["Protocoles<br/>ARP ICMP UDP DNS DHCP TCP HTTP IPv6"]
@@ -33,7 +33,7 @@ flowchart TB
     session["Session WebXR<br/>panneau 3D, manettes"]
   end
 
-  subgraph pwa["PWA — manifest.json, sw.js"]
+  subgraph pwa["PWA — manifest.json, sw.mjs"]
     sw["Service Worker<br/>cache hors ligne"]
   end
 
@@ -56,9 +56,9 @@ qu'à travers trois contrats fixés en S1 ([contrats.md](contrats.md)) :
 
 1. **le bus d'évènements** — la simulation publie ce qui se passe (`packet:send`, `state:changed`…), les autres s'abonnent ;
 2. **les commandes** — l'interface et le panneau VR agissent sur la simulation uniquement par `sim.execute('play')` ;
-3. **l'API de rendu** — l'interface et la VR utilisent la scène uniquement par les fonctions listées dans `src/render/api.js`.
+3. **l'API de rendu** — l'interface et la VR utilisent la scène uniquement par les fonctions listées dans `src/render/api.mjs`.
 
-`main.js` est le seul fichier qui voit tout le monde. Il a été figé après la S1 :
+`main.mjs` est le seul fichier qui voit tout le monde. Il a été figé après la S1 :
 
 ```js
 const sim = createSimulation();                       // Khalil
@@ -84,15 +84,15 @@ En pause, l'étape 2 ne fait rien : les paquets restent figés, mais la caméra 
 | Chemin | Contenu | Propriétaire |
 | --- | --- | --- |
 | `index.html`, `styles.css` | page, zones réservées, style | Ramy |
-| `main.js` | assemblage | Ayoub |
-| `simulation.js`, `src/sim/` | moteur, réseau, contrats, équipements, protocoles | Khalil (protocoles : selon l'onglet « Fichiers ») |
+| `main.mjs` | assemblage | Ayoub |
+| `simulation.mjs`, `src/sim/` | moteur, réseau, contrats, équipements, protocoles | Khalil (protocoles : selon l'onglet « Fichiers ») |
 | `src/render/` | scène, modèles, câbles, étiquettes, styles et animation des paquets | Aziz (animation : Ayoub) |
 | `src/ui/` | interface | Ramy |
 | `src/xr/` | mode VR | Ayoub |
 | `scenarios/` | scénarios JSON et catalogue | selon le protocole |
 | `assets/models/`, `assets/icons/` | modèles GLB, icônes | Aziz, Ayoub |
 | `vendor/three/` | Three.js r187, version figée | Aziz |
-| `manifest.json`, `sw.js` | PWA | Ayoub |
+| `manifest.json`, `sw.mjs` | PWA | Ayoub |
 | `tools/` | serveur local, génération de la liste de cache, des icônes et des modèles | Ayoub (modèles : Aziz) |
 | `tests/` | tests automatiques (`node --test`) | chacun pour ses fichiers |
 | `.github/` | CI, déploiement, CODEOWNERS | Ayoub |
@@ -105,7 +105,7 @@ En pause, l'étape 2 ne fait rien : les paquets restent figés, mais la caméra 
 | Modules ES natifs, **aucune étape de compilation** | le dépôt est directement le site ; rien à installer pour contribuer ; conforme à « site statique » |
 | **Aucune dépendance npm** à l'exécution ; Three.js copié dans `vendor/` | fonctionnement hors ligne garanti, version figée, pas de CDN |
 | `importmap` dans `index.html` | écrire `import … from 'three'` sans outil de build |
-| `WebGPURenderer` : WebGPU partout, VR comprise (pont WebXR maison), WebGL 2 seulement en secours | demandé par l'enseignant, voir [choix-moteur-rendu.md](choix-moteur-rendu.md) et [vr-webgpu.md](vr-webgpu.md) |
+| `WebGPURenderer` : 100 % WebGPU, VR comprise (pont WebXR maison), sans secours WebGL | demandé par l'enseignant, voir [choix-moteur-rendu.md](choix-moteur-rendu.md) et [vr-webgpu.md](vr-webgpu.md) |
 | Diagnostic et éditeur en **fonctions pures** sur le scénario | testables sans navigateur ; annuler = revenir à la version précédente |
 | Simulation séparée du rendu | scénarios testables sans navigateur ; même simulation à 15 ou 60 images par seconde |
 | Scénarios en JSON | un enseignant peut écrire un scénario sans programmer |
@@ -117,32 +117,32 @@ En pause, l'étape 2 ne fait rien : les paquets restent figés, mais la caméra 
 | Réf. | Fonctionnalité | Réalisation |
 | --- | --- | --- |
 | F01 | topologies JSON, exploration 3D souris/toucher | `scenarios/`, `src/render/`, OrbitControls |
-| F02 | animations et explications pas à pas | `packetAnimator.js`, `explanations.js` |
+| F02 | animations et explications pas à pas | `packetAnimator.mjs`, `explanations.mjs` |
 | F03 | ARP, ICMP, DNS, DHCP, TCP, UDP | `src/sim/protocols/` + un scénario chacun |
-| F04 | HTTP, commutation, routage statique | `http.js`, `switch.js`, `router.js` ; VLAN, ACL, NAT et pare-feu simulés (laboratoire, S6) ; HTTPS expliqué mais non simulé |
-| F05 | inspection des paquets | `inspector.js` + `describe()` de chaque protocole |
-| F06 | lecture, pause, pas à pas, vitesse, réinitialisation | `commands.js`, `controls.js` |
-| F07 | accès par URL, PWA installable, cache | GitHub Pages, `manifest.json`, `sw.js`, `install.js` |
+| F04 | HTTP, commutation, routage statique | `http.mjs`, `switch.mjs`, `router.mjs` ; VLAN, ACL, NAT et pare-feu simulés (laboratoire, S6) ; HTTPS expliqué mais non simulé |
+| F05 | inspection des paquets | `inspector.mjs` + `describe()` de chaque protocole |
+| F06 | lecture, pause, pas à pas, vitesse, réinitialisation | `commands.mjs`, `controls.mjs` |
+| F07 | accès par URL, PWA installable, cache | GitHub Pages, `manifest.json`, `sw.mjs`, `install.mjs` |
 | F08 | mode classique et VR émulable | `src/xr/` ; repli automatique sans WebXR |
-| F09 | extension du catalogue | IPv6 simplifié (`ipv6.js`) ; TLS, FTP, SMTP, SSH, RIP, OSPF, BGP non réalisés |
+| F09 | extension du catalogue | IPv6 simplifié (`ipv6.mjs`) ; TLS, FTP, SMTP, SSH, RIP, OSPF, BGP non réalisés |
 | F10 | AR par hit testing (option) | non réalisé |
 
 ### Compléments demandés par le superviseur (S5 à S7)
 
 | Fonctionnalité | Modules | Doc |
 | --- | --- | --- |
-| Débit : vitesse des liens, temps d'émission, files, pertes, transferts TCP, charge des câbles, fiche technique | `catalog.js`, `traffic.js`, `network.js`, `tcp.js`, `linkLoad.js`, `datasheet.js` | [debit.md](debit.md) |
-| Diagnostic et recommandations, corrections en un clic | `diagnostic.js`, `diagnosticPanel.js`, `tabs.js` | [diagnostic.md](diagnostic.md) |
-| Éditeur de topologie (ajout, câblage, réglages, adressage auto, sauvegardes, import/export, annuler) | `builder.js`, `editorPanel.js`, `dragControls.js` | [editeur.md](editeur.md) |
-| VR en WebGPU, panneau VR Étape / Fiche / Diagnostic | `gpuBridge.js`, `vrInfoPanel.js`, `session.js`, `controllers.js` | [vr-webgpu.md](vr-webgpu.md) |
+| Débit : vitesse des liens, temps d'émission, files, pertes, transferts TCP, charge des câbles, fiche technique | `catalog.mjs`, `traffic.mjs`, `network.mjs`, `tcp.mjs`, `linkLoad.mjs`, `datasheet.mjs` | [debit.md](debit.md) |
+| Diagnostic et recommandations, corrections en un clic | `diagnostic.mjs`, `diagnosticPanel.mjs`, `tabs.mjs` | [diagnostic.md](diagnostic.md) |
+| Éditeur de topologie (ajout, câblage, réglages, adressage auto, sauvegardes, import/export, annuler) | `builder.mjs`, `editorPanel.mjs`, `dragControls.mjs` | [editeur.md](editeur.md) |
+| VR en WebGPU, panneau VR Étape / Fiche / Diagnostic | `gpuBridge.mjs`, `vrInfoPanel.mjs`, `session.mjs`, `controllers.mjs` | [vr-webgpu.md](vr-webgpu.md) |
 | Scénarios ARP et traceroute | `scenarios/arp.json`, `scenarios/traceroute.json` | [protocoles/arp.md](protocoles/arp.md) |
 | Vérification HTTPS / TLS du site publié, chaque semaine en CI | `tools/verify-https.mjs`, `.github/workflows/ci.yml` | [lancement-deploiement.md](lancement-deploiement.md) |
-| Laboratoire : VLAN 802.1Q, sous-interfaces, sécurité de port, ACL, NAT/PAT, pare-feu à états | `security.js`, `devices/firewall.js`, `switch.js`, `router.js`, `network.js` | [laboratoire.md](laboratoire.md) |
-| Consoles IOS / VRP / PC par modèle, missions guidées | `cli.js`, `config.js`, `missions.js`, `terminal.js`, `missions.js` (ui) | [console.md](console.md) |
-| Salle 3D à la première personne, étagère-catalogue ; VR : téléportation, clavier 3D | `render/lab.js`, `labHud.js`, `xr/vrConsole.js`, `controllers.js` | [laboratoire.md](laboratoire.md) |
+| Laboratoire : VLAN 802.1Q, sous-interfaces, sécurité de port, ACL, NAT/PAT, pare-feu à états | `security.mjs`, `devices/firewall.mjs`, `switch.mjs`, `router.mjs`, `network.mjs` | [laboratoire.md](laboratoire.md) |
+| Consoles IOS / VRP / PC par modèle, missions guidées | `cli.mjs`, `config.mjs`, `missions.mjs`, `terminal.mjs`, `missions.mjs` (ui) | [console.md](console.md) |
+| Salle 3D à la première personne, étagère « Équipements » ; VR : téléportation, clavier 3D | `render/lab.mjs`, `labHud.mjs`, `xr/vrConsole.mjs`, `controllers.mjs` | [laboratoire.md](laboratoire.md) |
 
 **Laboratoire — circulation des données.** Une commande de configuration tapée dans une console (fenêtre ou
-pupitre VR) passe par `cli.js`, qui appelle une fonction pure de `config.js` : elle rend un **nouveau scénario**,
+pupitre VR) passe par `cli.mjs`, qui appelle une fonction pure de `config.mjs` : elle rend un **nouveau scénario**,
 validé, que la simulation recharge (ou l'éditeur, s'il est ouvert, pour garder l'historique). Les commandes
 `show` / `display` lisent l'état vivant de la simulation ; `ping` et `traceroute` rendent des étapes jouées dans la
 scène, dont les réponses sont mises en forme par `formatRun`. Les missions évaluent le scénario, l'historique des

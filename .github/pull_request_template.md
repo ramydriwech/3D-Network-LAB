@@ -7,7 +7,7 @@
 - [ ] `npm test` passe sur mon poste
 - [ ] `npm start` : l'application s'ouvre et la partie modifiée fonctionne
 - [ ] Je n'ai modifié que **mes** fichiers (voir `.github/CODEOWNERS`)
-- [ ] Si un contrat commun change (`events.js`, format des scénarios, `index.html`) : les quatre membres ont approuvé
+- [ ] Si un contrat commun change (`events.mjs`, format des scénarios, `index.html`) : les quatre membres ont approuvé
 
 ## Bug trouvé dans le fichier de quelqu'un d'autre ?
 

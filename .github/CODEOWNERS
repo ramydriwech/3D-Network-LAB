@@ -30,7 +30,7 @@
 /docs/conception/sequence-ping.md @GITHUB-AZIZ
 
 # --- Khalil : moteur, contrats communs, PC et routeur, ARP, TCP, routage
-/simulation.js                  @GITHUB-KHALIL
+/simulation.mjs                  @GITHUB-KHALIL
 /src/sim/                       @GITHUB-KHALIL
 /tests/                         @GITHUB-KHALIL
 /docs/format-scenario.md        @GITHUB-KHALIL
@@ -40,9 +40,9 @@
 /docs/conception/classes.md     @GITHUB-KHALIL
 
 # --- Ayoub : démarrage, PWA, CI, déploiement, VR, animation des paquets, switch
-/main.js                        @GITHUB-AYOUB
+/main.mjs                        @GITHUB-AYOUB
 /manifest.json                  @GITHUB-AYOUB
-/sw.js                          @GITHUB-AYOUB
+/sw.mjs                          @GITHUB-AYOUB
 /package.json                   @GITHUB-AYOUB
 /.github/                       @GITHUB-AYOUB
 /tools/                         @GITHUB-AYOUB
@@ -54,34 +54,34 @@
 /docs/conception/deploiement.md @GITHUB-AYOUB
 
 # --- Exceptions à l'intérieur des dossiers ci-dessus
-/src/render/packetAnimator.js   @GITHUB-AYOUB
-/src/sim/devices/switch.js      @GITHUB-AYOUB
+/src/render/packetAnimator.mjs   @GITHUB-AYOUB
+/src/sim/devices/switch.mjs      @GITHUB-AYOUB
 /scenarios/ping.json            @GITHUB-AYOUB
-/tests/switch.test.js           @GITHUB-AYOUB
-/tests/precache.test.js         @GITHUB-AYOUB
+/tests/switch.test.mjs           @GITHUB-AYOUB
+/tests/precache.test.mjs         @GITHUB-AYOUB
 /tools/make-models.mjs          @GITHUB-AZIZ
 
 # --- Protocoles : code, scénario, tests et documentation vont ensemble
-/src/sim/protocols/dhcp.js      @GITHUB-RAMY
-/src/sim/protocols/http.js      @GITHUB-RAMY
+/src/sim/protocols/dhcp.mjs      @GITHUB-RAMY
+/src/sim/protocols/http.mjs      @GITHUB-RAMY
 /scenarios/dhcp.json            @GITHUB-RAMY
 /scenarios/http.json            @GITHUB-RAMY
-/tests/dhcp.test.js             @GITHUB-RAMY
-/tests/http.test.js             @GITHUB-RAMY
-/tests/ui-i18n.test.js          @GITHUB-RAMY
+/tests/dhcp.test.mjs             @GITHUB-RAMY
+/tests/http.test.mjs             @GITHUB-RAMY
+/tests/ui-i18n.test.mjs          @GITHUB-RAMY
 /docs/protocoles/dhcp.md        @GITHUB-RAMY
 /docs/protocoles/http.md        @GITHUB-RAMY
 
-/src/sim/protocols/icmp.js      @GITHUB-AZIZ
-/src/sim/protocols/udp.js       @GITHUB-AZIZ
-/src/sim/protocols/dns.js       @GITHUB-AZIZ
+/src/sim/protocols/icmp.mjs      @GITHUB-AZIZ
+/src/sim/protocols/udp.mjs       @GITHUB-AZIZ
+/src/sim/protocols/dns.mjs       @GITHUB-AZIZ
 /scenarios/udp.json             @GITHUB-AZIZ
 /scenarios/dns.json             @GITHUB-AZIZ
-/tests/icmp.test.js             @GITHUB-AZIZ
-/tests/udp.test.js              @GITHUB-AZIZ
-/tests/dns.test.js              @GITHUB-AZIZ
-/tests/render-api.test.js       @GITHUB-AZIZ
-/tests/packetStyles.test.js     @GITHUB-AZIZ
+/tests/icmp.test.mjs             @GITHUB-AZIZ
+/tests/udp.test.mjs              @GITHUB-AZIZ
+/tests/dns.test.mjs              @GITHUB-AZIZ
+/tests/render-api.test.mjs       @GITHUB-AZIZ
+/tests/packetStyles.test.mjs     @GITHUB-AZIZ
 /docs/protocoles/icmp.md        @GITHUB-AZIZ
 /docs/protocoles/udp.md         @GITHUB-AZIZ
 /docs/protocoles/dns.md         @GITHUB-AZIZ
@@ -96,8 +96,8 @@
 /docs/protocoles/ipv6.md        @GITHUB-KHALIL
 
 # --- Fichiers partagés (contrats) : modification = pull request approuvée par les quatre
-/src/sim/events.js              @GITHUB-RAMY @GITHUB-AZIZ @GITHUB-KHALIL @GITHUB-AYOUB
-/src/sim/scenario.js            @GITHUB-RAMY @GITHUB-AZIZ @GITHUB-KHALIL @GITHUB-AYOUB
+/src/sim/events.mjs              @GITHUB-RAMY @GITHUB-AZIZ @GITHUB-KHALIL @GITHUB-AYOUB
+/src/sim/scenario.mjs            @GITHUB-RAMY @GITHUB-AZIZ @GITHUB-KHALIL @GITHUB-AYOUB
 /docs/format-scenario.md        @GITHUB-RAMY @GITHUB-AZIZ @GITHUB-KHALIL @GITHUB-AYOUB
 /index.html                     @GITHUB-RAMY @GITHUB-AZIZ @GITHUB-KHALIL @GITHUB-AYOUB
 /scenarios/index.json           @GITHUB-RAMY @GITHUB-AZIZ @GITHUB-KHALIL @GITHUB-AYOUB

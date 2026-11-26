@@ -1,10 +1,10 @@
 # Consoles des équipements — référence des commandes
 
-> Laboratoire de Steve (S7). Code : `src/sim/cli.js` (interpréteur), `src/sim/config.js` (modifications du
-> scénario). Tests : `tests/cli.test.js`. Mode d'emploi du laboratoire : `laboratoire.md`.
+> Laboratoire de Steve (S7). Code : `src/sim/cli.mjs` (interpréteur), `src/sim/config.mjs` (modifications du
+> scénario). Tests : `tests/cli.test.mjs`. Mode d'emploi du laboratoire : `laboratoire.md`.
 
 Chaque équipement administrable a une console. Son **style** dépend du système de son modèle
-(`src/sim/catalog.js`, champ `os`) :
+(`src/sim/catalog.mjs`, champ `os`) :
 
 | Style | Systèmes (fictifs) | Équipements |
 | --- | --- | --- |
@@ -95,6 +95,9 @@ réussite) s'affiche à la fin.
 
 ## Invite de commandes du PC
 
+Invite d'un PC : `C:\Users\<nom du PC>>` (par exemple `C:\Users\ADMIN-1>`). La fenêtre de console est petite et
+à moitié transparente pour laisser voir la salle ; son coin en bas à droite l'agrandit, ⎯ la réduit.
+
 `help`, `ipconfig` (`/all`, `/renew` pour le DHCP), `arp -a`, `ping <ip|nom>`, `tracert <ip>`, `nslookup <nom>`,
 `curl <adresse>` (page web), `hostname`, `cls`, et pour changer l'adresse :
 
@@ -112,6 +115,6 @@ history() }`. `execute` renvoie `{ lines, error?, scenario?, run?, clear? }` :
 - `run` : les étapes à jouer (`sim.runActions(run.steps)`) puis `formatRun(dialect, run, réponses)` pour écrire le
   résultat dans le style de la console.
 
-Ajouter une commande : une ligne `add(modes, 'mots {param}', 'aide', (args) => …)` dans `cli.js` ; les paramètres
+Ajouter une commande : une ligne `add(modes, 'mots {param}', 'aide', (args) => …)` dans `cli.mjs` ; les paramètres
 connus sont `{ip}`, `{mask}`, `{num}`, `{word}`, `{iface}`, `{vlans}`, `{mac}`, `{rest}`. Une modification passe
-par une fonction pure de `config.js`, testable sans interface.
+par une fonction pure de `config.mjs`, testable sans interface.

@@ -5,17 +5,17 @@ code ; ce document les résume. **Les modifier demande une pull request approuv�
 
 | Contrat | Fichier | Qui s'en sert |
 | --- | --- | --- |
-| Sujets du bus et forme d'un paquet | `src/sim/events.js` | tous |
-| Contrat d'un protocole | `src/sim/events.js` (`PROTOCOL_CONTRACT`) | auteurs de protocoles |
-| Format des scénarios | `src/sim/scenario.js`, [format-scenario.md](format-scenario.md) | auteurs de scénarios |
-| Commandes | `src/sim/commands.js` | interface, panneau VR |
-| API de rendu | `src/render/api.js`, [api-rendu.md](api-rendu.md) | interface, VR, animation |
+| Sujets du bus et forme d'un paquet | `src/sim/events.mjs` | tous |
+| Contrat d'un protocole | `src/sim/events.mjs` (`PROTOCOL_CONTRACT`) | auteurs de protocoles |
+| Format des scénarios | `src/sim/scenario.mjs`, [format-scenario.md](format-scenario.md) | auteurs de scénarios |
+| Commandes | `src/sim/commands.mjs` | interface, panneau VR |
+| API de rendu | `src/render/api.mjs`, [api-rendu.md](api-rendu.md) | interface, VR, animation |
 | Zones de la page | `index.html`, [conception/maquette.md](conception/maquette.md) | interface, VR |
 
 ## 1. La simulation vue de l'extérieur
 
 ```js
-import { createSimulation, Topics } from './simulation.js';
+import { createSimulation, Topics } from './simulation.mjs';
 
 const sim = createSimulation();
 await sim.loadScenarioFromUrl('scenarios/ping.json');
@@ -67,7 +67,7 @@ sim.text('arp.request'); // texte { fr, en } d'une explication
 
 ## 4. Contrat d'un protocole (patron Strategy)
 
-Un protocole est un fichier `src/sim/protocols/<id>.js` dont l'export par défaut est :
+Un protocole est un fichier `src/sim/protocols/<id>.mjs` dont l'export par défaut est :
 
 | Membre | Rôle |
 | --- | --- |
@@ -94,7 +94,7 @@ Un protocole est un fichier `src/sim/protocols/<id>.js` dont l'export par défau
 
 ## 6. Mocks
 
-- `src/sim/mockEngine.js` — `createMockSimulation()` : même interface que la vraie simulation,
+- `src/sim/mockEngine.mjs` — `createMockSimulation()` : même interface que la vraie simulation,
   rejoue une liste d'évènements écrite à la main. Pour développer l'interface ou le rendu sans le moteur.
-- `src/render/mockRender.js` — `createMockRender()` : même API que le rendu, sans carte graphique. Pour tester
-  l'interface ; sert aussi de repli si ni WebGPU ni WebGL 2 ne sont disponibles.
+- `src/render/mockRender.mjs` — `createMockRender()` : même API que le rendu, sans carte graphique. Pour tester
+  l'interface ; sert aussi de repli quand WebGPU n'est pas disponible (la scène affiche alors un message).

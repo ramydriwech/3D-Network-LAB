@@ -8,6 +8,12 @@ choisissez un scénario, vous lancez la lecture, et chaque message est animé et
 Ouvrez l'adresse du site dans **Chrome** (PC ou smartphone) : `https://<compte>.github.io/<depot>/`.
 Rien à installer, aucun compte à créer.
 
+L'application s'ouvre **dans le laboratoire** (voir la partie 13) : une salle où le réseau du scénario est monté
+dans des baies et sur des postes de travail. Le bouton **Mode classique** (en haut à droite de la scène, à côté de **Survol** ; ou la touche **L**)
+affiche à la place une **vue d'ensemble** de la topologie, pour voir d'un coup d'œil qui est relié à qui ; les
+équipements, les câbles et les paquets y sont dessinés plus grands. **Retour au labo** (ou **L**) ramène dans la
+salle. Pour ouvrir directement le mode classique, ajoutez `?classique` à l'adresse.
+
 L'écran comporte trois parties :
 
 | Partie | Contenu |
@@ -18,6 +24,8 @@ L'écran comporte trois parties :
 
 ## 2. Se déplacer dans la scène
 
+En mode classique (et en mode **Survol** du laboratoire) :
+
 | Action | Souris | Écran tactile |
 | --- | --- | --- |
 | Tourner autour du réseau | glisser (bouton gauche) | glisser avec un doigt |
@@ -26,7 +34,9 @@ L'écran comporte trois parties :
 | Sélectionner | clic | toucher |
 
 Les équipements : **PC** (écran bleu), **serveur** (tour violette), **switch** (boîtier vert), **routeur** (boîtier orange).
-Les petites étiquettes près des switches et des routeurs sont les noms de leurs ports.
+Au-dessus de chaque équipement : son nom, puis son adresse — l'adresse IP d'un PC, d'un serveur, d'un routeur ou
+d'un pare-feu (deux au plus, puis « +n »), l'adresse MAC d'un switch (un switch n'a pas d'adresse IP : il travaille
+avec les adresses MAC). Les petites étiquettes près des switches et des routeurs sont les noms de leurs ports.
 
 ## 3. Jouer un scénario
 
@@ -96,9 +106,18 @@ Cliquez sur un équipement pour voir ses adresses et ses tables, qui se rempliss
 ## 6. Inspecter un paquet
 
 1. Mettez en **pause** ou avancez **pas à pas** : le paquet arrivé reste affiché.
-2. Cliquez sur le paquet dans la scène, **ou** sur sa ligne dans le **Journal**.
-3. Le panneau **Inspecteur de paquet** détaille ses champs, couche par couche : Ethernet (adresses MAC), IP (adresses,
-   TTL), puis le protocole transporté (ports, indicateurs TCP, numéros de séquence, contenu).
+2. Cliquez sur le paquet (sa carte) dans la scène — dans le laboratoire, visez-le avec le viseur, jusqu'à 12 m —
+   **ou** sur sa ligne dans le **Journal**. L'onglet **Lecture** s'ouvre s'il était caché.
+3. Le panneau **Inspecteur de paquet** détaille la trame comme un analyseur réseau, en-tête par en-tête :
+   - **Ethernet II** : MAC destination et source, type (0x0800 IPv4, 0x0806 ARP, 0x86DD IPv6), bourrage, FCS (CRC-32), taille ;
+   - **ARP** (opération, adresses de l'émetteur et de la cible), **IPv4** (version, longueurs, identification,
+     indicateurs, TTL, numéro de protocole, somme de contrôle de l'en-tête, adresses) ou **IPv6** ;
+   - **ICMP**, **ICMPv6**, **UDP** ou **TCP** : types et codes, ports (avec leur service : 53 DNS, 80 HTTP…),
+     numéros de séquence, indicateurs, fenêtre, longueur, somme de contrôle ;
+   - le message **DHCP**, **DNS** ou **HTTP**, et les données ;
+   - en bas, les **octets de la trame** en hexadécimal.
+   Les longueurs et les sommes de contrôle sont calculées sur la trame reconstruite octet par octet, comme sur un vrai
+   réseau (`src/sim/wire.mjs`).
 
 À essayer : dans le scénario Routage, inspectez le même ping avant et après un routeur. Les adresses IP n'ont pas
 changé, les adresses MAC si, et le TTL a perdu 1.
@@ -107,11 +126,18 @@ changé, les adresses MAC si, et le TTL a perdu 1.
 
 L'installation n'est **pas nécessaire** : tout fonctionne dans le navigateur. Elle ajoute une icône sur l'appareil et ouvre l'application dans sa propre fenêtre.
 
-- **PC (Chrome, Edge)** : bouton **Installer l'application** en haut à droite, ou icône d'installation dans la barre d'adresse.
-- **Android (Chrome)** : même bouton, ou menu ⋮ → *Ajouter à l'écran d'accueil*.
-- **iPhone, iPad (Safari)** : bouton *Partager* → *Sur l'écran d'accueil*.
+Cliquez sur le bouton **Installer** de la barre du haut.
 
-Si vous refusez, rien ne change : continuez dans le navigateur. Le bouton n'apparaît pas si l'application est déjà installée ou si le navigateur ne propose pas l'installation.
+- **PC ou Android (Chrome, Edge)** : quand le navigateur le permet, le bouton est mis en avant (bleu) et ouvre
+  directement sa fenêtre d'installation. Sinon, il explique le geste : icône d'installation dans la barre d'adresse,
+  ou menu ⋮ de Chrome → *Installer…* (menu ⋯ d'Edge → *Applications* → *Installer ce site en tant qu'application*).
+- **Mac (Safari)** : le bouton rappelle le geste : menu *Fichier* → *Ajouter au Dock*.
+- **iPhone, iPad (Safari)** : bouton *Partager* → *Sur l'écran d'accueil*.
+- **Firefox sur ordinateur** : il ne sait pas installer les applications web ; le bouton conseille Chrome, Edge ou
+  Safari. L'application reste utilisable dans Firefox.
+
+Si vous refusez, rien ne change : continuez dans le navigateur. Le bouton disparaît quand l'application est installée,
+et il n'est pas affiché quand vous l'ouvrez déjà comme application installée.
 
 ### Utilisation hors ligne
 
@@ -129,12 +155,21 @@ Dans le casque, le réseau apparaît comme une maquette posée devant vous. À g
 les commandes et l'explication en cours. Visez un bouton, un équipement ou un paquet avec le rayon d'une manette, puis
 appuyez sur la **gâchette**. Le bouton **Quitter** du panneau termine la session.
 
-Si le bouton indique **VR indisponible**, aucun casque ni émulateur n'a été détecté : l'application reste entièrement utilisable en mode classique.
+Si le bouton indique **VR indisponible**, aucun casque ni émulateur n'a été détecté : l'application reste entièrement utilisable à l'écran. Un clic sur ce bouton ouvre le panneau **Technologies** (voir ci-dessous), qui montre ce qui manque.
 
-En bas à droite de la scène, une pastille indique le moteur de rendu utilisé : **WebGPU** quand le navigateur le
-propose, **WebGL 2** sinon. La VR fonctionne avec les deux ; à l'entrée, un message indique la voie choisie
-(« VR WebGPU (directe) », « VR WebGPU (pont pour émulateur) » ou « VR WebGL 2 »). Si un casque affiche qu'il ne sait
-pas encore afficher du WebGPU en VR, rechargez avec `?backend=webgl` à la fin de l'adresse.
+L'application dessine **en WebGPU seulement**, à l'écran comme en VR (pastille « WebGPU » en bas à droite de la
+scène). À l'entrée en VR, un message indique la voie choisie : « VR WebGPU (directe) » sur un casque dont le navigateur
+relie WebXR et WebGPU, « VR WebGPU (pont pour émulateur) » avec l'Immersive Web Emulator. Si un casque affiche qu'il ne
+sait pas encore afficher du WebGPU en VR, activez « WebXR WebGPU » dans les réglages expérimentaux de son navigateur.
+
+**Panneau « Technologies ».** Un clic sur la pastille **WebGPU** (en bas à droite de la scène), sur **VR indisponible**,
+ou sur **Détails techniques** quand WebGPU manque, ouvre un panneau qui mesure en direct ce que l'appareil fournit :
+contexte sécurisé (HTTPS), rendu WebGPU et version de Three.js, carte graphique, qualité de l'image, WebXR, session VR
+immersive, liaison WebXR + WebGPU (`XRGPUBinding`), possibilité de VR sur cet appareil, hors-ligne, installation.
+Chaque ligne est verte (ça marche), orange (ça marche avec une réserve), rouge (ça ne marchera pas) ou grise (sans
+objet), avec un conseil quand ce n'est pas vert. **Copier le rapport** le met dans le presse-papiers, pour le joindre à
+un message. Avant une démonstration en VR sur un casque, ouvrez ce panneau dans le navigateur du casque : la ligne
+« VR sur cet appareil » dit si la VR marchera.
 
 À droite, un second panneau a trois onglets : **Étape** (l'explication en cours), **Fiche** (la fiche technique et
 les débits de l'équipement visé) et **Diagnostic** (les problèmes du réseau, avec un bouton **Corriger**).
@@ -184,12 +219,16 @@ commandes IOS, VRP ou invite de commandes) ; un switch non administrable n'a pas
 
 ## 13. Le laboratoire et les consoles
 
-Le bouton **Laboratoire** (en haut à droite) vous fait entrer dans une salle où les switchs, routeurs, pare-feu et
-serveurs sont montés dans des baies, et les PC posés sur des postes de travail. **ZQSD** / **WASD** pour marcher, la **souris** pour regarder (cliquez d'abord dans la scène), **E** pour
-ouvrir la **console** de l'équipement visé, **V** pour voir la salle d'en haut, **Échap** pour libérer la souris.
-L'étagère **Catalogue** contient un exemplaire de chaque modèle (cliquez-en un pour le poser devant vous) et, en haut,
-un rouleau de chaque type de câble : en le visant, sa fiche s'affiche (vitesse, portée, usage) ; un clic le choisit
-pour les prochains branchements (outil « Relier », bouton « Câbler » en VR).
+L'application s'ouvre dans une salle où les switchs, routeurs, pare-feu et serveurs sont montés dans des baies, et
+les PC posés sur des postes de travail. **ZQSD** / **WASD** pour marcher, la **souris** pour regarder (cliquez d'abord
+dans la scène), **E** pour ouvrir la **console** de l'équipement visé, **V** pour voir la salle d'en haut, **L** pour
+passer en mode classique (et revenir), **Échap** pour libérer la souris.
+**Construire à la main** (guide complet : `docs/laboratoire.md`, partie 2 bis). Steve a des mains : un clic sur
+l'étagère **Mobilier** prend une baie, un poste de travail ou une table, un clic le pose (**R** : tourner) ; un clic
+sur l'étagère **Équipements** prend un modèle, que l'on installe en visant le bon meuble (l'emplacement U libre d'une
+baie s'allume en vert) ; un clic sur un rouleau de câble le prend : on vise une prise (« SW1 · Gi0/3 — libre »), on
+clique, puis la prise de l'autre équipement. **F** reprend ce que vous visez (ou débranche une prise) et repose ce que
+vous avez en main ; **Suppr** le retire. Chaque geste s'annule avec **Annuler** (onglet Construire).
 
 La console (aussi accessible par **Ouvrir la console** dans le panneau Équipement) accepte de vraies commandes :
 `enable`, `configure terminal`, `show ip route`, `interface g0/1`, `ip address …`, `switchport access vlan 20`,
@@ -207,11 +246,11 @@ tourner, gâchette sur un équipement pour ouvrir sa console sur un pupitre avec
 
 | Problème | Solution |
 | --- | --- |
-| La scène reste noire ; message « Ni WebGPU ni WebGL 2 ne sont disponibles » | mettez le navigateur à jour ; activez l'accélération matérielle dans ses paramètres |
+| Pas de scène 3D ; message « … La scène 3D a besoin de WebGPU » | ouvrez l'application dans Chrome ou Edge récents, Safari 26+ ou Firefox 141+ (Windows) ; activez l'accélération matérielle ; mettez à jour le pilote graphique. Le reste de l'application (scénarios, journal, consoles) fonctionne quand même |
 | Rien ne bouge | appuyez sur **Lecture** ; si l'état affiche « Terminé », appuyez sur **Réinitialiser** |
 | Impossible de cliquer sur un paquet | mettez en pause d'abord ; ou passez par le **Journal** |
 | Le bouton « Installer » n'apparaît pas | l'application est déjà installée, ou le navigateur ne le propose pas (voir § 7 pour Safari) |
-| « VR indisponible » | installez Immersive Web Emulator et rechargez ; vérifiez que l'adresse commence par `https://` |
+| « VR indisponible » | cliquez dessus : le panneau « Technologies » montre ce qui manque ; installez Immersive Web Emulator et rechargez ; vérifiez que l'adresse commence par `https://` |
 | L'application ne s'ouvre pas hors ligne | il faut l'avoir ouverte une fois avec une connexion |
 | L'ancienne version s'affiche encore | rechargez la page une seconde fois |
 | L'affichage est lent sur téléphone | fermez les autres onglets ; réduisez la vitesse de lecture |

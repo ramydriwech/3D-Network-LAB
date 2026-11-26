@@ -4,8 +4,8 @@
 
 | | |
 | --- | --- |
-| Code | `src/sim/protocols/dns.js` |
-| Tests | `tests/dns.test.js` |
+| Code | `src/sim/protocols/dns.mjs` |
+| Tests | `tests/dns.test.mjs` |
 | Scénario | `scenarios/dns.json` |
 | Couche | application — transporté par UDP, port 53 |
 | Action de scénario | `{ "action": "dns", "from": "pc1", "name": "www.supcom.tn" }` |

@@ -13,7 +13,7 @@ npm start
 Puis ouvrir **http://localhost:8080** dans Chrome. `Ctrl+C` arrête le serveur. Autre port : `PORT=3000 npm start`
 (PowerShell : `$env:PORT=3000; npm start`).
 
-`npm start` fait deux choses : il génère `precache-manifest.js` (la liste des fichiers à mettre en cache), puis lance
+`npm start` fait deux choses : il génère `precache-manifest.mjs` (la liste des fichiers à mettre en cache), puis lance
 `tools/serve.mjs`, un petit serveur de fichiers statiques.
 
 > **Pourquoi un serveur ?** Ouvrir `index.html` par un double-clic (`file://…`) ne fonctionne pas : le navigateur
@@ -26,8 +26,8 @@ Puis ouvrir **http://localhost:8080** dans Chrome. `Ctrl+C` arrête le serveur. 
 | --- | --- |
 | `npm start` | serveur local sur le port 8080 |
 | `npm test` | tous les tests automatiques (`node --test`) |
-| `node --test tests/tcp.test.js` | un seul fichier de tests |
-| `npm run precache` | régénère `precache-manifest.js` |
+| `node --test tests/tcp.test.mjs` | un seul fichier de tests |
+| `npm run precache` | régénère `precache-manifest.mjs` |
 | `npm run models` | régénère les modèles GLB de `assets/models/` |
 | `npm run icons` | régénère les icônes PNG de `assets/icons/` |
 
@@ -73,14 +73,14 @@ Après le premier déploiement, l'adresse du site s'affiche dans **Settings → 
 
 ### Ce qui est publié
 
-Seulement ce dont le navigateur a besoin : `index.html`, `styles.css`, `main.js`, `simulation.js`, `manifest.json`,
-`sw.js`, `precache-manifest.js`, `src/`, `scenarios/`, `assets/`, `vendor/`. Les tests, la documentation et les outils restent dans le dépôt.
+Seulement ce dont le navigateur a besoin : `index.html`, `styles.css`, `main.mjs`, `simulation.mjs`, `manifest.json`,
+`sw.mjs`, `precache-manifest.mjs`, `src/`, `scenarios/`, `assets/`, `vendor/`. Les tests, la documentation et les outils restent dans le dépôt.
 
 ### Vérifier un déploiement
 
 1. Onglet **Actions** : le dernier « CI » est vert.
 2. Ouvrir l'URL HTTPS ; dans la console, aucune erreur.
-3. Outils de développement → **Application → Service workers** : `sw.js` est « activated and is running ».
+3. Outils de développement → **Application → Service workers** : `sw.mjs` est « activated and is running ».
 4. **Application → Cache storage** : un cache `3dnt-<version>` contient tous les fichiers.
 5. **Network → Offline**, recharger : l'application s'affiche, la pastille « Hors ligne » apparaît.
 
@@ -99,11 +99,11 @@ lance `node tools/verify-https.mjs https://<compte>.github.io/<dépôt>/`. Il co
 | redirection HTTP → HTTPS, en-tête HSTS | (avertissements seulement) |
 
 Le résultat s'affiche en tableau dans la page de l'exécution GitHub Actions. On peut lancer la même commande sur son
-poste. Les jugements sont testés sans réseau (`tests/verify-https.test.js`).
+poste. Les jugements sont testés sans réseau (`tests/verify-https.test.mjs`).
 
 ### Mise à jour chez les utilisateurs
 
-La `version` de `precache-manifest.js` est une empreinte du contenu des fichiers. Dès qu'un fichier change, le
+La `version` de `precache-manifest.mjs` est une empreinte du contenu des fichiers. Dès qu'un fichier change, le
 Service Worker déployé est différent : le navigateur l'installe en arrière-plan, crée un nouveau cache et supprime
 l'ancien. La nouvelle version s'affiche **au rechargement suivant**.
 

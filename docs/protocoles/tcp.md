@@ -5,8 +5,8 @@ chaque octet envoyé est acquitté.
 
 | | |
 | --- | --- |
-| Code | `src/sim/protocols/tcp.js` |
-| Tests | `tests/tcp.test.js` |
+| Code | `src/sim/protocols/tcp.mjs` |
+| Tests | `tests/tcp.test.mjs` |
 | Scénario | `scenarios/tcp.json` |
 | Couche | transport — dépend d'ARP et d'ICMP |
 | Action de scénario | `{ "action": "tcp", "from": "pc1", "to": "srv1", "port": 5000, "data": "Bonjour SUP'COM" }` |

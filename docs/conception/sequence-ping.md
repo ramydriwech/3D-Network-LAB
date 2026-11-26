@@ -67,10 +67,10 @@ Les switches SW1 et SW2, transparents pour IP, sont omis de ce second diagramme.
 
 | Message du diagramme | Code | Explication affichée (clé) |
 | --- | --- | --- |
-| choix remise directe / passerelle | `IpNode.sendIp()` — `src/sim/devices/host.js` | `host.direct`, `host.viaGateway` |
-| ARP Request / Reply | `resolve()`, `receive()` — `src/sim/protocols/arp.js` | `arp.request`, `arp.reply`, `arp.cacheUpdate` |
-| apprentissage et inondation | `Switch.receive()` — `src/sim/devices/switch.js` | `switch.learn`, `switch.flood.broadcast`, `switch.forward` |
-| ICMP Echo Request / Reply | `sendEcho()`, `receive()` — `src/sim/protocols/icmp.js` | `icmp.echoRequest`, `icmp.echoReply`, `icmp.success` |
-| relais et TTL | `Router.forward()` — `src/sim/devices/router.js` | `router.lookup`, `router.ttl`, `router.forward` |
+| choix remise directe / passerelle | `IpNode.sendIp()` — `src/sim/devices/host.mjs` | `host.direct`, `host.viaGateway` |
+| ARP Request / Reply | `resolve()`, `receive()` — `src/sim/protocols/arp.mjs` | `arp.request`, `arp.reply`, `arp.cacheUpdate` |
+| apprentissage et inondation | `Switch.receive()` — `src/sim/devices/switch.mjs` | `switch.learn`, `switch.flood.broadcast`, `switch.forward` |
+| ICMP Echo Request / Reply | `sendEcho()`, `receive()` — `src/sim/protocols/icmp.mjs` | `icmp.echoRequest`, `icmp.echoReply`, `icmp.success` |
+| relais et TTL | `Router.forward()` — `src/sim/devices/router.mjs` | `router.lookup`, `router.ttl`, `router.forward` |
 
-La suite exacte des messages est figée dans `tests/golden/ping.txt` et vérifiée par `tests/regression.test.js`.
+La suite exacte des messages est figée dans `tests/golden/ping.txt` et vérifiée par `tests/regression.test.mjs`.

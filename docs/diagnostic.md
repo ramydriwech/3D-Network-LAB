@@ -1,8 +1,8 @@
 # Diagnostic du réseau et recommandations
 
-> Demande du superviseur (S6). Code : `src/sim/diagnostic.js` (règles, corrections),
-> `src/ui/diagnosticPanel.js` (onglet), `src/xr/vrInfoPanel.js` (panneau VR).
-> Tests : `tests/diagnostic.test.js`.
+> Demande du superviseur (S6). Code : `src/sim/diagnostic.mjs` (règles, corrections),
+> `src/ui/diagnosticPanel.mjs` (onglet), `src/xr/vrInfoPanel.mjs` (panneau VR).
+> Tests : `tests/diagnostic.test.mjs`.
 
 ![L'onglet Diagnostic sur le scénario « Diagnostic »](captures/diagnostic.jpg)
 
@@ -57,4 +57,4 @@ Les règles sont de simples fonctions : on en ajoute une sans toucher aux autres
 
 Un réseau à deux routeurs avec quatre erreurs (adresse en double, passerelle hors réseau,
 route manquante sur R2, DNS introuvable) et un câble Cat 5. Les pings échouent ; une fois
-tout corrigé, ils réussissent tous (vérifié par `tests/diagnostic.test.js`).
+tout corrigé, ils réussissent tous (vérifié par `tests/diagnostic.test.mjs`).

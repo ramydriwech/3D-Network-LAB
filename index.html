@@ -16,7 +16,7 @@
   <script type="importmap">
     {
       "imports": {
-        "three": "./vendor/three/three.webgpu.js",
+        "three": "./vendor/three/three.webgpu.mjs",
         "three/addons/": "./vendor/three/addons/"
       }
     }
@@ -29,14 +29,14 @@
     request approuvée par les quatre.
 
       #scene          canevas 3D                      src/render/      (Aziz)
-      #controls       lecture, pause, pas à pas…      src/ui/controls.js       (Ramy)
-      #explanations   explications pédagogiques       src/ui/explanations.js   (Ramy)
-      #info           équipement sélectionné          src/ui/infoPanel.js      (Ramy)
-      #inspector      champs d'un paquet              src/ui/inspector.js      (Ramy)
-      #journal        messages échangés               src/ui/journal.js        (Ramy)
-      #scenario-slot  choix du scénario               src/ui/scenarioPicker.js (Ramy)
-      #lang-slot      bouton FR/EN                    src/ui/i18n.js           (Ramy)
-      #install-slot   installation de la PWA          src/ui/install.js        (Ramy)
+      #controls       lecture, pause, pas à pas…      src/ui/controls.mjs       (Ramy)
+      #explanations   explications pédagogiques       src/ui/explanations.mjs   (Ramy)
+      #info           équipement sélectionné          src/ui/infoPanel.mjs      (Ramy)
+      #inspector      champs d'un paquet              src/ui/inspector.mjs      (Ramy)
+      #journal        messages échangés               src/ui/journal.mjs        (Ramy)
+      #scenario-slot  choix du scénario               src/ui/scenarioPicker.mjs (Ramy)
+      #lang-slot      bouton FR/EN                    src/ui/i18n.mjs           (Ramy)
+      #install-slot   installation de la PWA          src/ui/install.mjs        (Ramy)
       #xr-slot        bouton « Entrer en VR »         src/xr/          (Ayoub)
   -->
   <header class="topbar">
@@ -74,6 +74,6 @@
     <p class="fatal-error">Cette application a besoin de JavaScript. / This application needs JavaScript.</p>
   </noscript>
 
-  <script type="module" src="main.js"></script>
+  <script type="module" src="main.mjs"></script>
 </body>
 </html>

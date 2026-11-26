@@ -9,7 +9,7 @@ Rien à installer : un navigateur récent suffit, sur PC ou sur smartphone.
 
 ## Ce que fait l'application
 
-- **Rendu WebGPU partout, VR comprise** (Three.js `WebGPURenderer`), avec secours WebGL 2 automatique.
+- **Rendu 100 % WebGPU, VR comprise** (Three.js `WebGPURenderer`, sans secours WebGL) : un navigateur récent avec WebGPU est nécessaire (Chrome, Edge, Safari 26+, Firefox 141+ sous Windows).
 - **Topologie 3D** de PC, serveurs, switches et routeurs, à explorer à la souris ou au doigt.
 - **Scénarios animés** : ARP, ICMP (ping), DHCP, UDP, DNS, TCP, HTTP, IPv6, routage statique, traceroute, débit, diagnostic.
 - **Explication de chaque message**, en français ou en anglais.
@@ -21,7 +21,9 @@ Rien à installer : un navigateur récent suffit, sur PC ou sur smartphone.
 - **Débit** : vitesse négociée de chaque lien, temps d'émission des trames, files d'attente, pertes, transferts TCP à fenêtre glissante avec retransmissions ; câbles colorés selon leur charge ; fiche technique des équipements.
 - **Diagnostic** : adresses, passerelles, routes, câblage et performances vérifiés, avec la cause, le conseil et une correction en un clic.
 - **Éditeur** : construire sa propre topologie (ajout, glisser-déposer, câblage, réglages, adressage automatique), l'enregistrer, l'exporter en JSON, annuler / rétablir.
-- **Laboratoire** : entrer dans une salle à la première personne (ou en VR à l'échelle réelle), viser un équipement et ouvrir sa **console** ; chaque modèle a sa fiche et son style de commandes (IOS, VRP, invite de commandes) ; VLAN, sécurité de port, ACL, NAT et pare-feu à états ; clavier 3D et téléportation en VR ; six **missions** guidées vérifiées automatiquement.
+- **Laboratoire** (vue d'ouverture) et **mode classique** (vue d'ensemble agrandie de la topologie : qui est relié à qui), à un bouton ou à la touche L l'un de l'autre.
+- **Construire la salle à la main** : Steve a des mains ; il pose les meubles (baies 12U et 6U, postes de travail, tables), installe chaque équipement sur le bon meuble (emplacement U d'une baie, bureau, table), branche les câbles prise par prise, débranche, déplace — à l'écran comme en VR, chaque geste annulable.
+- **Dans le laboratoire** : se déplacer dans une salle à la première personne (ou en VR à l'échelle réelle), viser un équipement et ouvrir sa **console** ; chaque modèle a sa fiche et son style de commandes (IOS, VRP, invite de commandes) ; VLAN, sécurité de port, ACL, NAT et pare-feu à états ; clavier 3D et téléportation en VR ; six **missions** guidées vérifiées automatiquement.
 
 | Débit et fiche technique | Diagnostic | Éditeur |
 | --- | --- | --- |
@@ -58,15 +60,15 @@ Ouvrir `index.html` par un double-clic ne fonctionne pas (les modules JavaScript
 
 ```
 index.html, styles.css     page et style
-main.js                    assemble les quatre parties
-simulation.js, src/sim/    moteur de simulation, équipements, protocoles
+main.mjs                    assemble les quatre parties
+simulation.mjs, src/sim/    moteur de simulation, équipements, protocoles
 src/render/                scène 3D (Three.js, WebGPURenderer)
 src/ui/                    interface
 src/xr/                    mode VR (WebXR)
 scenarios/                 scénarios JSON
 assets/                    modèles GLB, icônes
 vendor/three/              Three.js r187 (version figée)
-manifest.json, sw.js       PWA
+manifest.json, sw.mjs       PWA
 tests/                     tests automatiques
 tools/                     serveur local et scripts de génération
 docs/                      documentation
@@ -76,12 +78,12 @@ docs/                      documentation
 
 1. Écrire `scenarios/mon-scenario.json` en suivant le [format](docs/format-scenario.md).
 2. L'ajouter à `scenarios/index.json`.
-3. `npm test` vérifie qu'il est valide ; `UPDATE_GOLDEN=1 node --test tests/regression.test.js` enregistre sa trace de référence.
+3. `npm test` vérifie qu'il est valide ; `UPDATE_GOLDEN=1 node --test tests/regression.test.mjs` enregistre sa trace de référence.
 
 ## Règles de contribution
 
 - Chacun ne modifie que ses fichiers (`.github/CODEOWNERS`). Un bug chez un autre = une issue assignée à son propriétaire.
-- Les contrats communs (`src/sim/events.js`, le format des scénarios, `index.html`) ne changent que par une pull request approuvée par les quatre.
+- Les contrats communs (`src/sim/events.mjs`, le format des scénarios, `index.html`) ne changent que par une pull request approuvée par les quatre.
 - Push quotidien sur sa branche `feature/<membre>-<sujet>` ; fusion dans `main` le mercredi et le dimanche, après `git pull --rebase origin main`.
 - `main` reste toujours exécutable : les tests passent avant toute fusion.
 

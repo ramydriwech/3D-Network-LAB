@@ -4,8 +4,8 @@
 
 | | |
 | --- | --- |
-| Code | `src/sim/protocols/dhcp.js` |
-| Tests | `tests/dhcp.test.js` |
+| Code | `src/sim/protocols/dhcp.mjs` |
+| Tests | `tests/dhcp.test.mjs` |
 | Scénario | `scenarios/dhcp.json` |
 | Couche | application — transporté par UDP, ports 67 (serveur) et 68 (client) |
 | Action de scénario | `{ "action": "dhcp", "from": "pc1" }` |

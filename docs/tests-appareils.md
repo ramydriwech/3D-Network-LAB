@@ -34,9 +34,9 @@ Ce document est la **fiche de test** : la remplir sur chaque appareil, noter « 
 
 | # | Appareil | Problème | Correction | Fichier |
 | --- | --- | --- | --- | --- |
-| 1 | écran étroit ou en portrait (émulation 390 × 800) | les équipements des extrémités sortaient du cadre | la caméra recule selon le rapport largeur/hauteur de la scène | `src/render/scene.js` (`frame`) |
-| 2 | mobile (préventif) | risque : canevas resté à l'ancienne taille après une rotation de l'écran | écoute de `orientationchange` | `src/render/scene.js` |
-| 3 | mobile (préventif) | risque : contexte graphique perdu après une mise en veille (moteur de secours WebGL 2) | `webglcontextlost` intercepté pour permettre la restauration | `src/render/scene.js` |
+| 1 | écran étroit ou en portrait (émulation 390 × 800) | les équipements des extrémités sortaient du cadre | la caméra recule selon le rapport largeur/hauteur de la scène | `src/render/scene.mjs` (`frame`) |
+| 2 | mobile (préventif) | risque : canevas resté à l'ancienne taille après une rotation de l'écran | écoute de `orientationchange` | `src/render/scene.mjs` |
+| 3 | appareil sans WebGPU (préventif) | la scène 3D ne peut pas s'afficher (application 100 % WebGPU, sans secours WebGL) | message clair (cause, navigateurs qui conviennent) ; le reste de l'application fonctionne | `src/render/webgpu.mjs`, `src/render/index.mjs` |
 | | | *ajouter ici les problèmes relevés sur les vrais appareils* | | |
 
 La ligne 1 a été constatée en émulation sur PC (fenêtre de 390 × 800 pixels, écran tactile simulé) ; les lignes 2 et 3

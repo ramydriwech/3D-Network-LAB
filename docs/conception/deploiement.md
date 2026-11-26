@@ -17,10 +17,10 @@ flowchart LR
   subgraph client["Appareil de l'utilisateur (PC ou smartphone)"]
     subgraph nav["Navigateur (Chrome)"]
       html["Interface HTML<br/>index.html, styles.css, src/ui/"]
-      three["Three.js — WebGPU<br/>(secours WebGL 2)<br/>src/render/"]
-      sim["Simulation<br/>simulation.js, src/sim/"]
+      three["Three.js — WebGPU<br/>(100 % WebGPU)<br/>src/render/"]
+      sim["Simulation<br/>simulation.mjs, src/sim/"]
       xr["WebXR Device API<br/>src/xr/"]
-      sw["Service Worker<br/>sw.js + Cache Storage"]
+      sw["Service Worker<br/>sw.mjs + Cache Storage"]
       html <--> sim
       sim --> three
       three <--> xr
@@ -42,14 +42,14 @@ flowchart LR
 | GitHub — dépôt | source de vérité ; `main` est protégée et toujours exécutable | Git, CODEOWNERS |
 | GitHub Actions | tests à chaque push ; déploiement automatique de `main` | `.github/workflows/ci.yml` |
 | GitHub Pages | hébergement statique en HTTPS, sous `https://<compte>.github.io/<depot>/` | aucun serveur applicatif |
-| Navigateur | exécute toute l'application | modules ES, WebGPU (ou WebGL 2), WebXR, Service Worker |
+| Navigateur | exécute toute l'application | modules ES, WebGPU (obligatoire), WebXR, Service Worker |
 | Casque ou émulateur | affichage immersif | WebXR `immersive-vr` |
 
 ## Contraintes prises en compte
 
 - **Aucun backend** : le site est un ensemble de fichiers statiques. Les scénarios sont des fichiers JSON chargés par `fetch`.
 - **HTTPS obligatoire** pour le Service Worker et WebXR : fourni par GitHub Pages (`localhost` suffit en développement).
-- **Sous-chemin du dépôt** : tous les chemins de l'application sont relatifs (`scenarios/…`, `sw.js`, `./` dans le manifest),
+- **Sous-chemin du dépôt** : tous les chemins de l'application sont relatifs (`scenarios/…`, `sw.mjs`, `./` dans le manifest),
   elle fonctionne donc aussi bien sous `/<depot>/` qu'à la racine.
 - **Aucune ressource externe** : Three.js est copié dans `vendor/three/`, les polices sont celles du système.
   Après la première visite, tout vient du cache.

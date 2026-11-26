@@ -11,10 +11,10 @@ même pull request que toute ressource, bibliothèque ou aide extérieure ajout�
 
 | Élément | Origine | Licence | Utilisation |
 |---|---|---|---|
-| Three.js r187 (`vendor/three/`) | paquet npm `three@0.187.0`, fichiers de `build/` et `examples/jsm/` copiés sans modification | MIT (`vendor/three/LICENSE`) | rendu 3D WebGPU (et son repli WebGL 2), OrbitControls, chargeur GLTF |
+| Three.js r187 (`vendor/three/`) | paquet npm `three@0.187.0`, fichiers de `build/` et `examples/jsm/` copiés tels quels, sauf l'extension `.js` → `.mjs` (format du projet) et, en conséquence, les chemins de leurs `import` relatifs | MIT (`vendor/three/LICENSE`) | rendu 3D WebGPU (le moteur WebGL inclus dans le fichier n'est jamais utilisé), OrbitControls, chargeur GLTF |
 
 Aucune autre bibliothèque n'est chargée par le navigateur. Les outils (`tools/*.mjs`) et les
-tests (`tests/*.test.js`) n'utilisent que Node.js (≥ 20) et son lanceur de tests intégré.
+tests (`tests/*.test.mjs`) n'utilisent que Node.js (≥ 20) et son lanceur de tests intégré.
 
 Pour les essais en VR sans casque, l'équipe utilise l'extension **Immersive Web Emulator**
 (Meta, licence MIT) dans Chrome, ou sa bibliothèque **IWER** dans les tests automatisés ;
@@ -36,7 +36,7 @@ les polices du système.
 
 | Élément | Origine |
 |---|---|
-| Catalogue des équipements et câbles (`src/sim/catalog.js`) | modèles **génériques et fictifs** (« CX-24G », « RX-2G »…). Les vitesses sont les vitesses Ethernet normalisées ; les caractéristiques (capacité de commutation, débit de transfert) sont **calculées** à partir des ports, pas recopiées d'une fiche constructeur. Aucune marque. |
+| Catalogue des équipements et câbles (`src/sim/catalog.mjs`) | modèles **génériques et fictifs** (« CX-24G », « RX-2G »…). Les vitesses sont les vitesses Ethernet normalisées ; les caractéristiques (capacité de commutation, débit de transfert) sont **calculées** à partir des ports, pas recopiées d'une fiche constructeur. Aucune marque. |
 | Portées et vitesses des câbles (Cat 5 à Cat 6a, fibre OM3) | valeurs usuelles des normes TIA/ISO (100 m en cuivre, 10 Gb/s sur 55 m en Cat 6, 300 m en OM3) |
 | Adresses MAC des scénarios | adresses « administrées localement » (préfixe `02:`), d'aucun constructeur |
 | Adresses IP | plages privées (RFC 1918) et réseau de documentation IPv6 `2001:db8::/32` (RFC 3849) |

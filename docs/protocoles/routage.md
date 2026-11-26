@@ -5,8 +5,8 @@ et le renvoie par une autre.
 
 | | |
 | --- | --- |
-| Code | `src/sim/devices/router.js` (et `IpNode` dans `src/sim/devices/host.js`) |
-| Tests | `tests/routage.test.js` |
+| Code | `src/sim/devices/router.mjs` (et `IpNode` dans `src/sim/devices/host.mjs`) |
+| Tests | `tests/routage.test.mjs` |
 | Scénario | `scenarios/routage.json` |
 
 ## La topologie du scénario

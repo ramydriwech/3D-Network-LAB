@@ -5,8 +5,8 @@ les routeurs et les hôtes s'en servent pour signaler une erreur à l'émetteur 
 
 | | |
 | --- | --- |
-| Code | `src/sim/protocols/icmp.js` |
-| Tests | `tests/icmp.test.js` |
+| Code | `src/sim/protocols/icmp.mjs` |
+| Tests | `tests/icmp.test.mjs` |
 | Scénarios | `scenarios/ping.json`, `scenarios/routage.json` |
 | Couche | réseau — dépend d'ARP |
 | Action de scénario | `{ "action": "ping", "from": "pc1", "to": "pc2", "count": 1, "ttl": 64 }` |

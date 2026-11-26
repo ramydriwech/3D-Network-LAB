@@ -5,8 +5,8 @@ la découverte de voisin (NDP), transportée par ICMPv6 et envoyée en **multidi
 
 | | |
 | --- | --- |
-| Code | `src/sim/protocols/ipv6.js` |
-| Tests | `tests/ipv6.test.js` |
+| Code | `src/sim/protocols/ipv6.mjs` |
+| Tests | `tests/ipv6.test.mjs` |
 | Scénario | `scenarios/ipv6.json` |
 | Couche | réseau |
 | Action de scénario | `{ "action": "ping6", "from": "pc1", "to": "pc2" }` |

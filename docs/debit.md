@@ -1,8 +1,8 @@
 # Débit et bande passante
 
-> Demande du superviseur (S5). Code : `src/sim/catalog.js`, `src/sim/traffic.js`,
-> `src/sim/network.js` (méthode `transmit`), `src/sim/protocols/tcp.js` (transferts),
-> `src/render/linkLoad.js` (couleurs des câbles), `src/ui/datasheet.js` (fiche technique).
+> Demande du superviseur (S5). Code : `src/sim/catalog.mjs`, `src/sim/traffic.mjs`,
+> `src/sim/network.mjs` (méthode `transmit`), `src/sim/protocols/tcp.mjs` (transferts),
+> `src/render/linkLoad.mjs` (couleurs des câbles), `src/ui/datasheet.mjs` (fiche technique).
 
 ![Trois envois simultanés : câbles colorés selon la charge, ports en direct du switch](captures/debit-charge.jpg)
 
@@ -15,7 +15,7 @@ devient un goulot. Le simulateur montre maintenant tout cela.
 
 ## 2. La vitesse d'un lien
 
-Chaque équipement a un **modèle** (catalogue fictif, `src/sim/catalog.js`) qui fixe la
+Chaque équipement a un **modèle** (catalogue fictif, `src/sim/catalog.mjs`) qui fixe la
 vitesse de ses ports ; chaque câble a un **type** (Cat 5, 5e, 6, 6a, fibre). Comme
 l'auto-négociation Ethernet, le lien prend **la plus petite** des trois vitesses :
 
@@ -52,7 +52,7 @@ Exemples : une grande trame occupe un port Gigabit 0,12 s à l'écran, un port �
 
 - Un port émet ses trames **une par une** : celles qui arrivent pendant une émission
   attendent dans sa **file**. La fiche « Ports en direct » montre la file et le maximum atteint.
-- `TrafficMeter` (`src/sim/traffic.js`) mesure, sur les 4 dernières secondes simulées, le
+- `TrafficMeter` (`src/sim/traffic.mjs`) mesure, sur les 4 dernières secondes simulées, le
   **taux d'utilisation** de chaque lien (temps occupé / temps écoulé) et les **débits** de
   chaque port, convertis à l'échelle réelle.
 - Au-delà de 50 % d'utilisation, une étiquette « Charge 72 % » apparaît au milieu du câble :
@@ -88,4 +88,4 @@ Pas de contrôle de congestion : la fenêtre reste fixe pour que les effets soie
 bien plus lentement ; 3. pertes : retransmission rapide puis délai RTO ; 4. trois postes
 envoient ensemble et le lien du serveur se charge.
 
-Contrôle : `tests/debit.test.js` (vitesses, temps d'émission, fenêtre, pertes, partage).
+Contrôle : `tests/debit.test.mjs` (vitesses, temps d'émission, fenêtre, pertes, partage).

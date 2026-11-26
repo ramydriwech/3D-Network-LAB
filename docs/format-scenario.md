@@ -1,7 +1,7 @@
 # Format des fichiers de scénario
 
 > **Contrat commun.** Toute modification de ce format passe par une pull request approuvée
-> par les quatre membres. Le code qui le vérifie est `src/sim/scenario.js` (`validateScenario`).
+> par les quatre membres. Le code qui le vérifie est `src/sim/scenario.mjs` (`validateScenario`).
 
 Un scénario est un fichier JSON du dossier `scenarios/`. Il décrit **une topologie** (équipements,
 adresses, câbles) et **des étapes** à jouer. Ajouter un scénario ne demande aucune ligne de
@@ -42,11 +42,35 @@ JavaScript : on écrit le fichier, puis on l'ajoute au catalogue `scenarios/inde
 | `id` | oui | identifiant en minuscules, chiffres et tirets ; **égal au nom du fichier** sans `.json` |
 | `title`, `summary` | oui | textes `{ "fr": …, "en": … }` |
 | `objectives` | non | `{ "fr": [ … ], "en": [ … ] }` : ce qu'il faut observer |
-| `protocols` | oui | protocoles à charger (`src/sim/protocols/<id>.js`) ; leurs dépendances suivent toutes seules |
+| `protocols` | oui | protocoles à charger (`src/sim/protocols/<id>.mjs`) ; leurs dépendances suivent toutes seules |
 | `devices` | oui | équipements (au moins un) |
 | `links` | non | câbles |
 | `steps` | oui | étapes jouées dans l'ordre (la liste peut être vide) |
 | `explanations` | non | `{ "clé": { "fr", "en" } }` : remplace le texte d'une explication pour ce scénario |
+| `lab` | non | plan de la salle du laboratoire (voir ci-dessous) ; sans lui, un plan automatique est calculé |
+
+### Plan de la salle (`lab`)
+
+Écrit par les gestes du laboratoire (`src/ui/labBuild.mjs`) ; lu par `src/render/labLayout.mjs` (`layoutOf`, testé).
+
+```json
+"lab": {
+  "room": { "minX": -6, "maxX": 6, "minZ": -4.5, "maxZ": 4.5 },
+  "furniture": [
+    { "id": "m1", "kind": "rack12", "x": -1, "z": -0.3, "rot": 0 },
+    { "id": "m2", "kind": "desk", "x": -4, "z": -1.2, "rot": 90 }
+  ],
+  "mounts": { "sw1": { "on": "m1", "slot": 5 }, "pc1": { "on": "m2", "slot": 0 } }
+}
+```
+
+- `room` : murs de la salle, en mètres (la porte est au milieu du mur +z, les étagères le long du mur +x).
+- `furniture` : `kind` parmi `rack12` (baie 12U), `rack6` (baie basse 6U), `desk` (poste de travail), `table`
+  (table de laboratoire, deux places) ; position au sol en mètres ; `rot` en degrés, multiple de 90 (0 : façade vers +z).
+- `mounts` : pour chaque équipement, son meuble et son emplacement — premier **U** occupé dans une baie (compté de 1
+  depuis le bas), `0` sur un bureau, `0` ou `1` sur une table. Un équipement de baie va en baie, un PC sur un
+  bureau, un boîtier de bureau en baie (sur une tablette) ou sur une table. Plan automatique : chaque switch, routeur,
+  pare-feu ou serveur dans sa baie. Un équipement sans emplacement reçoit une place libre (ou un meuble).
 
 ## Équipements (`devices`)
 
@@ -61,7 +85,7 @@ JavaScript : on écrit le fichier, puis on l'ajoute au catalogue `scenarios/inde
 | `dns` | serveur DNS utilisé par l'hôte |
 | `routes` | routes statiques d'un routeur : `[{ network, prefix, via }]` |
 | `services` | applications d'un serveur : `udp.listen`, `tcp.listen`, `dns.records`, `dhcp`, `http.pages` |
-| `model` | modèle du catalogue (`src/sim/catalog.js`), ex. `sw-24g`, `pc-fe` ; sinon le modèle par défaut du type |
+| `model` | modèle du catalogue (`src/sim/catalog.mjs`), ex. `sw-24g`, `pc-fe` ; sinon le modèle par défaut du type |
 
 | `type: "firewall"` | pare-feu à états (laboratoire) : comme un routeur, plus des zones sur ses interfaces |
 | `vlans` | switch administrable : `{ "10": "ADMIN", "20": "ETUDIANTS" }` (le VLAN 1 existe toujours) |
