@@ -32,12 +32,12 @@ import { initTechPanel } from './techPanel.mjs';
 
 registerStrings({
   fr: {
-    'app.title': '3D Network Topology',
+    'app.title': '3D-Network-LAB',
     'scene.hint': 'Glisser : tourner · Molette ou pincement : zoomer · Clic droit ou deux doigts : déplacer',
     'scene.label': 'Scène 3D de la topologie réseau',
   },
   en: {
-    'app.title': '3D Network Topology',
+    'app.title': '3D-Network-LAB',
     'scene.hint': 'Drag: rotate · Wheel or pinch: zoom · Right-click or two fingers: pan',
     'scene.label': '3D scene of the network topology',
   },

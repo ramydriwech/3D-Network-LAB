@@ -1,5 +1,5 @@
 {
-  "name": "3d-network-topology",
+  "name": "3d-network-lab",
   "version": "1.0.0",
   "description": "Visualisation 3D pédagogique des protocoles réseau (Three.js, WebXR, PWA) — SUP'COM",
   "private": true,

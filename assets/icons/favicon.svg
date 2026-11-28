@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="3D Network Topology">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="3D-Network-LAB">
   <rect width="64" height="64" rx="14" fill="#0b1220"/>
   <g stroke="#38bdf8" stroke-width="3" stroke-linecap="round">
     <line x1="32" y1="17" x2="15" y2="45"/>

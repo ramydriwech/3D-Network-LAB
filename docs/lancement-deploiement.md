@@ -115,7 +115,7 @@ git push origin v1.0
 ```
 
 L'étiquette déclenche `.github/workflows/release.yml` : tests, puis création de la *release* GitHub avec une archive
-`3d-network-topology-v1.0.zip` du site. Cette archive sert aussi de **plan B pour la soutenance** : la décompresser,
+`3d-network-lab-v1.0.zip` du site. Cette archive sert aussi de **plan B pour la soutenance** : la décompresser,
 puis `npx serve` ou `python -m http.server 8080` dans le dossier, et ouvrir `http://localhost:8080`.
 
 ## 4. Dépannage

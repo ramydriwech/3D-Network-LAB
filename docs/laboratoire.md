@@ -46,7 +46,7 @@ continu, du rouleau à la fiche ; une fois le premier bout branché, il part de 
 
 Les deux étagères, contre le mur de droite : **« Équipements »** (un exemplaire de chaque modèle, et la planche des
 câbles) et **« Mobilier »** (les quatre meubles, en maquettes à la même échelle). L'enseigne au-dessus de la porte :
-« Network Topology Lab ».
+« 3D-Network-LAB ».
 
 | Geste | Comment | Ce qui se passe |
 | --- | --- | --- |

@@ -55,6 +55,6 @@ const server = http.createServer((request, response) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`3D Network Topology : http://localhost:${PORT}/`);
+  console.log(`3D-Network-LAB : http://localhost:${PORT}/`);
   console.log('Arrêt : Ctrl+C');
 });

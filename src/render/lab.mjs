@@ -235,7 +235,7 @@ export function createLab(render, sim) {
     const sign = textPanel(1.8, 0.32, (g, w, h) => {
       g.fillStyle = '#0f172a'; g.fillRect(0, 0, w, h);
       g.fillStyle = '#38bdf8'; g.font = `bold ${Math.round(h * 0.45)}px system-ui, sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle';
-      g.fillText('NETWORK TOPOLOGY LAB', w / 2, h / 2);
+      g.fillText('3D-NETWORK-LAB', w / 2, h / 2);
     });
     sign.position.set(cx, 2.78, bounds.maxZ - 0.02);
     sign.rotation.y = Math.PI;
