@@ -8,7 +8,7 @@
 Entrez dans une salle réseau, configurez routeurs et switchs en console, câblez à la main,<br>
 et regardez chaque trame ARP, ICMP, TCP ou HTTP circuler — expliquée pas à pas.
 
-[![CI](https://github.com/ramydriwech/3D-Network-LAB-Complet/actions/workflows/ci.yml/badge.svg)](https://github.com/ramydriwech/3D-Network-LAB-Complet/actions/workflows/ci.yml)
+[![CI](https://github.com/ramydriwech/3D-Network-LAB/actions/workflows/ci.yml/badge.svg)](https://github.com/ramydriwech/3D-Network-LAB/actions/workflows/ci.yml)
 ![WebGPU](https://img.shields.io/badge/rendu-100%25%20WebGPU-0ea5e9)
 ![WebXR](https://img.shields.io/badge/VR-WebXR-8b5cf6)
 ![Three.js](https://img.shields.io/badge/Three.js-r187-000000?logo=threedotjs)
@@ -17,7 +17,7 @@ et regardez chaque trame ARP, ICMP, TCP ou HTTP circuler — expliquée pas à p
 ![Dépendances](https://img.shields.io/badge/d%C3%A9pendances-0-22c55e)
 ![Licence](https://img.shields.io/badge/licence-MIT-blue)
 
-**[▶ Ouvrir l'application](https://ramydriwech.github.io/3D-Network-LAB-Complet/)** ·
+**[▶ Ouvrir l'application](https://ramydriwech.github.io/3D-Network-LAB/)** ·
 **[🎬 Vidéo de démonstration](docs/media/demo.mp4)** ·
 **[📖 Manuel](docs/manuel.md)** ·
 **[🏗️ Architecture](docs/architecture.md)**
@@ -149,14 +149,14 @@ Détails : [architecture](docs/architecture.md) · [simulation](docs/simulation.
 
 ## Démarrer
 
-**En ligne** : ouvrez **[l'application](https://ramydriwech.github.io/3D-Network-LAB-Complet/)** dans un navigateur
+**En ligne** : ouvrez **[l'application](https://ramydriwech.github.io/3D-Network-LAB/)** dans un navigateur
 compatible WebGPU (Chrome, Edge, Safari 26+, Firefox 141+ sous Windows). Rien à installer.
 
 **En local** — seul [Node.js](https://nodejs.org) 20+ est nécessaire :
 
 ```bash
-git clone https://github.com/ramydriwech/3D-Network-LAB-Complet.git
-cd 3D-Network-LAB-Complet
+git clone https://github.com/ramydriwech/3D-Network-LAB.git
+cd 3D-Network-LAB
 npm start        # http://localhost:8080
 npm test         # 208 tests (node --test)
 ```
