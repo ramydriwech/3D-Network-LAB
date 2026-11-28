@@ -63,10 +63,8 @@ Sur une pull request, seuls les tests sont lancés.
 1. Le dépôt doit être **public** : avec un compte gratuit, GitHub Pages et la protection de branche ne sont offerts qu'aux dépôts publics.
    Puis **Settings → Pages → Build and deployment → Source : « GitHub Actions »**.
 2. **Settings → Branches → Add branch ruleset** (ou *Add rule*) pour `main` :
-   - *Require a pull request before merging*, avec 1 approbation (option : *Require review from Code Owners*) ;
    - *Require status checks to pass* → choisir le contrôle **Tests** ;
    - interdire les *force pushes*.
-3. Dans `.github/CODEOWNERS`, remplacer les quatre identifiants `@GITHUB-…` par les vrais noms d'utilisateur.
 
 Après le premier déploiement, l'adresse du site s'affiche dans **Settings → Pages** et dans l'onglet **Actions** :
 `https://<compte>.github.io/<depot>/`. La reporter dans le `README.md`.

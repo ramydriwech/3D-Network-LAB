@@ -1,15 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Topics } from '../src/sim/events.mjs';
-import { loadSim, play, sends, noteKeys, missingFor } from './helpers.mjs';
+import { loadSim, play, sends, noteKeys } from './helpers.mjs';
 
-// Ces tests jouent le scénario « routage » : ils attendent que toutes ses pièces soient dans le dépôt.
-const skip = missingFor('routage');
-
+// Ces tests jouent le scénario « routage ».
 const only = (index) => (scenario) => ({ ...scenario, steps: [scenario.steps[index]] });
 const echoes = (events) => events.filter((e) => e.topic === Topics.PACKET_SEND && e.packet.icmp).map((e) => e.packet);
 
-test('routage : la table contient les réseaux connectés et la route statique', { skip }, async () => {
+test('routage : la table contient les réseaux connectés et la route statique', async () => {
   const { sim } = await loadSim('routage');
   const r1 = sim.device('r1');
   assert.deepEqual(r1.routeRows().map((row) => [row[0], typeof row[1] === 'string' ? row[1] : 'connecté', row[2]]), [
@@ -23,7 +21,7 @@ test('routage : la table contient les réseaux connectés et la route statique',
   assert.equal(r1.tables()[0].id, 'routes');
 });
 
-test('routage : le TTL diminue de 1 à chaque routeur, les adresses IP ne changent pas', { skip }, async () => {
+test('routage : le TTL diminue de 1 à chaque routeur, les adresses IP ne changent pas', async () => {
   const { sim, events } = await play('routage', only(0));
   assert.deepEqual(sends(events, sim).filter((line) => line.includes('ICMP')), [
     'PC1>R1 ICMP Echo Request', 'R1>R2 ICMP Echo Request', 'R2>PC2 ICMP Echo Request',
@@ -38,7 +36,7 @@ test('routage : le TTL diminue de 1 à chaque routeur, les adresses IP ne change
   assert.ok(keys.includes('icmp.success'));
 });
 
-test('routage : TTL = 1, le premier routeur détruit le paquet et prévient la source', { skip }, async () => {
+test('routage : TTL = 1, le premier routeur détruit le paquet et prévient la source', async () => {
   const { sim, events } = await play('routage', only(1));
   assert.deepEqual(sends(events, sim).filter((line) => line.includes('ICMP')), ['PC1>R1 ICMP Echo Request', 'R1>PC1 ICMP Time Exceeded']);
   assert.ok(events.some((e) => e.topic === Topics.PACKET_DROP && e.device === 'r1'));
@@ -47,13 +45,13 @@ test('routage : TTL = 1, le premier routeur détruit le paquet et prévient la s
   assert.ok(noteKeys(events).includes('router.ttlExpired'));
 });
 
-test('routage : sans route, « Destination Unreachable »', { skip }, async () => {
+test('routage : sans route, « Destination Unreachable »', async () => {
   const { sim, events } = await play('routage', only(2));
   assert.ok(sends(events, sim).includes('R1>PC1 ICMP Destination Unreachable (network)'));
   assert.ok(noteKeys(events).includes('router.noRoute'));
 });
 
-test('routage : sans la route de retour sur R2, la réponse se perd', { skip }, async () => {
+test('routage : sans la route de retour sur R2, la réponse se perd', async () => {
   const { sim, events } = await play('routage', (scenario) => {
     const copy = structuredClone(scenario);
     copy.devices.find((device) => device.id === 'r2').routes = [];

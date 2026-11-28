@@ -1,7 +1,7 @@
-# Contrats communs
+# Contrats d'interface
 
-Ces contrats ont été fixés en S1 pour que chacun puisse ensuite travailler seul. Ils vivent dans le
-code ; ce document les résume. **Les modifier demande une pull request approuvée par les quatre.**
+Ces contrats séparent les modules : chacun évolue et se teste sans toucher aux autres. Ils vivent dans le
+code ; ce document les résume. **Les modifier oblige à vérifier chaque module qui s'en sert.**
 
 | Contrat | Fichier | Qui s'en sert |
 | --- | --- | --- |
@@ -69,7 +69,7 @@ sim.text('arp.request'); // texte { fr, en } d'une explication
 
 Un protocole est un fichier `src/sim/protocols/<id>.mjs` dont l'export par défaut est :
 
-| Membre | Rôle |
+| Élément | Rôle |
 | --- | --- |
 | `id`, `name`, `layer` | identifiant (= nom du fichier), nom affiché, couche (`liaison`, `réseau`, `transport`, `application`) |
 | `requires` | protocoles dont il dépend |

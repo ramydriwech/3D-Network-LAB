@@ -1,4 +1,4 @@
-// CONTRAT COMMUN — toute modification passe par une pull request approuvée par les quatre.
+// CONTRAT D'INTERFACE — vocabulaire partagé par tous les modules : le modifier oblige à vérifier chacun d'eux.
 //
 // Ce fichier fixe le vocabulaire partagé entre la simulation, le rendu 3D et l'interface :
 //   1. les sujets (topics) publiés sur le bus d'évènements ;

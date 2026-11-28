@@ -2,11 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Topics } from '../src/sim/events.mjs';
 import http, { parseUrl } from '../src/sim/protocols/http.mjs';
-import { play, noteKeys, missingFor } from './helpers.mjs';
+import { play, noteKeys } from './helpers.mjs';
 
-// Ces tests jouent le scénario « http » : ils attendent que toutes ses pièces soient dans le dépôt.
-const skip = missingFor('http');
-
+// Ces tests jouent le scénario « http ».
 const only = (index) => (scenario) => ({ ...scenario, steps: [scenario.steps[index]] });
 /** Messages émis par les extrémités, dans l'ordre (sans ARP ni recopies du switch). */
 const labels = (events) => events
@@ -19,7 +17,7 @@ test('HTTP : découpage d\'une URL', () => {
   assert.deepEqual(parseUrl('www.supcom.tn'), { host: 'www.supcom.tn', port: 80, path: '/' });
 });
 
-test('HTTP : DNS, puis TCP, puis la requête et la réponse, puis la fermeture', { skip }, async () => {
+test('HTTP : DNS, puis TCP, puis la requête et la réponse, puis la fermeture', async () => {
   const { sim, events } = await play('http', only(0));
   assert.deepEqual(labels(events), [
     'pc1 DNS Query', 'dns1 DNS Response',
@@ -40,7 +38,7 @@ test('HTTP : DNS, puis TCP, puis la requête et la réponse, puis la fermeture',
   assert.ok(noteKeys(events).includes('http.rendered'));
 });
 
-test('HTTP : page inconnue, réponse 404 ; le cache DNS évite une nouvelle question', { skip }, async () => {
+test('HTTP : page inconnue, réponse 404 ; le cache DNS évite une nouvelle question', async () => {
   const { sim, events } = await play('http');
   const all = labels(events);
   assert.equal(all.filter((line) => line === 'pc1 DNS Query').length, 1);
@@ -50,7 +48,7 @@ test('HTTP : page inconnue, réponse 404 ; le cache DNS évite une nouvelle ques
   assert.ok(noteKeys(events).includes('dns.cacheHit'));
 });
 
-test('HTTP : URL avec adresse IP (pas de DNS) et nom introuvable', { skip }, async () => {
+test('HTTP : URL avec adresse IP (pas de DNS) et nom introuvable', async () => {
   const direct = await play('http', (scenario) => ({ ...scenario, steps: [{ action: 'http', from: 'pc1', url: 'http://192.168.1.80/' }] }));
   assert.ok(!labels(direct.events).includes('pc1 DNS Query'));
   assert.equal(direct.sim.device('pc1').httpLast.status, 200);

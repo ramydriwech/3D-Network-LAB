@@ -14,7 +14,7 @@ function fakeSite() {
   };
   ['index.html', 'styles.css', 'main.mjs', 'simulation.mjs', 'manifest.json', 'sw.mjs', 'README.md', 'package.json',
     'src/ui/index.mjs', 'scenarios/ping.json', 'assets/models/pc.glb', 'vendor/three/three.module.mjs', 'vendor/three/LICENSE',
-    'tests/a.test.mjs', 'docs/manuel.md', 'tools/serve.mjs', '.github/CODEOWNERS', 'src/.DS_Store'].forEach((file) => write(file));
+    'tests/a.test.mjs', 'docs/manuel.md', 'tools/serve.mjs', '.github/workflows/ci.yml', 'src/.DS_Store'].forEach((file) => write(file));
   return { root, write };
 }
 

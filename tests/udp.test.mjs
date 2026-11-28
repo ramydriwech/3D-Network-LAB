@@ -2,14 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Topics } from '../src/sim/events.mjs';
 import udp from '../src/sim/protocols/udp.mjs';
-import { loadSim, play, sends, noteKeys, missingFor } from './helpers.mjs';
+import { loadSim, play, sends, noteKeys } from './helpers.mjs';
 
-// Ces tests jouent le scénario « udp » : ils attendent que toutes ses pièces soient dans le dépôt.
-const skip = missingFor('udp');
-
+// Ces tests jouent le scénario « udp ».
 const only = (index) => (scenario) => ({ ...scenario, steps: [scenario.steps[index]] });
 
-test('UDP : un datagramme vers un port ouvert, et rien en retour', { skip }, async () => {
+test('UDP : un datagramme vers un port ouvert, et rien en retour', async () => {
   const { sim, events } = await play('udp', only(0));
   const lines = sends(events, sim).filter((line) => line.includes('UDP'));
   assert.deepEqual(lines, ['PC1>SW1 UDP 49152 → 5005', 'SW1>SRV1 UDP 49152 → 5005']);
@@ -21,7 +19,7 @@ test('UDP : un datagramme vers un port ouvert, et rien en retour', { skip }, asy
   assert.equal(sends(events, sim).some((line) => line.startsWith('SRV1>') && !line.includes('ARP')), false, 'le serveur ne renvoie rien');
 });
 
-test('UDP : port fermé, le datagramme est détruit et ICMP prévient l\'émetteur', { skip }, async () => {
+test('UDP : port fermé, le datagramme est détruit et ICMP prévient l\'émetteur', async () => {
   const { sim, events } = await play('udp', only(1));
   assert.ok(sends(events, sim).includes('SW1>PC1 ICMP Destination Unreachable (port)'));
   assert.ok(events.some((e) => e.topic === Topics.PACKET_DROP && e.device === 'srv1'));
@@ -31,7 +29,7 @@ test('UDP : port fermé, le datagramme est détruit et ICMP prévient l\'émette
   assert.ok(noteKeys(events).includes('icmp.errorReceived'));
 });
 
-test('UDP : les ports temporaires se suivent, une application peut s\'abonner à un port', { skip }, async () => {
+test('UDP : les ports temporaires se suivent, une application peut s\'abonner à un port', async () => {
   const { sim, events } = await loadSim('udp', (scenario) => ({ ...scenario, steps: [] }));
   const pc1 = sim.device('pc1');
   const pc2 = sim.device('pc2');

@@ -7,9 +7,8 @@ import { cableSpeed, formatRate, formatSpeed, linkSpeed, MODELS, portNames, spec
 import { frameBytes, rateOf, transmitTime, TrafficMeter, loadLevel } from '../src/sim/traffic.mjs';
 import { validateScenario } from '../src/sim/scenario.mjs';
 import { FRAME_GAP, MSS } from '../src/sim/traffic.mjs';
-import { loadSim, play, noteKeys, missingFor, readScenario } from './helpers.mjs';
+import { loadSim, play, noteKeys, readScenario } from './helpers.mjs';
 
-const skip = missingFor('debit');
 const only = (index) => (scenario) => ({ ...scenario, steps: [scenario.steps[index]] });
 /** Segments de données émis par un poste (on ignore les recopies du switch). */
 const dataSegments = (events, from) => events
@@ -79,7 +78,7 @@ test('scénario : modèles, câbles, vitesses et étapes groupées sont vérifi�
   for (const part of ['n\'est pas un modèle de host', 'cat9', 'speed', 'steps[3].steps', 'lose']) assert.ok(errors.includes(part), part);
 });
 
-test('débit : un lien à 100 Mb/s émet chaque grande trame dix fois plus lentement', { skip }, async () => {
+test('débit : un lien à 100 Mb/s émet chaque grande trame dix fois plus lentement', async () => {
   const fast = await play('debit', only(0));
   const slow = await play('debit', only(1));
   const big = (events, from) => dataSegments(events, from).find((e) => e.bytes === 1518);
@@ -92,7 +91,7 @@ test('débit : un lien à 100 Mb/s émet chaque grande trame dix fois plus lente
   assert.ok(Number(done(fast.events).params.time) < Number(done(slow.events).params.time));
 });
 
-test('débit : la fenêtre glissante laisse partir plusieurs segments sans attendre', { skip }, async () => {
+test('débit : la fenêtre glissante laisse partir plusieurs segments sans attendre', async () => {
   const { events } = await play('debit', only(0));
   const sends = dataSegments(events, 'pc1');
   assert.equal(sends.length, 10);
@@ -101,7 +100,7 @@ test('débit : la fenêtre glissante laisse partir plusieurs segments sans atten
   for (let i = 1; i < sends.length; i++) assert.equal(sends[i].time, sends[i - 1].time + sends[i - 1].sending + FRAME_GAP);
 });
 
-test('débit : perte → ACK dupliqués → retransmission rapide, puis délai RTO', { skip }, async () => {
+test('débit : perte → ACK dupliqués → retransmission rapide, puis délai RTO', async () => {
   const { events, sim } = await play('debit', only(2));
   const lost = events.filter((e) => e.topic === Topics.PACKET_DROP && e.onLink);
   assert.deepEqual(lost.map((e) => e.packet.label), ['TCP 3/10', 'TCP 10/10']);
@@ -120,7 +119,7 @@ test('débit : perte → ACK dupliqués → retransmission rapide, puis délai R
   assert.equal(server.rcv - server.rcvStart, 14600 + 1);
 });
 
-test('débit : trois envois simultanés partagent le lien du serveur', { skip }, async () => {
+test('débit : trois envois simultanés partagent le lien du serveur', async () => {
   const { sim, events } = await loadSim('debit', only(3));
   sim.execute('play');
   let peak = 0;

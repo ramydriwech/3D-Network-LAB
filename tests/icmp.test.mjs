@@ -2,15 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Topics } from '../src/sim/events.mjs';
 import icmp, { targetIp } from '../src/sim/protocols/icmp.mjs';
-import { loadSim, play, sends, noteKeys, missingFor } from './helpers.mjs';
+import { loadSim, play, sends, noteKeys } from './helpers.mjs';
 
-// Ces tests jouent le scénario « ping » : ils attendent que toutes ses pièces soient dans le dépôt.
-const skip = missingFor('ping');
-
+// Ces tests jouent le scénario « ping ».
 const only = (index) => (scenario) => ({ ...scenario, steps: [scenario.steps[index]] });
 const icmpSends = (events) => events.filter((e) => e.topic === Topics.PACKET_SEND && e.packet.icmp);
 
-test('ICMP : ping dans le même réseau (demande puis réponse)', { skip }, async () => {
+test('ICMP : ping dans le même réseau (demande puis réponse)', async () => {
   const { sim, events } = await play('ping', only(0));
   const lines = sends(events, sim).filter((line) => line.includes('ICMP'));
   assert.deepEqual(lines, [
@@ -30,7 +28,7 @@ test('ICMP : ping dans le même réseau (demande puis réponse)', { skip }, asyn
   assert.equal(sim.device('pc1').ping.received, 1);
 });
 
-test('ICMP : ping à travers le routeur, adresses IP conservées de bout en bout', { skip }, async () => {
+test('ICMP : ping à travers le routeur, adresses IP conservées de bout en bout', async () => {
   const { sim, events } = await play('ping', only(1));
   const lines = sends(events, sim).filter((line) => line.includes('ICMP'));
   assert.deepEqual(lines, [
@@ -49,7 +47,7 @@ test('ICMP : ping à travers le routeur, adresses IP conservées de bout en bout
   assert.ok(noteKeys(events).includes('icmp.success'));
 });
 
-test('ICMP : plusieurs pings se suivent, un par un', { skip }, async () => {
+test('ICMP : plusieurs pings se suivent, un par un', async () => {
   const { sim, events } = await play('ping', (scenario) => ({
     ...scenario, steps: [{ action: 'ping', from: 'pc1', to: 'pc2', count: 3 }],
   }));
@@ -58,14 +56,14 @@ test('ICMP : plusieurs pings se suivent, un par un', { skip }, async () => {
   assert.equal(sim.device('pc1').ping.received, 3);
 });
 
-test('ICMP : cible donnée par identifiant ou par adresse', { skip }, async () => {
+test('ICMP : cible donnée par identifiant ou par adresse', async () => {
   const { sim } = await loadSim('ping');
   assert.equal(targetIp(sim.network, 'pc3'), '192.168.2.10');
   assert.equal(targetIp(sim.network, '10.9.9.9'), '10.9.9.9');
   assert.equal(icmp.start(sim.network, { action: 'ping', from: 'sw1', to: 'pc2' }), false, 'un switch ne peut pas lancer de ping');
 });
 
-test('ICMP : destination sans route, le routeur renvoie « Destination Unreachable »', { skip }, async () => {
+test('ICMP : destination sans route, le routeur renvoie « Destination Unreachable »', async () => {
   const { sim, events } = await play('ping', (scenario) => ({
     ...scenario, steps: [{ action: 'ping', from: 'pc1', to: '10.50.0.1' }],
   }));

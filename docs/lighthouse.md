@@ -19,8 +19,8 @@ En ligne de commande (facultatif) : `npx lighthouse https://<compte>.github.io/<
 
 | Date | Version du site | Appareil | Performance | Accessibilité | Bonnes pratiques | SEO | Auditeur |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| *à remplir* | | Mobile | | | | | Ayoub |
-| *à remplir* | | Ordinateur | | | | | Ayoub |
+| *à remplir* | | Mobile | | | | | |
+| *à remplir* | | Ordinateur | | | | | |
 
 Mesures principales (mobile) :
 

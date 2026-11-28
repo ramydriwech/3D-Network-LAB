@@ -1,18 +1,18 @@
 # Cahier conceptuel
 
 **3D network topology** — Projet WebXR & Spatial Computing, SUP'COM, département SIA.
-Équipe : Mohamed Aziz Saoudi, Ayoub Ben Sabbeh, Khalil Krifa, Rami Driouech. Superviseur : Dr. Eng. Mohamed Becha Kaaniche.
+Auteur : Rami Driouech. Superviseur : Dr. Eng. Mohamed Becha Kaaniche.
 
-Ce cahier rassemble l'analyse des besoins et les diagrammes de conception. Chaque diagramme est tenu à jour par
-son auteur dans `docs/conception/` ; ce document les relie et en donne la lecture d'ensemble.
+Ce cahier rassemble l'analyse des besoins et les diagrammes de conception. Les diagrammes sont tenus à jour
+dans `docs/conception/` ; ce document les relie et en donne la lecture d'ensemble.
 
-| Diagramme | Fichier | Auteur |
-| --- | --- | --- |
-| Maquette de l'interface | [conception/maquette.md](conception/maquette.md) | Ramy |
-| Cas d'utilisation | [conception/cas-utilisation.md](conception/cas-utilisation.md) | Ramy |
-| Séquence du ping | [conception/sequence-ping.md](conception/sequence-ping.md) | Aziz |
-| Classes | [conception/classes.md](conception/classes.md) | Khalil |
-| Déploiement | [conception/deploiement.md](conception/deploiement.md) | Ayoub |
+| Diagramme | Fichier |
+| --- | --- |
+| Maquette de l'interface | [conception/maquette.md](conception/maquette.md) |
+| Cas d'utilisation | [conception/cas-utilisation.md](conception/cas-utilisation.md) |
+| Séquence du ping | [conception/sequence-ping.md](conception/sequence-ping.md) |
+| Classes | [conception/classes.md](conception/classes.md) |
+| Déploiement | [conception/deploiement.md](conception/deploiement.md) |
 
 ## 1. Le besoin
 
@@ -56,7 +56,7 @@ explication pour chaque message — accessible par un simple lien, sans installa
 | utilisable sans casque | mode classique complet ; VR vérifiée dans l'émulateur ; repli automatique |
 | hors ligne après une première visite | Service Worker et liste de cache générée |
 | fluide sur mobile | modèles légers, ressources partagées, nombre de paquets plafonné |
-| quatre développeurs en parallèle | contrats communs fixés en S1, un propriétaire par fichier |
+| modules indépendants, testables séparément | trois contrats d'interface entre les modules |
 
 ## 2. Cas d'utilisation
 

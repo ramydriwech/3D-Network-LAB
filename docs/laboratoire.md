@@ -121,17 +121,17 @@ une fois la mission réussie. Les missions réussies restent cochées dans le na
 
 ## 6. Où est le code
 
-| Partie | Fichier | Membre |
+| Partie | Fichier | Semaine |
 | --- | --- | --- |
-| VLAN, ACL, NAT, pare-feu | `src/sim/security.mjs`, `src/sim/devices/firewall.mjs`, `router.mjs`, `network.mjs` | Khalil (S6) |
-| Switch administrable | `src/sim/devices/switch.mjs` | Ayoub (S6) |
-| Pare-feu en 3D, câbles coupés | `tools/make-models.mjs`, `src/render/shapes.mjs`, `src/render/linkLoad.mjs` | Aziz (S6) |
-| Consoles et missions (logique) | `src/sim/cli.mjs`, `src/sim/config.mjs`, `src/sim/missions.mjs` | Khalil (S7) |
-| Fenêtre de console, onglet Missions, catalogue | `src/ui/terminal.mjs`, `src/ui/missions.mjs`, `src/ui/editorPanel.mjs` | Ramy (S7) |
-| Salle 3D, première personne, étagères | `src/render/lab.mjs`, `src/ui/labHud.mjs` | Aziz (S7) |
-| Plan de la salle (meubles, emplacements U, places), mains, gestes de construction | `src/render/labLayout.mjs`, `src/render/labHands.mjs`, `src/ui/labBuild.mjs` | amélioration du labo |
-| Baies, postes de travail, décor, chemins de câbles | `src/render/labFurniture.mjs`, `src/render/cableRoute.mjs`, `src/render/mergeStatic.mjs` | Aziz (S7, amélioration du rendu) |
-| Laboratoire en VR, clavier 3D | `src/xr/vrConsole.mjs`, `src/xr/controllers.mjs`, `src/xr/session.mjs` | Ayoub (S7) |
+| VLAN, ACL, NAT, pare-feu | `src/sim/security.mjs`, `src/sim/devices/firewall.mjs`, `router.mjs`, `network.mjs` | S6 |
+| Switch administrable | `src/sim/devices/switch.mjs` | S6 |
+| Pare-feu en 3D, câbles coupés | `tools/make-models.mjs`, `src/render/shapes.mjs`, `src/render/linkLoad.mjs` | S6 |
+| Consoles et missions (logique) | `src/sim/cli.mjs`, `src/sim/config.mjs`, `src/sim/missions.mjs` | S7 |
+| Fenêtre de console, onglet Missions, catalogue | `src/ui/terminal.mjs`, `src/ui/missions.mjs`, `src/ui/editorPanel.mjs` | S7 |
+| Salle 3D, première personne, étagères | `src/render/lab.mjs`, `src/ui/labHud.mjs` | S7 |
+| Plan de la salle (meubles, emplacements U, places), mains, gestes de construction | `src/render/labLayout.mjs`, `src/render/labHands.mjs`, `src/ui/labBuild.mjs` | S7, amélioration du labo |
+| Baies, postes de travail, décor, chemins de câbles | `src/render/labFurniture.mjs`, `src/render/cableRoute.mjs`, `src/render/mergeStatic.mjs` | S7, amélioration du rendu |
+| Laboratoire en VR, clavier 3D | `src/xr/vrConsole.mjs`, `src/xr/controllers.mjs`, `src/xr/session.mjs` | S7 |
 
 Tests : `tests/lab.test.mjs`, `tests/labLayout.test.mjs`, `tests/cli.test.mjs`, `tests/missions.test.mjs`, et les références
 `tests/golden/vlan.txt`, `pare-feu.txt`, `securite-port.txt`.

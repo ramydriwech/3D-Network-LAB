@@ -2,15 +2,15 @@
 
 ```mermaid
 flowchart LR
-  subgraph dev["Postes des développeurs"]
-    git["Dépôt Git local<br/>branche feature/…"]
+  subgraph dev["Poste de développement"]
+    git["Dépôt Git local"]
   end
 
   subgraph gh["GitHub"]
     repo["Dépôt<br/>branche main protégée"]
     ci["GitHub Actions<br/>1. npm test<br/>2. liste de cache<br/>3. assemblage du site"]
     pages["GitHub Pages<br/>fichiers statiques — HTTPS"]
-    repo -- "push / pull request" --> ci
+    repo -- "push" --> ci
     ci -- "si main et tests OK" --> pages
   end
 
@@ -39,7 +39,7 @@ flowchart LR
 | Nœud | Rôle | Technologie |
 | --- | --- | --- |
 | Poste du développeur | écrire, tester (`npm test`), essayer (`npm start`) | Git, Node.js ≥ 20 |
-| GitHub — dépôt | source de vérité ; `main` est protégée et toujours exécutable | Git, CODEOWNERS |
+| GitHub — dépôt | source de vérité ; `main` est protégée et toujours exécutable | Git |
 | GitHub Actions | tests à chaque push ; déploiement automatique de `main` | `.github/workflows/ci.yml` |
 | GitHub Pages | hébergement statique en HTTPS, sous `https://<compte>.github.io/<depot>/` | aucun serveur applicatif |
 | Navigateur | exécute toute l'application | modules ES, WebGPU (obligatoire), WebXR, Service Worker |

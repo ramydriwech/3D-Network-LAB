@@ -28,7 +28,7 @@ réseau : il affiche ce que la simulation publie sur le bus. Son interface publi
 | `mergeStatic.mjs` | fusion des pièces fixes en un maillage par matériau (équipements, salle) : moins d'appels de dessin |
 | `labels.mjs` | étiquettes : texte dessiné dans un canevas 2D, affiché sur un sprite |
 | `packetStyles.mjs` | couleur par protocole, forme par type de diffusion (données pures, testées) |
-| `packetAnimator.mjs` | déplacement des paquets sur les câbles (Ayoub) |
+| `packetAnimator.mjs` | déplacement des paquets sur les câbles |
 | `api.mjs`, `mockRender.mjs` | liste de l'API et fausse version sans carte graphique |
 
 ## Le moteur : 100 % WebGPU
@@ -281,6 +281,6 @@ vise pas directement : les visées de la VR et du laboratoire n'ont pas de camé
 une maquette sur une table. La grille est masquée et les étiquettes sont agrandies (× 1,7) pour rester lisibles à un mètre.
 À la sortie, tout est remis comme avant.
 
-## Protocoles documentés par Aziz
+## Protocoles liés
 
 [ICMP](protocoles/icmp.md) · [UDP](protocoles/udp.md) · [DNS](protocoles/dns.md)

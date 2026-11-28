@@ -5,9 +5,8 @@ import assert from 'node:assert/strict';
 import { Topics } from '../src/sim/events.mjs';
 import { applyFix, describeFix, diagnose, freeAddress } from '../src/sim/diagnostic.mjs';
 import { validateScenario } from '../src/sim/scenario.mjs';
-import { loadSim, missingFor, readScenario } from './helpers.mjs';
+import { loadSim, readScenario } from './helpers.mjs';
 
-const skip = missingFor('diagnostic');
 const rules = (scenario, options) => diagnose(scenario, options).findings.map((f) => f.id.split(':')[0]);
 
 /** Petit réseau sain : deux PC, un switch, un routeur, un second réseau derrière. */
@@ -147,7 +146,7 @@ test('diagnostic : DNS introuvable, avec ou sans serveur DNS dans le réseau', (
   assert.equal(applyFix(none, lonely.fix).devices[0].dns, undefined);
 });
 
-test('diagnostic : le scénario cassé échoue, puis passe une fois tout corrigé', { skip }, async () => {
+test('diagnostic : le scénario cassé échoue, puis passe une fois tout corrigé', async () => {
   const broken = readScenario('diagnostic');
   const before = diagnose(broken);
   assert.deepEqual(before.counts, { error: 4, warning: 1, info: 0 });

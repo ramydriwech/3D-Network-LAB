@@ -13,5 +13,6 @@
     "icons": "node tools/make-icons.mjs"
   },
   "engines": { "node": ">=20" },
+  "author": "Rami Driouech",
   "license": "MIT"
 }

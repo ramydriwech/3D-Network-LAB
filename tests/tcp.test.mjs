@@ -2,18 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Topics } from '../src/sim/events.mjs';
 import tcp, { CLIENT_ISN, SERVER_ISN, TcpState } from '../src/sim/protocols/tcp.mjs';
-import { loadSim, play, noteKeys, missingFor } from './helpers.mjs';
+import { loadSim, play, noteKeys } from './helpers.mjs';
 
-// Ces tests jouent le scénario « tcp » : ils attendent que toutes ses pièces soient dans le dépôt.
-const skip = missingFor('tcp');
-
+// Ces tests jouent le scénario « tcp ».
 const only = (index) => (scenario) => ({ ...scenario, steps: [scenario.steps[index]] });
 /** Segments émis par les deux extrémités (on ignore les recopies du switch). */
 const segments = (events) => events
   .filter((e) => e.topic === Topics.PACKET_SEND && e.packet.tcp && e.from !== 'sw1')
   .map((e) => ({ from: e.from, ...e.packet.tcp, flags: e.packet.tcp.flags.join(','), data: e.packet.data }));
 
-test('TCP : ouverture en trois temps avec les bons numéros', { skip }, async () => {
+test('TCP : ouverture en trois temps avec les bons numéros', async () => {
   const { events } = await play('tcp', only(0));
   const [syn, synAck, ack] = segments(events);
   assert.deepEqual([syn.from, syn.flags, syn.seq, syn.ack], ['pc1', 'SYN', CLIENT_ISN, 0]);
@@ -25,7 +23,7 @@ test('TCP : ouverture en trois temps avec les bons numéros', { skip }, async ()
   assert.ok(noteKeys(events).includes('tcp.established'));
 });
 
-test('TCP : les données sont acquittées par « prochain octet attendu »', { skip }, async () => {
+test('TCP : les données sont acquittées par « prochain octet attendu »', async () => {
   const { events } = await play('tcp', only(0));
   const all = segments(events);
   const data = all.find((s) => s.flags === 'PSH,ACK');
@@ -37,7 +35,7 @@ test('TCP : les données sont acquittées par « prochain octet attendu »', { s
   assert.ok(noteKeys(events).includes('tcp.acked'));
 });
 
-test('TCP : fermeture en quatre temps, FIN compte pour un octet', { skip }, async () => {
+test('TCP : fermeture en quatre temps, FIN compte pour un octet', async () => {
   const { sim, events } = await play('tcp', only(0));
   const all = segments(events);
   const tail = all.slice(-4);
@@ -51,7 +49,7 @@ test('TCP : fermeture en quatre temps, FIN compte pour un octet', { skip }, asyn
   assert.equal(tcp.table(sim.device('pc1')).rows[0][2], 'CLOSED');
 });
 
-test('TCP : port fermé, le serveur répond RST et rien n\'est établi', { skip }, async () => {
+test('TCP : port fermé, le serveur répond RST et rien n\'est établi', async () => {
   const { sim, events } = await play('tcp', only(1));
   const all = segments(events);
   assert.deepEqual(all.map((s) => `${s.from} ${s.flags}`), ['pc1 SYN', 'srv1 RST,ACK']);
@@ -62,7 +60,7 @@ test('TCP : port fermé, le serveur répond RST et rien n\'est établi', { skip 
   assert.equal(sim.device('srv1').tcpConns.size, 0);
 });
 
-test('TCP : une application peut répondre dans le même segment que l\'acquittement', { skip }, async () => {
+test('TCP : une application peut répondre dans le même segment que l\'acquittement', async () => {
   const { sim, events } = await loadSim('tcp', (scenario) => ({ ...scenario, steps: [] }));
   const pc1 = sim.device('pc1');
   const srv1 = sim.device('srv1');

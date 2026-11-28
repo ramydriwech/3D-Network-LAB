@@ -66,7 +66,7 @@ Poste : Chrome récent sur PC, site servi sur `http://localhost:8080` ou sur Git
 
 | Date | Navigateur | Carte graphique | 1 | 2 | 3 | 4 | 5 | 6 | 7 | Testeur |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| *à remplir* | Chrome … | | | | | | | | | Ayoub |
+| *à remplir* | Chrome … | | | | | | | | | |
 
 > Ce tableau se remplit sur le poste de test : noter « OK » ou le message d'erreur exact.
 >

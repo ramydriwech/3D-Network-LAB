@@ -1,14 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Topics } from '../src/sim/events.mjs';
-import { loadSim, play, sends, noteKeys, missingFor } from './helpers.mjs';
+import { loadSim, play, sends, noteKeys } from './helpers.mjs';
 
-// Ces tests jouent le scénario « ping » : ils attendent que toutes ses pièces soient dans le dépôt.
-const skip = missingFor('ping');
-
+// Ces tests jouent le scénario « ping ».
 const only = (index) => (scenario) => ({ ...scenario, steps: [scenario.steps[index]] });
 
-test('switch : apprend les adresses MAC source port par port', { skip }, async () => {
+test('switch : apprend les adresses MAC source port par port', async () => {
   const { sim, events } = await play('ping', only(0));
   const table = sim.device('sw1').macTable;
   assert.equal(table.get('02:00:00:00:01:10'), 'p1');
@@ -18,7 +16,7 @@ test('switch : apprend les adresses MAC source port par port', { skip }, async (
   assert.deepEqual(sim.device('sw1').tables()[0].rows, [['02:00:00:00:01:10', 'p1'], ['02:00:00:00:01:11', 'p2']]);
 });
 
-test('switch : une diffusion sort par tous les ports sauf celui d\'arrivée', { skip }, async () => {
+test('switch : une diffusion sort par tous les ports sauf celui d\'arrivée', async () => {
   const { sim, events } = await play('ping', only(0));
   const all = sends(events, sim);
   assert.ok(all.includes('SW1>PC2 ARP Request'));
@@ -27,7 +25,7 @@ test('switch : une diffusion sort par tous les ports sauf celui d\'arrivée', { 
   assert.ok(noteKeys(events).includes('switch.flood.broadcast'));
 });
 
-test('switch : destination connue, un seul port de sortie', { skip }, async () => {
+test('switch : destination connue, un seul port de sortie', async () => {
   const { sim, events } = await play('ping', only(0));
   const all = sends(events, sim);
   assert.equal(all.filter((line) => line.startsWith('SW1>') && line.endsWith('ICMP Echo Request')).length, 1);
@@ -35,7 +33,7 @@ test('switch : destination connue, un seul port de sortie', { skip }, async () =
   assert.ok(noteKeys(events).includes('switch.forward'));
 });
 
-test('switch : destination inconnue, la trame est inondée', { skip }, async () => {
+test('switch : destination inconnue, la trame est inondée', async () => {
   const { sim, events } = await loadSim('ping', (scenario) => ({ ...scenario, steps: [] }));
   const pc1 = sim.device('pc1');
   const frame = sim.network.packet({
@@ -51,7 +49,7 @@ test('switch : destination inconnue, la trame est inondée', { skip }, async () 
   assert.ok(keys.includes('host.notForMe'), 'les hôtes qui ne sont pas destinataires ignorent la trame');
 });
 
-test('switch : une trame dont la destination est sur le port d\'arrivée n\'est pas relayée', { skip }, async () => {
+test('switch : une trame dont la destination est sur le port d\'arrivée n\'est pas relayée', async () => {
   const { sim, events } = await loadSim('ping', (scenario) => ({ ...scenario, steps: [] }));
   const sw1 = sim.device('sw1');
   sw1.macTable.set('02:00:00:00:01:55', 'p1');

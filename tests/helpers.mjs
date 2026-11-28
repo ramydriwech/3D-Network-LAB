@@ -1,37 +1,11 @@
 // Outils communs aux tests : charger un scénario depuis le disque et enregistrer ce que
 // publie la simulation.
 
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { createSimulation, Topics } from '../simulation.mjs';
 
 export function readScenario(name) {
   return JSON.parse(readFileSync(new URL(`../scenarios/${name}.json`, import.meta.url), 'utf8'));
-}
-
-const DEVICE_FILES = { host: 'host', server: 'host', router: 'router', switch: 'switch', firewall: 'firewall' };
-
-/**
- * Ce qu'il manque encore dans le dépôt pour jouer un scénario, ou `false` si tout est là.
- *
- * Le travail est réparti entre quatre personnes : le test d'un protocole peut avoir besoin
- * du scénario, du switch ou d'un protocole écrits par quelqu'un d'autre et pas encore
- * fusionnés. Dans ce cas le test est mis en attente (« skip ») avec la raison affichée, au
- * lieu d'échouer ; il s'active tout seul dès que la pièce manquante arrive dans main.
- *
- *   const skip = missingFor('ping');
- *   test('ARP : …', { skip }, async () => { … });
- */
-export function missingFor(name) {
-  const here = (file) => existsSync(new URL(`../${file}`, import.meta.url));
-  const file = `scenarios/${name}.json`;
-  if (!here(file)) return `en attente de ${file}`;
-  const scenario = readScenario(name);
-  const needed = [
-    ...(scenario.protocols || []).map((id) => `src/sim/protocols/${id}.mjs`),
-    ...[...new Set(scenario.devices.map((device) => DEVICE_FILES[device.type]))].map((id) => `src/sim/devices/${id}.mjs`),
-  ];
-  const missing = needed.filter((item) => !here(item));
-  return missing.length ? `en attente de ${missing.join(', ')}` : false;
 }
 
 /** Crée une simulation, charge le scénario et enregistre tous les évènements publiés. */

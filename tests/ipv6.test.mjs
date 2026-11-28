@@ -2,14 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Topics, validateProtocol } from '../src/sim/events.mjs';
 import ipv6, { expand, solicitedNode, solicitedMac } from '../src/sim/protocols/ipv6.mjs';
-import { play, sends, noteKeys, missingFor } from './helpers.mjs';
+import { play, sends, noteKeys } from './helpers.mjs';
 
-// Ces tests jouent le scénario « ipv6 » : ils attendent que toutes ses pièces soient dans le dépôt.
-const skip = missingFor('ipv6');
+// Ces tests jouent le scénario « ipv6 ».
 
 const only = (index) => (scenario) => ({ ...scenario, steps: [scenario.steps[index]] });
 
-test('IPv6 : le protocole respecte le contrat commun', () => {
+test('IPv6 : le protocole respecte le contrat', () => {
   assert.deepEqual(validateProtocol(ipv6), []);
 });
 
@@ -20,7 +19,7 @@ test('IPv6 : adresses de multidiffusion du nœud sollicité', () => {
   assert.equal(solicitedMac('2001:db8::abcd:1234'), '33:33:FF:CD:12:34');
 });
 
-test('IPv6 : sollicitation en multidiffusion, annonce, puis ping', { skip }, async () => {
+test('IPv6 : sollicitation en multidiffusion, annonce, puis ping', async () => {
   const { sim, events } = await play('ipv6', only(0));
   assert.deepEqual(sends(events, sim), [
     'PC1>SW1 Neighbor Solicitation',
@@ -40,7 +39,7 @@ test('IPv6 : sollicitation en multidiffusion, annonce, puis ping', { skip }, asy
   assert.equal(sim.device('pc1').neighbours.get('2001:db8:6::11'), '02:00:00:00:06:11');
 });
 
-test('IPv6 : au second ping, le cache de voisins évite la sollicitation', { skip }, async () => {
+test('IPv6 : au second ping, le cache de voisins évite la sollicitation', async () => {
   const { sim, events } = await play('ipv6');
   const lines = sends(events, sim);
   assert.equal(lines.filter((line) => line.includes('Neighbor Solicitation')).length, 3, 'une seule sollicitation (recopiée sur 3 câbles)');

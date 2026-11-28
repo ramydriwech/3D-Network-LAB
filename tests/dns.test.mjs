@@ -2,15 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Topics } from '../src/sim/events.mjs';
 import dns from '../src/sim/protocols/dns.mjs';
-import { loadSim, play, sends, noteKeys, missingFor } from './helpers.mjs';
+import { loadSim, play, sends, noteKeys } from './helpers.mjs';
 
-// Ces tests jouent le scénario « dns » : ils attendent que toutes ses pièces soient dans le dépôt.
-const skip = missingFor('dns');
-
+// Ces tests jouent le scénario « dns ».
 const only = (index) => (scenario) => ({ ...scenario, steps: [scenario.steps[index]] });
 const dnsPackets = (events) => events.filter((e) => e.topic === Topics.PACKET_SEND && e.packet.dns).map((e) => e.packet);
 
-test('DNS : question et réponse en UDP sur le port 53', { skip }, async () => {
+test('DNS : question et réponse en UDP sur le port 53', async () => {
   const { sim, events } = await play('dns', only(0));
   const lines = sends(events, sim).filter((line) => line.includes('DNS '));
   assert.deepEqual(lines, ['PC1>SW1 DNS Query', 'SW1>DNS1 DNS Query', 'DNS1>SW1 DNS Response', 'SW1>PC1 DNS Response']);
@@ -27,7 +25,7 @@ test('DNS : question et réponse en UDP sur le port 53', { skip }, async () => {
   assert.ok(noteKeys(events).includes('dns.resolved'));
 });
 
-test('DNS : nom inconnu, réponse NXDOMAIN', { skip }, async () => {
+test('DNS : nom inconnu, réponse NXDOMAIN', async () => {
   const { sim, events } = await play('dns', only(1));
   const response = dnsPackets(events).find((packet) => packet.dns.qr === 'response');
   assert.equal(response.dns.rcode, 'NXDOMAIN');
@@ -36,14 +34,14 @@ test('DNS : nom inconnu, réponse NXDOMAIN', { skip }, async () => {
   assert.ok(noteKeys(events).includes('dns.failed'));
 });
 
-test('DNS : la seconde demande est servie par le cache, sans trafic', { skip }, async () => {
+test('DNS : la seconde demande est servie par le cache, sans trafic', async () => {
   const { sim, events } = await play('dns', (scenario) => ({ ...scenario, steps: [scenario.steps[0], scenario.steps[2]] }));
   assert.equal(dnsPackets(events).filter((packet) => packet.dns.qr === 'query' ).length, 2, 'une seule question, vue sur deux câbles');
   assert.ok(noteKeys(events).includes('dns.cacheHit'));
   assert.equal(sim.state, 'finished');
 });
 
-test('DNS : résolution par programme, client sans serveur configuré, inspecteur', { skip }, async () => {
+test('DNS : résolution par programme, client sans serveur configuré, inspecteur', async () => {
   const { sim, events } = await loadSim('dns', (scenario) => ({ ...scenario, steps: [] }));
   const answers = [];
   dns.resolve(sim.device('pc1'), 'mail.supcom.tn', (ip) => answers.push(ip));

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { Topics } from '../src/sim/events.mjs';
 import { NatTable, PortSecurity, evaluateAcl, parseMatch, ruleText, checkRule } from '../src/sim/security.mjs';
 import { validateScenario } from '../src/sim/scenario.mjs';
-import { play, readScenario, noteKeys, missingFor } from './helpers.mjs';
+import { play, readScenario, noteKeys } from './helpers.mjs';
 
 const only = (index) => (scenario) => ({ ...scenario, steps: [scenario.steps[index]] });
 const replies = (events, device) => events.filter((e) => e.topic === Topics.PACKET_RECEIVE && e.accepted && e.device === device && /Echo Reply/.test(e.packet.label)).length;
@@ -51,8 +51,7 @@ test('sécurité : port sécurisé — apprentissage sticky puis violation', () 
 });
 
 test('scénarios du laboratoire : valides, et erreurs claires', () => {
-  // Le scénario VLAN et celui de la sécurité de port arrivent avec le switch administrable (Ayoub).
-  for (const name of ['vlan', 'pare-feu', 'securite-port'].filter((n) => !missingFor(n))) assert.deepEqual(validateScenario(readScenario(name)).errors, [], name);
+  for (const name of ['vlan', 'pare-feu', 'securite-port']) assert.deepEqual(validateScenario(readScenario(name)).errors, [], name);
   const broken = readScenario('pare-feu');
   const fw = broken.devices.find((d) => d.id === 'fw1');
   fw.interfaces[1].acl = { in: 'ABSENTE' };
@@ -62,7 +61,7 @@ test('scénarios du laboratoire : valides, et erreurs claires', () => {
   for (const part of ['ABSENTE', 'static ou overload', 'permit ou deny']) assert.ok(errors.includes(part), part);
 });
 
-test('VLAN : une diffusion reste dans son VLAN, le routeur relie les VLAN', { skip: missingFor('vlan') }, async () => {
+test('VLAN : une diffusion reste dans son VLAN, le routeur relie les VLAN', async () => {
   const one = await play('vlan', only(0));
   assert.ok(receivedBy(one.events, 'pc2', 'ARP Request'));
   assert.ok(!receivedBy(one.events, 'pc3', 'ARP Request') && !receivedBy(one.events, 'pc4', 'ARP Request'), 'le VLAN 20 ne voit rien');
@@ -77,7 +76,7 @@ test('VLAN : une diffusion reste dans son VLAN, le routeur relie les VLAN', { sk
   assert.deepEqual(two.sim.device('sw1').tables()[0].columns.length, 3, 'la table MAC affiche la colonne VLAN');
 });
 
-test('pare-feu : NAT, session, ACL d\'entrée, DMZ', { skip: missingFor('pare-feu') }, async () => {
+test('pare-feu : NAT, session, ACL d\'entrée, DMZ', async () => {
   const out = await play('pare-feu', only(0));
   assert.equal(replies(out.events, 'pc1'), 1);
   const onInternet = out.events.find((e) => e.topic === Topics.PACKET_SEND && e.from === 'isp' && /Echo Request/.test(e.packet.label));
@@ -95,7 +94,7 @@ test('pare-feu : NAT, session, ACL d\'entrée, DMZ', { skip: missingFor('pare-fe
   assert.equal(web.sim.device('fw1').aclHits.get('DEPUIS-INTERNET')[0] > 0, true);
 });
 
-test('pare-feu : sans session, Internet ne peut pas entrer (zone moins sûre)', { skip: missingFor('pare-feu') }, async () => {
+test('pare-feu : sans session, Internet ne peut pas entrer (zone moins sûre)', async () => {
   const { events } = await play('pare-feu', (s) => {
     const fw = s.devices.find((d) => d.id === 'fw1');
     fw.acls['DEPUIS-INTERNET'] = [{ action: 'permit', proto: 'ip', src: 'any', dst: 'any' }];
@@ -113,7 +112,7 @@ test('pare-feu : sans session, Internet ne peut pas entrer (zone moins sûre)', 
   assert.ok(noteKeys(noAcl).includes('fw.block'), 'outside → inside sans règle : bloqué');
 });
 
-test('sécurité des ports : intrus coupé (err-disabled), puis plus rien ne passe', { skip: missingFor('securite-port') }, async () => {
+test('sécurité des ports : intrus coupé (err-disabled), puis plus rien ne passe', async () => {
   const { sim, events } = await play('securite-port');
   const keys = noteKeys(events);
   assert.ok(keys.includes('switch.sec.learn') && keys.includes('switch.sec.violation') && keys.includes('net.ifaceDown'));
@@ -123,7 +122,7 @@ test('sécurité des ports : intrus coupé (err-disabled), puis plus rien ne pas
   assert.deepEqual([...sim.device('sw1').security.get('p1').learned], ['02:00:00:00:5E:11']);
 });
 
-test('interface éteinte : rien ne passe', { skip: missingFor('routage') }, async () => {
+test('interface éteinte : rien ne passe', async () => {
   const { events } = await play('routage', (s) => {
     s.devices.find((d) => d.id === 'r1').interfaces[1].shutdown = true;
     return { ...s, steps: [s.steps[0]] };

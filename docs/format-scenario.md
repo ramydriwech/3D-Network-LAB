@@ -1,7 +1,7 @@
 # Format des fichiers de scénario
 
-> **Contrat commun.** Toute modification de ce format passe par une pull request approuvée
-> par les quatre membres. Le code qui le vérifie est `src/sim/scenario.mjs` (`validateScenario`).
+> **Contrat d'interface.** Toute modification de ce format oblige à vérifier les scénarios, la
+> simulation et l'éditeur. Le code qui le vérifie est `src/sim/scenario.mjs` (`validateScenario`).
 
 Un scénario est un fichier JSON du dossier `scenarios/`. Il décrit **une topologie** (équipements,
 adresses, câbles) et **des étapes** à jouer. Ajouter un scénario ne demande aucune ligne de

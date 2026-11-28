@@ -2,18 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Topics } from '../src/sim/events.mjs';
 import dhcp from '../src/sim/protocols/dhcp.mjs';
-import { loadSim, play, sends, noteKeys, missingFor } from './helpers.mjs';
+import { loadSim, play, sends, noteKeys } from './helpers.mjs';
 
-// Ces tests jouent le scénario « dhcp » : ils attendent que toutes ses pièces soient dans le dépôt.
-const skip = missingFor('dhcp');
-
+// Ces tests jouent le scénario « dhcp ».
 const only = (index) => (scenario) => ({ ...scenario, steps: [scenario.steps[index]] });
 /** Messages DHCP tels qu'émis par leur auteur (on ignore les recopies du switch). */
 const messages = (events) => events
   .filter((e) => e.topic === Topics.PACKET_SEND && e.packet.dhcp && e.from !== 'sw1')
   .map((e) => e.packet);
 
-test('DHCP : les quatre messages Discover, Offer, Request, Ack', { skip }, async () => {
+test('DHCP : les quatre messages Discover, Offer, Request, Ack', async () => {
   const { events } = await play('dhcp', only(0));
   const all = messages(events);
   assert.deepEqual(all.map((p) => p.label), ['DHCP Discover', 'DHCP Offer', 'DHCP Request', 'DHCP Ack']);
@@ -33,7 +31,7 @@ test('DHCP : les quatre messages Discover, Offer, Request, Ack', { skip }, async
   assert.equal(new Set(all.map((p) => p.dhcp.xid)).size, 1, 'même identifiant de transaction partout');
 });
 
-test('DHCP : le client applique la configuration reçue', { skip }, async () => {
+test('DHCP : le client applique la configuration reçue', async () => {
   const { sim, events } = await play('dhcp', only(0));
   const pc1 = sim.device('pc1');
   assert.equal(pc1.primary().ip, '192.168.1.100');
@@ -49,14 +47,14 @@ test('DHCP : le client applique la configuration reçue', { skip }, async () => 
   assert.equal(sim.device('pc2').primary().ip, '192.168.1.11', 'un poste configuré à la main n\'est pas modifié');
 });
 
-test('DHCP : une fois configuré, le poste communique normalement', { skip }, async () => {
+test('DHCP : une fois configuré, le poste communique normalement', async () => {
   const { sim, events } = await play('dhcp');
   assert.ok(sends(events, sim).includes('SW1>PC1 ICMP Echo Reply'));
   const request = events.find((e) => e.topic === Topics.PACKET_SEND && e.packet.label === 'ICMP Echo Request').packet;
   assert.equal(request.ip.src, '192.168.1.100');
 });
 
-test('DHCP : deux clients reçoivent deux adresses différentes ; réserve épuisée', { skip }, async () => {
+test('DHCP : deux clients reçoivent deux adresses différentes ; réserve épuisée', async () => {
   const twoClients = (scenario) => {
     const copy = structuredClone(scenario);
     delete copy.devices[1].interfaces[0].ip;
@@ -78,7 +76,7 @@ test('DHCP : deux clients reçoivent deux adresses différentes ; réserve épui
   assert.ok(noteKeys(second.events).includes('dhcp.poolEmpty'));
 });
 
-test('DHCP : lignes de l\'inspecteur', { skip }, async () => {
+test('DHCP : lignes de l\'inspecteur', async () => {
   const { events } = await play('dhcp', only(0));
   const [discover, offer] = messages(events);
   assert.equal(dhcp.describe(discover).length, 3);

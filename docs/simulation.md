@@ -80,7 +80,7 @@ DHCP repartent de zéro.
 2. Dans `install(device, net)`, brancher les réceptions : `device.on('ip:MONPROTO', (packet, iface) => …)`.
 3. Émettre avec `device.sendIp({ dst, proto, protocol, label, explain, … })` : le choix de la route, ARP et la trame Ethernet sont pris en charge.
 4. Écrire un texte `{ fr, en }` pour chaque explication dans `texts`.
-5. Si la famille de paquets est nouvelle, l'ajouter à `PROTOCOL_IDS` (contrat : pull request à quatre) et lui donner une couleur dans `src/render/packetStyles.mjs`.
+5. Si la famille de paquets est nouvelle, l'ajouter à `PROTOCOL_IDS` (contrat d'interface : vérifier les modules qui s'en servent) et lui donner une couleur dans `src/render/packetStyles.mjs`.
 6. Écrire le scénario, l'ajouter à `scenarios/index.json`, écrire les tests.
 
 Aucune autre modification : ni le moteur, ni l'interface, ni le rendu ne connaissent la liste des protocoles.

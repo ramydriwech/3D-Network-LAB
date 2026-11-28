@@ -5,7 +5,7 @@ rendu** : la seule chose que l'interface, la VR et l'animation des paquets ont l
 La liste officielle est `RENDER_API` dans `src/render/api.mjs` ; `tests/render-api.test.mjs` vérifie
 que le vrai rendu et le mock la fournissent en entier.
 
-| Membre | Type | Rôle |
+| Élément | Type | Rôle |
 | --- | --- | --- |
 | `scene` | `THREE.Scene` | la scène |
 | `camera` | `THREE.PerspectiveCamera` | la caméra |

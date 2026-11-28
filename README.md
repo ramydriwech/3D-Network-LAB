@@ -51,7 +51,7 @@ Ouvrir `index.html` par un double-clic ne fonctionne pas (les modules JavaScript
 | [Architecture](docs/architecture.md) | organisation du code et choix techniques |
 | [Lancement et déploiement](docs/lancement-deploiement.md) | serveur local, GitHub Pages, publication d'une version |
 | [Simulation](docs/simulation.md) · [Rendu 3D](docs/rendu-3d.md) | fonctionnement détaillé des deux moteurs |
-| [Contrats communs](docs/contrats.md) · [Format des scénarios](docs/format-scenario.md) · [API de rendu](docs/api-rendu.md) | interfaces entre les parties |
+| [Contrats d'interface](docs/contrats.md) · [Format des scénarios](docs/format-scenario.md) · [API de rendu](docs/api-rendu.md) | interfaces entre les parties |
 | [Protocoles](docs/protocoles/) | une page par protocole, avec ses simplifications pédagogiques |
 | [Débit](docs/debit.md) · [Diagnostic](docs/diagnostic.md) · [Éditeur](docs/editeur.md) · [VR en WebGPU](docs/vr-webgpu.md) · [Laboratoire](docs/laboratoire.md) · [Consoles](docs/console.md) | compléments demandés par le superviseur (S5 à S7) |
 | [Origine des ressources](ATTRIBUTION.md) | bibliothèques, modèles, données et aides extérieures |
@@ -60,7 +60,7 @@ Ouvrir `index.html` par un double-clic ne fonctionne pas (les modules JavaScript
 
 ```
 index.html, styles.css     page et style
-main.mjs                    assemble les quatre parties
+main.mjs                    assemble les quatre modules
 simulation.mjs, src/sim/    moteur de simulation, équipements, protocoles
 src/render/                scène 3D (Three.js, WebGPURenderer)
 src/ui/                    interface
@@ -80,21 +80,14 @@ docs/                      documentation
 2. L'ajouter à `scenarios/index.json`.
 3. `npm test` vérifie qu'il est valide ; `UPDATE_GOLDEN=1 node --test tests/regression.test.mjs` enregistre sa trace de référence.
 
-## Règles de contribution
+## Règles de développement
 
-- Chacun ne modifie que ses fichiers (`.github/CODEOWNERS`). Un bug chez un autre = une issue assignée à son propriétaire.
-- Les contrats communs (`src/sim/events.mjs`, le format des scénarios, `index.html`) ne changent que par une pull request approuvée par les quatre.
-- Push quotidien sur sa branche `feature/<membre>-<sujet>` ; fusion dans `main` le mercredi et le dimanche, après `git pull --rebase origin main`.
-- `main` reste toujours exécutable : les tests passent avant toute fusion.
+- Les contrats d'interface (`src/sim/events.mjs`, le format des scénarios, `index.html`) changent avec précaution : chaque module qui s'en sert est vérifié.
+- `main` reste toujours exécutable : les tests passent avant chaque push.
 
-## Équipe
+## Auteur
 
-| Membre | Responsabilités |
-| --- | --- |
-| Rami Driouech | interface, page et style, DHCP, HTTP, manuel |
-| Mohamed Aziz Saoudi | rendu 3D, modèles, ICMP, UDP, DNS |
-| Khalil Krifa | moteur de simulation, contrats, hôte et routeur, ARP, TCP, routage |
-| Ayoub Ben Sabbeh | démarrage, PWA, CI et déploiement, mode VR, animation des paquets, switch |
+Rami Driouech — conception et développement.
 
 Superviseur : Dr. Eng. Mohamed Becha Kaaniche.
 

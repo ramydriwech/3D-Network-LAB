@@ -1,11 +1,10 @@
-// Point d'entrée de l'application. FICHIER FIGÉ APRÈS LA S1 : il ne fait qu'assembler
-// les quatre parties, chacune derrière une seule fonction, pour que personne n'ait
-// besoin de le modifier ensuite.
+// Point d'entrée de l'application. Il ne fait qu'assembler les quatre modules, chacun
+// derrière une seule fonction : ajouter une fonctionnalité ne demande pas de le modifier.
 //
-//   simulation.mjs        createSimulation()   moteur, protocoles          (Khalil)
-//   src/render/index.mjs  initRender()         scène 3D                    (Aziz)
-//   src/ui/index.mjs      initUI()             interface HTML              (Ramy)
-//   src/xr/index.mjs      initXR()             mode VR                     (Ayoub)
+//   simulation.mjs        createSimulation()   moteur, protocoles
+//   src/render/index.mjs  initRender()         scène 3D
+//   src/ui/index.mjs      initUI()             interface HTML
+//   src/xr/index.mjs      initXR()             mode VR
 
 import { createSimulation } from './simulation.mjs';
 import { initRender } from './src/render/index.mjs';

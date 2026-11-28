@@ -1,4 +1,4 @@
-// Premiers tests automatiques (S1) : ils protègent les contrats communs.
+// Tests des contrats : ils protègent les contrats d'interface.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';

@@ -7,7 +7,7 @@ GitHub Pages. Tout s'exécute dans le navigateur ; il n'y a ni serveur applicati
 
 ```mermaid
 flowchart TB
-  main["main.mjs<br/>assemble les quatre parties"]
+  main["main.mjs<br/>assemble les quatre modules"]
 
   subgraph sim["Simulation — simulation.mjs, src/sim/"]
     engine["Moteur à évènements discrets"]
@@ -49,22 +49,22 @@ flowchart TB
   sw -. "sert tous les fichiers" .-> main
 ```
 
-## Principe directeur : quatre parties, trois contrats
+## Principe directeur : quatre modules, trois contrats
 
-Quatre personnes travaillent en parallèle. Pour qu'elles ne se bloquent pas, les quatre parties ne se connaissent
-qu'à travers trois contrats fixés en S1 ([contrats.md](contrats.md)) :
+Pour rester indépendants, testables séparément et faciles à faire évoluer, les quatre modules ne se connaissent
+qu'à travers trois contrats ([contrats.md](contrats.md)) :
 
 1. **le bus d'évènements** — la simulation publie ce qui se passe (`packet:send`, `state:changed`…), les autres s'abonnent ;
 2. **les commandes** — l'interface et le panneau VR agissent sur la simulation uniquement par `sim.execute('play')` ;
 3. **l'API de rendu** — l'interface et la VR utilisent la scène uniquement par les fonctions listées dans `src/render/api.mjs`.
 
-`main.mjs` est le seul fichier qui voit tout le monde. Il a été figé après la S1 :
+`main.mjs` est le seul fichier qui voit tous les modules. Il se contente de les assembler :
 
 ```js
-const sim = createSimulation();                       // Khalil
-const render = await initRender({ container, sim });  // Aziz
-initUI(app);                                          // Ramy
-initXR(app);                                          // Ayoub
+const sim = createSimulation();                       // simulation
+const render = await initRender({ container, sim });  // rendu 3D
+initUI(app);                                          // interface
+initXR(app);                                          // mode VR
 await app.loadScenario(catalog.default);
 render.start((dtMs) => sim.tick(dtMs));
 ```
@@ -81,22 +81,22 @@ En pause, l'étape 2 ne fait rien : les paquets restent figés, mais la caméra 
 
 ## Organisation du dépôt
 
-| Chemin | Contenu | Propriétaire |
-| --- | --- | --- |
-| `index.html`, `styles.css` | page, zones réservées, style | Ramy |
-| `main.mjs` | assemblage | Ayoub |
-| `simulation.mjs`, `src/sim/` | moteur, réseau, contrats, équipements, protocoles | Khalil (protocoles : selon l'onglet « Fichiers ») |
-| `src/render/` | scène, modèles, câbles, étiquettes, styles et animation des paquets | Aziz (animation : Ayoub) |
-| `src/ui/` | interface | Ramy |
-| `src/xr/` | mode VR | Ayoub |
-| `scenarios/` | scénarios JSON et catalogue | selon le protocole |
-| `assets/models/`, `assets/icons/` | modèles GLB, icônes | Aziz, Ayoub |
-| `vendor/three/` | Three.js r187, version figée | Aziz |
-| `manifest.json`, `sw.mjs` | PWA | Ayoub |
-| `tools/` | serveur local, génération de la liste de cache, des icônes et des modèles | Ayoub (modèles : Aziz) |
-| `tests/` | tests automatiques (`node --test`) | chacun pour ses fichiers |
-| `.github/` | CI, déploiement, CODEOWNERS | Ayoub |
-| `docs/` | documentation | chacun pour sa partie |
+| Chemin | Contenu |
+| --- | --- |
+| `index.html`, `styles.css` | page, zones réservées, style |
+| `main.mjs` | assemblage |
+| `simulation.mjs`, `src/sim/` | moteur, réseau, contrats, équipements, protocoles |
+| `src/render/` | scène, modèles, câbles, étiquettes, styles et animation des paquets |
+| `src/ui/` | interface |
+| `src/xr/` | mode VR |
+| `scenarios/` | scénarios JSON et catalogue |
+| `assets/models/`, `assets/icons/` | modèles GLB, icônes |
+| `vendor/three/` | Three.js r187, version figée |
+| `manifest.json`, `sw.mjs` | PWA |
+| `tools/` | serveur local, génération de la liste de cache, des icônes et des modèles |
+| `tests/` | tests automatiques (`node --test`) |
+| `.github/` | CI et déploiement |
+| `docs/` | documentation |
 
 ## Choix techniques et raisons
 

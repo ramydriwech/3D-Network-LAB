@@ -2,14 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Topics } from '../src/sim/events.mjs';
 import arp, { ARP_TIMEOUT } from '../src/sim/protocols/arp.mjs';
-import { loadSim, play, sends, noteKeys, missingFor } from './helpers.mjs';
+import { loadSim, play, sends, noteKeys } from './helpers.mjs';
 
-// Ces tests jouent le scénario « ping » : ils attendent que toutes ses pièces soient dans le dépôt.
-const skip = missingFor('ping');
-
+// Ces tests jouent le scénario « ping ».
 const only = (index) => (scenario) => ({ ...scenario, steps: [scenario.steps[index]] });
 
-test('ARP : requête en diffusion, réponse en unicast, caches mis à jour', { skip }, async () => {
+test('ARP : requête en diffusion, réponse en unicast, caches mis à jour', async () => {
   const { sim, events } = await play('ping', only(0));
   const all = sends(events, sim);
 
@@ -36,7 +34,7 @@ test('ARP : requête en diffusion, réponse en unicast, caches mis à jour', { s
   assert.ok(noteKeys(events).includes('arp.notForMe'));
 });
 
-test('ARP : le cache évite une seconde requête', { skip }, async () => {
+test('ARP : le cache évite une seconde requête', async () => {
   const { sim, events } = await play('ping', (scenario) => ({ ...scenario, steps: [scenario.steps[0], scenario.steps[0]] }));
   const requests = sends(events, sim).filter((line) => line === 'PC1>SW1 ARP Request');
   assert.equal(requests.length, 1);
@@ -44,7 +42,7 @@ test('ARP : le cache évite une seconde requête', { skip }, async () => {
   assert.equal(sends(events, sim).filter((line) => line === 'PC1>SW1 ICMP Echo Request').length, 2);
 });
 
-test('ARP : hors de son réseau, l\'hôte cherche la MAC de la passerelle', { skip }, async () => {
+test('ARP : hors de son réseau, l\'hôte cherche la MAC de la passerelle', async () => {
   const { sim, events } = await play('ping', only(1));
   const requests = events.filter((e) => e.topic === Topics.PACKET_SEND && e.packet.label === 'ARP Request' && e.from === 'pc1');
   assert.equal(requests[0].packet.arp.targetIp, '192.168.1.1', 'PC1 demande R1, pas PC3');
@@ -55,7 +53,7 @@ test('ARP : hors de son réseau, l\'hôte cherche la MAC de la passerelle', { sk
   assert.ok(noteKeys(events).includes('host.viaGateway'));
 });
 
-test('ARP : sans réponse, la résolution échoue après le délai', { skip }, async () => {
+test('ARP : sans réponse, la résolution échoue après le délai', async () => {
   const { sim, events } = await play('ping', (scenario) => ({
     ...scenario,
     steps: [{ action: 'ping', from: 'pc1', to: '192.168.1.99' }],
@@ -67,7 +65,7 @@ test('ARP : sans réponse, la résolution échoue après le délai', { skip }, a
   assert.equal(sends(events, sim).some((line) => line.includes('ICMP')), false);
 });
 
-test('ARP : lignes de l\'inspecteur', { skip }, async () => {
+test('ARP : lignes de l\'inspecteur', async () => {
   const { events } = await play('ping', only(0));
   const request = events.find((e) => e.topic === Topics.PACKET_SEND).packet;
   const rows = arp.describe(request);
@@ -76,7 +74,7 @@ test('ARP : lignes de l\'inspecteur', { skip }, async () => {
   assert.deepEqual(arp.describe({}), []);
 });
 
-test('ARP : deux paquets en attente de la même adresse ne déclenchent qu\'une requête', { skip }, async () => {
+test('ARP : deux paquets en attente de la même adresse ne déclenchent qu\'une requête', async () => {
   const { sim, events } = await loadSim('ping', (scenario) => ({ ...scenario, steps: [] }));
   const pc1 = sim.device('pc1');
   const send = (seq) => pc1.sendIp({

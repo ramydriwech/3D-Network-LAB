@@ -1,4 +1,4 @@
-// CONTRAT COMMUN — format des fichiers de scénario (voir docs/format-scenario.md).
+// CONTRAT D'INTERFACE — format des fichiers de scénario (voir docs/format-scenario.md).
 // Ce module valide un scénario JSON et le charge depuis une URL.
 
 import { isIp, isMac } from './addr.mjs';
