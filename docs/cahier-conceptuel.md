@@ -1,6 +1,6 @@
 # Cahier conceptuel
 
-**3D-Network-LAB** — Projet WebXR & Spatial Computing, SUP'COM, département SIA.
+**3D Network LAB** — Projet WebXR & Spatial Computing, SUP'COM, département SIA.
 Auteur : Rami Driouech. Superviseur : Dr. Eng. Mohamed Becha Kaaniche.
 
 Ce cahier rassemble l'analyse des besoins et les diagrammes de conception. Les diagrammes sont tenus à jour

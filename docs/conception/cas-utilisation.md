@@ -6,7 +6,7 @@ flowchart LR
   ens(["👤 Enseignant"])
   jury(["👤 Jury / superviseur"])
 
-  subgraph app["3D-Network-LAB"]
+  subgraph app["3D Network LAB"]
     direction TB
     uc1(["Ouvrir l'application par son URL"])
     uc2(["Installer la PWA (facultatif)"])

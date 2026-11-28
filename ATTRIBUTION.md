@@ -1,6 +1,6 @@
 # Origine des ressources (attribution)
 
-Projet **3D-Network-LAB** — SUP'COM, département SIA, 2026/2027.
+Projet **3D Network LAB** — SUP'COM, département SIA, 2026/2027.
 Auteur : Rami Driouech.
 Superviseur : Dr. Eng. Mohamed Becha Kaaniche.
 

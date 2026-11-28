@@ -121,7 +121,7 @@ function buildGlb(name, parts) {
   }
 
   const json = {
-    asset: { version: '2.0', generator: '3D-Network-LAB — tools/make-models.mjs' },
+    asset: { version: '2.0', generator: '3D Network LAB — tools/make-models.mjs' },
     scene: 0,
     scenes: [{ nodes: [0] }],
     nodes: [{ name, mesh: 0 }],

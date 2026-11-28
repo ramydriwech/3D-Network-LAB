@@ -1,6 +1,6 @@
 {
   "id": "./",
-  "name": "3D-Network-LAB",
+  "name": "3D Network LAB",
   "short_name": "Network LAB",
   "description": "Comprendre les protocoles réseau (ARP, ICMP, DNS, DHCP, TCP, UDP, HTTP) en les regardant circuler dans une topologie 3D.",
   "lang": "fr",

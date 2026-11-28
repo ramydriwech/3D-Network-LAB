@@ -1,6 +1,6 @@
 # Architecture générale
 
-3D-Network-LAB est une **application web statique** : des fichiers HTML, CSS, JavaScript et JSON servis par
+3D Network LAB est une **application web statique** : des fichiers HTML, CSS, JavaScript et JSON servis par
 GitHub Pages. Tout s'exécute dans le navigateur ; il n'y a ni serveur applicatif ni base de données.
 
 ## Vue d'ensemble

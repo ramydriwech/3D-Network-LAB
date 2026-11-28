@@ -47,7 +47,7 @@ export function createReport() {
 /** Requête GET sans suivre les redirections : { status, headers }. */
 function get(module, url) {
   return new Promise((resolve, reject) => {
-    const request = module.get(url, { timeout: TIMEOUT, headers: { 'user-agent': 'verify-https (3D-Network-LAB)' } }, (response) => {
+    const request = module.get(url, { timeout: TIMEOUT, headers: { 'user-agent': 'verify-https (3D Network LAB)' } }, (response) => {
       response.resume();
       resolve({ status: response.statusCode, headers: response.headers });
     });

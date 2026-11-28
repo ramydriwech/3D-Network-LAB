@@ -2,7 +2,7 @@
 
 <img src="assets/icons/favicon.svg" alt="" width="84" height="84">
 
-# 3D-Network-LAB
+# 3D Network LAB
 
 **Un laboratoire réseau en 3D, dans le navigateur.**<br>
 Entrez dans une salle réseau, configurez routeurs et switchs en console, câblez à la main,<br>
@@ -38,7 +38,7 @@ Les schémas statiques expliquent mal ce qui se passe vraiment sur un réseau : 
 pourquoi un routeur réécrit les adresses MAC mais garde les adresses IP, pourquoi un ping échoue. Les simulateurs
 professionnels, eux, demandent une installation et une prise en main qui freinent la découverte.
 
-**3D-Network-LAB** comble cet écart : une application web, sans installation, qui ouvre directement sur un
+**3D Network LAB** comble cet écart : une application web, sans installation, qui ouvre directement sur un
 **laboratoire en 3D**. On y circule à la première personne, on configure les équipements avec de vraies commandes,
 et **chaque message est animé dans la salle puis expliqué** — en français ou en anglais.
 
@@ -205,7 +205,7 @@ docs/                       documentation, captures et démo
 
 ## English summary
 
-**3D-Network-LAB** is a browser-based 3D network lab for learning protocols. Walk through a server room in
+**3D Network LAB** is a browser-based 3D network lab for learning protocols. Walk through a server room in
 first person (or in VR), configure routers and switches from IOS- or VRP-style consoles, cable devices by hand, and
 watch every ARP, ICMP, TCP or HTTP frame travel through the room with a step-by-step explanation. It runs entirely
 client-side (WebGPU, WebXR, PWA, zero npm dependencies) and the whole interface is available in English.

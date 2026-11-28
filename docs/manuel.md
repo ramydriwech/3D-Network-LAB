@@ -1,6 +1,6 @@
 # Manuel utilisateur
 
-3D-Network-LAB montre, dans une scène 3D, comment les protocoles réseau échangent leurs messages. Vous
+3D Network LAB montre, dans une scène 3D, comment les protocoles réseau échangent leurs messages. Vous
 choisissez un scénario, vous lancez la lecture, et chaque message est animé et expliqué.
 
 ## 1. Ouvrir l'application

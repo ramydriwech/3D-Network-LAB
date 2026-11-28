@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" font-family="system-ui, sans-serif" font-size="14">
-  <title>Maquette de l'interface — 3D-Network-LAB</title>
+  <title>Maquette de l'interface — 3D Network LAB</title>
   <rect width="960" height="600" fill="#0b1220"/>
   <!-- Barre du haut -->
   <rect x="0" y="0" width="960" height="52" fill="#111a2e" stroke="#26344f"/>
-  <text x="18" y="32" fill="#e6edf7" font-weight="600">3D-Network-LAB</text>
+  <text x="18" y="32" fill="#e6edf7" font-weight="600">3D Network LAB</text>
   <rect x="200" y="12" width="280" height="28" rx="6" fill="#18233b" stroke="#38bdf8" stroke-dasharray="4 3"/>
   <text x="212" y="31" fill="#93a3bd">#scenario-slot — choix du scénario</text>
   <rect x="610" y="12" width="110" height="28" rx="6" fill="#18233b" stroke="#38bdf8" stroke-dasharray="4 3"/>

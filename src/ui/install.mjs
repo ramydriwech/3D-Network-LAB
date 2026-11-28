@@ -20,7 +20,7 @@ import { installHelpKey } from './installHelp.mjs';
 registerStrings({
   fr: {
     'install.button': 'Installer',
-    'install.tip': 'Installer 3D-Network-LAB sur cet appareil : elle s\'ouvre dans sa propre fenêtre et fonctionne hors ligne (facultatif)',
+    'install.tip': 'Installer 3D Network LAB sur cet appareil : elle s\'ouvre dans sa propre fenêtre et fonctionne hors ligne (facultatif)',
     'install.refused': 'Installation refusée : aucun problème, l\'application reste utilisable dans le navigateur.',
     'install.done': 'Application installée. Elle fonctionne aussi hors ligne.',
     'install.ios': 'Sur iPhone ou iPad : touchez le bouton Partager de Safari puis « Sur l\'écran d\'accueil ».',
@@ -34,7 +34,7 @@ registerStrings({
   },
   en: {
     'install.button': 'Install',
-    'install.tip': 'Install 3D-Network-LAB on this device: it opens in its own window and works offline (optional)',
+    'install.tip': 'Install 3D Network LAB on this device: it opens in its own window and works offline (optional)',
     'install.refused': 'Installation declined: no problem, the app remains usable in the browser.',
     'install.done': 'App installed. It also works offline.',
     'install.ios': 'On iPhone or iPad: tap Safari\'s Share button, then "Add to Home Screen".',

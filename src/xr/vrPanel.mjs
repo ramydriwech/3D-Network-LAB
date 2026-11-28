@@ -104,7 +104,7 @@ export function createVRPanel(app, exit) {
     context.textAlign = 'left';
     context.fillStyle = '#f1f5f9';
     context.font = `600 40px ${FONT}`;
-    context.fillText(sim.scenario ? localize(sim.scenario.title) : '3D-Network-LAB', 32, 26, WIDTH - 330);
+    context.fillText(sim.scenario ? localize(sim.scenario.title) : '3D Network LAB', 32, 26, WIDTH - 330);
     context.textAlign = 'right';
     context.fillStyle = '#7dd3fc';
     context.font = `32px ${FONT}`;
